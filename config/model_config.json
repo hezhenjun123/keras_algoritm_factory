@@ -1,0 +1,21 @@
+{
+  "BATCH_SIZE" : 16,
+  "DATA_CSV" : "data/train_vibration0606.pt",
+  "LEARNING_RATE" : 0.00001,
+  "EPOCHS" : 700,
+  "STEPS_PER_EPOCH" : -1,
+  "PRETRAINED" : "True",
+  "DROPOUT" : 0.25,
+  "NUM_CLASSES" : 3,
+  "CHANNEL_LIST" : [512, 256, 128],
+  "ACTIVATION" : "relu",
+  "RESIZE" : [300, 300],
+  "LOCAL_PARA" : {
+    "DATA_DIR" : "s3://zoomlion-sample/wheat-vibration-0606",
+    "DIR_OUT" : "./out"
+  },
+  "AWS_PARA" : {
+    "DATA_DIR" : "s3://zoomlion-sample/wheat-vibration-0606",
+    "DIR_OUT" : "/workspace/output/"
+  }
+}
