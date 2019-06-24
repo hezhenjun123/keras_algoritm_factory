@@ -3,36 +3,40 @@ from tensorflow.keras.callbacks import Callback, ModelCheckpoint
 import subprocess
 
 class SmartCheckpoint(Callback):
+    r"Checkpoint class that automatically handles non existing paths and s3 synchronization"
     def __init__(self,destination_path,file_format,**kwargs):
-        self.temp_dir = None
+        self.local_dir = None
         self.destination_path =  destination_path
         self.file_format = file_format
-        self.period = kwargs.pop('period',1)
         self.__create_local_folder__()
-        self.local_checkpoint_path = os.path.join(self.temp_dir if self.temp_dir is not None else self.destination_path,
-                                                 self.file_format)
-        self.checkpoint_callback = ModelCheckpoint(self.local_checkpoint_path,
-                                                     save_weights_only=False,
-                                                     verbose=1,
-                                                     period=1,
-                                                     **kwargs)
+        self.checkpoint_path = os.path.join(
+                                            self.local_dir if self.local_dir is not None else self.destination_path,
+                                            self.file_format
+                                            )
+        self.checkpoint_callback = ModelCheckpoint(self.checkpoint_path,
+                                                   **kwargs)
 
     def __create_local_folder__(self):
+        #only use local temp directory if destionation is s3
         if 's3://' in self.destination_path:
-            self.temp_dir = 'temporary_checkpoints/'
-            os.makedirs(self.temp_dir)
+            self.local_dir = 'temporary_checkpoints/'
+            os.makedirs(self.local_dir)
 
     def on_epoch_end(self,epoch,logs={}):
+        #can't move to init due to how self.model is assigned
         if epoch==0:
             self.checkpoint_callback.model = self.model
-        if (epoch+1)%self.period==0:
-            path_formatted = self.local_checkpoint_path.format(epoch=epoch+1,**logs)
-            os.makedirs(os.path.dirname(path_formatted),exist_ok=True)
-            self.checkpoint_callback.on_epoch_end(epoch,logs)
-            if self.temp_dir is not None:
-                current_files = os.listdir(self.temp_dir)
-                if current_files:
-                    for sub_file in current_files:
-                        command = 'aws s3 mv --recursive {} {}'.format(os.path.join(self.temp_dir,sub_file),
-                                                        os.path.join(self.destination_path,sub_file))
-                        subprocess.Popen(command.split(' '))
+
+        ckpt_path_formatted = self.checkpoint_path.format(epoch=epoch+1,**logs)
+        ckpt_path_directory= os.path.dirname(ckpt_path_formatted)
+        os.makedirs(ckpt_path_directory,exist_ok=True)
+        self.checkpoint_callback.on_epoch_end(epoch,logs)
+        if self.local_dir is not None:
+            checkpoint_created = len(os.listdir(ckpt_path_directory))
+            if checkpoint_created:
+                #move all of the contents of local directory to respect directory structure
+                files_or_dirs = os.listdir(self.local_dir)
+                for file_or_dir in files_or_dirs:
+                    command = 'aws s3 mv --recursive {} {}'.format(os.path.join(self.local_dir,file_or_dir),
+                                                                   os.path.join(self.destination_path,file_or_dir))
+                    subprocess.Popen(command.split(' '),stdout=subprocess.DEVNULL)
