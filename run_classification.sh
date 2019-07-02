@@ -28,7 +28,8 @@ echo $PY_CMD
 if [ "$RUN_ENV" == "local" ]; then
     $PY_CMD --run_env "local"
 elif [ "$RUN_ENV" == "aws" ]; then
-    pip install -r requirements.txt && $PY_CMD --run_env "aws"
+    pip install -r requirements.txt
+    $PY_CMD --run_env "aws" --config model_config_yield_level.json
 else
     echo "The job could not be started because there was no engine especified. \
     Please run with either of the follwing engines: --local , --aws"
