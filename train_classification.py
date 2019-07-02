@@ -6,8 +6,7 @@ from math import ceil
 from model.resnet import ResNet
 import albumentations as A
 from utilities.smart_checkpoint import SmartCheckpoint
-# import subprocess
-# import logging
+
 import json
 import argparse
 
@@ -19,7 +18,7 @@ parser.add_argument("--config", type=str, required=True)
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['S3_REQUEST_TIMEOUT_MSEC'] = '6000000'
-# tf.logging.set_verbosity(tf.logging.INFO)
+
 
 
 def create_new_run_dir(save_dir):
@@ -131,9 +130,7 @@ def start_experiment(config, args):
               callbacks=callbacks)
 
     model.save("output/model_final.h5")
-    # model_save_path = os.path.join(save_dir, "model_saved")
-    # upload_command = 'aws s3 cp --recursive {} {}'.format("output", model_save_path)
-    # subprocess.check_call(upload_command.split(' '))
+
 
 
 def main(args):
