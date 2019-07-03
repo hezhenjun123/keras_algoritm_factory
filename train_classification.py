@@ -1,28 +1,24 @@
 import os
 import data_generators.generator_classification as data
-# import data_generators.data_classification as data
 import tensorflow as tf
 import pandas as pd
 from math import ceil
 from model.resnet import ResNet
 import albumentations as A
 from utilities.smart_checkpoint import SmartCheckpoint
-import subprocess
-import logging
+
 import json
 import argparse
 
 
-logging.getLogger().setLevel(logging.INFO)
-MODULE_CONFIG_FILE = 'config/model_config.json'
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--run_env", type=str, required=True, choices=["aws", "local"])
+parser.add_argument("--config", type=str, required=True)
 
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['S3_REQUEST_TIMEOUT_MSEC'] = '6000000'
-tf.logging.set_verbosity(tf.logging.INFO)
+
 
 
 def create_new_run_dir(save_dir):
@@ -134,12 +130,13 @@ def start_experiment(config, args):
               callbacks=callbacks)
 
     model.save("output/model_final.h5")
-    model_save_path = os.path.join(save_dir, "model_saved")
-    upload_command = 'aws s3 cp --recursive {} {}'.format("output", model_save_path)
-    subprocess.check_call(upload_command.split(' '))
+
 
 
 def main(args):
+    MODULE_CONFIG_FILE = 'config/{}'.format(args.config)
+    if os.path.exists(MODULE_CONFIG_FILE) is False:
+        raise Exception("config file does not exist: {}".format(MODULE_CONFIG_FILE))
     with open(MODULE_CONFIG_FILE) as f:
         module_config_all = json.load(f)
     start_experiment(module_config_all, args)

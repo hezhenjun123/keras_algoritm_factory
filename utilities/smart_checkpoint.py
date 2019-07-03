@@ -2,6 +2,7 @@ import os
 from tensorflow.keras.callbacks import Callback, ModelCheckpoint
 import subprocess
 
+
 class SmartCheckpoint(Callback):
     r"Checkpoint class that automatically handles non existing paths and s3 synchronization"
     def __init__(self,destination_path,file_format,**kwargs):
@@ -13,8 +14,7 @@ class SmartCheckpoint(Callback):
                                             self.local_dir if self.local_dir is not None else self.destination_path,
                                             self.file_format
                                             )
-        self.checkpoint_callback = ModelCheckpoint(self.checkpoint_path,
-                                                   **kwargs)
+        self.checkpoint_callback = ModelCheckpoint(self.checkpoint_path, **kwargs)
 
     def __create_local_folder__(self):
         #only use local temp directory if destionation is s3
@@ -37,6 +37,8 @@ class SmartCheckpoint(Callback):
                 #move all of the contents of local directory to respect directory structure
                 files_or_dirs = os.listdir(self.local_dir)
                 for file_or_dir in files_or_dirs:
-                    command = 'aws s3 mv --recursive {} {}'.format(os.path.join(self.local_dir,file_or_dir),
+                    command = 'aws s3 mv --recursive --quiet --no-progress {} {}'.format(os.path.join(self.local_dir,file_or_dir),
                                                                    os.path.join(self.destination_path,file_or_dir))
-                    subprocess.Popen(command.split(' '),stdout=subprocess.DEVNULL)
+                    # subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL)
+                    with open(os.devnull, 'w') as devnull:
+                        subprocess.check_call(command.split(' '), shell=True, stdout=devnull, stderr=devnull)
