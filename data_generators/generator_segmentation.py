@@ -6,7 +6,7 @@ import numpy as np
 
 
 logging.getLogger().setLevel(logging.INFO)
-def dataset_from_dataframe(
+def dataset_from_dataframe( 
     df,
     output_shape,
     output_image_channels,
