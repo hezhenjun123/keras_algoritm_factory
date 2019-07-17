@@ -29,16 +29,18 @@ assert len(img_paths) == len(seg_label_paths), 'Something is not matching in len
 assert len(set([os.path.basename(x) for x in img_paths]) - set(
     [os.path.basename(x).replace('_segmap', '') for x in img_paths])) == 0, 'Names do not match up'
 
-names = [{0: 'OK', 1: 'DMG'}] * len(img_paths)
+label_name = [""]*len(img_paths)
+label = [""]*len(img_paths)
 
 splits = [give_split(name) for name in seg_label_paths]
-df = pd.DataFrame(list(zip(seg_label_paths, img_paths, names, splits)),
-                  columns=['seg_label_path', 'image_path', 'label_names', 'split'])
+
+df = pd.DataFrame(list(zip(img_paths, seg_label_paths, label_name, label, splits)),
+                  columns=['image_path', 'segmentation_path', 'label_name', 'label', 'split'])
 print(df.head())
 print("Length of the full dataframe is", len(df))
 print("Train/Validation split is\n", df['split'].value_counts())
 
 os.makedirs('data/', exist_ok=True)
 
-df.to_csv('data/train_segmentation.csv', index=False)
-print('Dataframe saved to data/train_segmentation.csv')
+df.to_csv('data/train_segmentation_new.csv',sep='\t', index=False)
+print('Dataframe saved to data/train_segmentation_new.csv')

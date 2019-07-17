@@ -1,9 +1,11 @@
 import os
 import tensorflow as tf
-from data_generators.generator_segmentation import dataset_from_dataframe
+from data_generators.generator_segmentation import create_dataset
 import numpy as np
+import copy
+import logging
 
-
+logging.getLogger().setLevel(logging.INFO)
 def create_run_dir(save_dir):
     """Creates a numbered directory named "run1". If directory "run1" already
     exists then creates directory "run2", and so on.
@@ -31,7 +33,7 @@ def create_run_dir(save_dir):
     return run_dir
 
 
-def get_plot_data(df, data_dir, crop_and_expand):
+def get_plot_data(df, crop_and_expand, config):
     """Reads the images and segmentation labels listed in `dataframe` and
     located in the root dir `data_dir`, and returns them as a list of tuples
     with images (`numpy.ndarray`), segmentation labels (`numpy.ndarray`) and
@@ -52,20 +54,16 @@ def get_plot_data(df, data_dir, crop_and_expand):
         (`numpy.ndarray`) and names (`str`) of the data listed in `df`.
     """
     plot_data = []
-    with tf.Graph().as_default(), tf.Session() as sess:
-        dataset = dataset_from_dataframe(
-            df=df,
-            output_shape=((None, None)),
-            output_image_channels=3,
-            output_image_type=tf.uint8,
-            data_dir=data_dir,
-            batch_size=1,
-            drop_remainder=False,
-            transforms=None,
-            cache_dir=None,
-            for_keras_fit=False,
-        )
+    config_now = copy.deepcopy(config)
+    config_now["BATCH_SIZE"] = 1
+    config_now["DATA_GENERATOR"]["OUTPUT_SHAPE"] = ["None", "None"]
+    config_now["DATA_GENERATOR"]["OUTPUT_IMAGE_TYPE"] = "uint8"
+    config_now["DATA_GENERATOR"]["REPEAT"] = "False"
 
+
+    with tf.Graph().as_default(), tf.Session() as sess:
+
+        dataset = create_dataset(df=df, config=config_now, transforms=None)
         iterator = dataset.make_one_shot_iterator()
         features = iterator.get_next()
         while True:
@@ -79,9 +77,12 @@ def get_plot_data(df, data_dir, crop_and_expand):
                         rnd_y:(rnd_y + crop_and_expand.resize[1])],
                         feat["segmentation_labels"][:, rnd_x:(rnd_x + crop_and_expand.resize[0]),
                         rnd_y:(rnd_y + crop_and_expand.resize[1])],
-                        feat["name"][0].decode(),
+                        "",
                     )
                 )
             except tf.errors.OutOfRangeError:
                 break
+    logging.info("================plot data==============")
+    logging.info(plot_data[-1][0].shape)
+    # logging.info(plot_data[-1][0])
     return plot_data

@@ -1,24 +1,26 @@
 import os
-import data_generators.generator_classification as data
 import tensorflow as tf
 import pandas as pd
 from math import ceil
-from model.resnet import ResNet
-import albumentations as A
-from utilities.smart_checkpoint import SmartCheckpoint
-
 import json
 import argparse
+import logging
+
+
+from utilities.smart_checkpoint import SmartCheckpoint
+from data_generators.generator_classification import create_dataset
+from data_generators.transforms import TransformSimpleClassiication
+from model.resnet import ResNet
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--run_env", type=str, required=True, choices=["aws", "local"])
 parser.add_argument("--config", type=str, required=True)
+logging.getLogger().setLevel(logging.INFO)
 
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['S3_REQUEST_TIMEOUT_MSEC'] = '6000000'
-
 
 
 def create_new_run_dir(save_dir):
@@ -29,9 +31,9 @@ def create_new_run_dir(save_dir):
         i += 1
     run_dir = os.path.join(save_dir, f"run{i}")
     tf.gfile.MakeDirs(run_dir)
-    print("#" * 40)
-    print(f"Saving summaries on {run_dir}")
-    print("#" * 40)
+    logging.info("#" * 40)
+    logging.info(f"Saving summaries on {run_dir}")
+    logging.info("#" * 40)
     return run_dir
 
 
@@ -49,52 +51,23 @@ def start_experiment(config, args):
     resize = config["RESIZE"]
     if args.run_env == "aws":
         save_dir = config["AWS_PARA"]["DIR_OUT"]
-        data_dir = config["AWS_PARA"]["DATA_DIR"]
     elif args.run_env == "local":
         save_dir = create_new_run_dir(config["LOCAL_PARA"]["DIR_OUT"])
-        data_dir = config["LOCAL_PARA"]["DATA_DIR"]
-
     else:
         raise Exception("Incorrect RUN_ENV: {}".format(config["RUN_ENV"]))
 
 
-    train_transforms = A.Compose([A.RandomCrop(388, 388), A.Resize(resize[0], resize[1])])
-    valid_transforms = A.Compose([A.RandomCrop(388, 388), A.Resize(resize[0], resize[1])])
-    # train_transforms = None
-    # valid_transforms = None
-    data_csv = pd.read_parquet(data_csv).fillna("")
-    print(data_csv.head())
-    print("#" * 15 + "Reading training data" + "#" * 15)
+    train_transforms = TransformSimpleClassiication(config)
+    valid_transforms = TransformSimpleClassiication(config)
+    data_csv = pd.read_csv(data_csv, sep='\t').fillna("")
+    logging.info(data_csv.head())
+    logging.info("#" * 15 + "Reading training data" + "#" * 15)
     data_train = data_csv[data_csv["split"] == "train"].sample(frac=1)
-
-    train_dataset = data.create_dataset(
-        source=data_train,
-        output_shape=(None, None),
-        output_image_channels=3,
-        output_image_type=tf.uint8,
-        data_dir=data_dir,
-        batch_size=batch_size,
-        drop_remainder=False,
-        transforms=train_transforms,
-        training=True,
-        cache_data=True,
-        num_parallel_calls=4)
-
-    print("#" * 15 + "Reading valid data" + "#" * 15)
+    train_dataset = create_dataset(df=data_train, config=config, transforms=train_transforms)
+    logging.info("#" * 15 + "Reading valid data" + "#" * 15)
     data_valid = data_csv[data_csv["split"] == "valid"].sample(frac=1)
 
-    valid_dataset = data.create_dataset(
-        source=data_valid,
-        output_shape=(None, None),
-        output_image_channels=3,
-        output_image_type=tf.uint8,
-        data_dir=data_dir,
-        batch_size=batch_size,
-        drop_remainder=False,
-        transforms=valid_transforms,
-        training=False,
-        cache_data=True,
-        num_parallel_calls=1)
+    valid_dataset = create_dataset(df=data_train, config=config, transforms=valid_transforms)
 
     model = ResNet(input_shape=(*resize, 3),
                    pretrained=pretrained,
@@ -128,8 +101,6 @@ def start_experiment(config, args):
               validation_steps=valid_steps,
               verbose=2,
               callbacks=callbacks)
-
-    model.save("output/model_final.h5")
 
 
 

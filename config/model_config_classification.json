@@ -1,14 +1,15 @@
 {
-  "BATCH_SIZE" : 4,
-  "DATA_CSV" : "data/train_segmentation_new.csv",
-  "LEARNING_RATE" : 0.0001,
+  "BATCH_SIZE" : 16,
+  "DATA_CSV" : "data/train_vibration0606.csv",
+  "LEARNING_RATE" : 0.00001,
   "EPOCHS" : 700,
   "STEPS_PER_EPOCH" : -1,
-  "DROPOUT" : 0,
-  "NUM_CLASSES" : 2,
-  "CHANNEL_LIST" : [32,64,128,256],
+  "PRETRAINED" : "True",
+  "DROPOUT" : 0.25,
+  "NUM_CLASSES" : 3,
+  "CHANNEL_LIST" : [512, 256, 128],
   "ACTIVATION" : "relu",
-  "NUM_PLOTS" : 5,
+  "RESIZE" : [300, 300],
   "LOCAL_PARA" : {
     "DIR_OUT" : "./out"
   },
@@ -16,16 +17,17 @@
     "DIR_OUT" : "/workspace/output/"
   },
   "DATA_GENERATOR" : {
-    "OUTPUT_SHAPE" : ["2048", "2592"],
+    "OUTPUT_SHAPE" : ["None", "None"],
     "OUTPUT_IMAGE_CHANNELS" : 3,
     "OUTPUT_IMAGE_TYPE" : "uint8",
-    "DATA_DIR" : ".",
+    "DATA_DIR" : "s3://zoomlion-sample/archive/wheat-vibration-0606/",
     "DROP_REMAINDER" : "False",
     "CACHE_DIR" : "cache",
     "NUM_PARALLEL_CALLS" : 4,
     "REPEAT": "True"
   },
   "TRANSFORM" : {
-    "RESIZE" : [512, 512]
+    "RESIZE" : [300, 300],
+    "RANDOMCROP" : [388, 388]
   }
 }

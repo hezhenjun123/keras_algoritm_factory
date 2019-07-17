@@ -5,6 +5,8 @@ import numpy as np
 from scipy.special import expit as sigmoid
 import tensorflow as tf
 from PIL import Image
+import logging
+logging.getLogger().setLevel(logging.INFO)
 
 
 class ImageSummary(tf.keras.callbacks.Callback):
@@ -98,11 +100,8 @@ class ImageSummary(tf.keras.callbacks.Callback):
                 )
             image = image[0, ...]
             label = label[0]
-            if transforms is not None:
-                tr_image = transforms(image=image)
-                tr_image = tr_image['image']
-            else:
-                tr_image = image
+
+            tr_image = image
             label = label[:,:,0]
             tr_image = np.expand_dims(tr_image, axis=0)
             self.data.append((image, tr_image, label, name))
@@ -177,4 +176,9 @@ class ImageSummary(tf.keras.callbacks.Callback):
                 )
             )
         summary = tf.Summary(value=summary_values)
+        logging.info("=====summary=======")
+        logging.info(self.tensorboard_callback.writer)
+        logging.info(dir(self.tensorboard_callback.writer))
+        logging.info(self.tensorboard_callback)
+        logging.info(dir(self.tensorboard_callback))
         self.tensorboard_callback.writer.add_summary(summary, epoch)

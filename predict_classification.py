@@ -3,10 +3,12 @@ import tensorflow as tf
 import numpy as np
 import logging
 
+
 logging.getLogger().setLevel(logging.INFO)
 import cv2
 import albumentations as A
 import glob
+
 
 # model_path = "run_025/checkpoints/epoch_0240/cp.ckpt"
 # model_path = "model_vibration/run_006/checkpoints/epoch_0050/cp.ckpt"
@@ -16,6 +18,7 @@ model_path = "model_vibration/run_008/checkpoints/epoch_0010/cp.ckpt"
 image_files = ["chaff-test-set/cam1/low/*.png",
                "chaff-test-set/cam1/medium/*.png",
                "chaff-test-set/cam1/high/*.png"]
+
 
 model = tf.keras.models.load_model(model_path)
 model.summary()

@@ -1,6 +1,8 @@
 import tensorflow as tf
+import logging
 
 
+logging.getLogger().setLevel(logging.INFO)
 class CropPatches(tf.keras.layers.Layer):
     r"""Crop the input image and label into batch of patches"""
     def __init__(self, resize, boxes):
@@ -100,13 +102,8 @@ class CropAndExpand(tf.keras.layers.Layer):
         """
         image = row["image"]
         label = row["segmentation_labels"]
-        name = row["name"]
-        defects = row["defects"]
         cropped_images, cropped_labels = self.crop_patches(image, label)
         row["image"] = cropped_images
         row["segmentation_labels"] = cropped_labels
-        names = tf.tile([name], [self.n])
-        ids = tf.as_string(tf.range(self.n))
-        row["name"] = tf.strings.join([names, ids], separator='_')
-        row["defects"] = tf.tile([defects], [self.n])
+
         return row
