@@ -26,7 +26,6 @@ tf.logging.set_verbosity(tf.logging.INFO)
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-# tf.enable_eager_execution()
 parser = argparse.ArgumentParser()
 parser.add_argument("--run_env", type=str, required=True, choices=["aws", "local"])
 parser.add_argument("--config", type=str, required=True)

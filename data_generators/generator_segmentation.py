@@ -107,7 +107,10 @@ def get_transform_map(transforms, output_shape, output_image_channels, output_im
             seg_label = augmented["mask"]
         if transforms.transform["SegMapTransform"] is not None:
             seg_label = transforms.transform["SegMapTransform"](mask=seg_label)["mask"]
-        return [tf.cast(image, output_image_type), tf.cast(seg_label, tf.uint8)]
+
+        image = image.astype(output_image_type.name)
+        seg_label = seg_label.astype(np.uint8)
+        return [image, seg_label]
 
 
     def transform_map(row):
