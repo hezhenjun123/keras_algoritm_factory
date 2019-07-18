@@ -3,9 +3,8 @@ import tensorflow as tf
 from data_generators.generator_segmentation import create_dataset
 import numpy as np
 import copy
-import logging
 
-logging.getLogger().setLevel(logging.INFO)
+
 def create_run_dir(save_dir):
     """Creates a numbered directory named "run1". If directory "run1" already
     exists then creates directory "run2", and so on.
@@ -82,7 +81,4 @@ def get_plot_data(df, crop_and_expand, config):
                 )
             except tf.errors.OutOfRangeError:
                 break
-    logging.info("================plot data==============")
-    logging.info(plot_data[-1][0].shape)
-    # logging.info(plot_data[-1][0])
     return plot_data

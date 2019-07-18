@@ -1,8 +1,6 @@
 import tensorflow as tf
-import logging
 
 
-logging.getLogger().setLevel(logging.INFO)
 class CropPatches(tf.keras.layers.Layer):
     r"""Crop the input image and label into batch of patches"""
     def __init__(self, resize, boxes):

@@ -1,9 +1,7 @@
 import albumentations as A
 import numpy as np
-import logging
 
 
-logging.getLogger().setLevel(logging.INFO)
 class TransformBase:
     def __init__(self, config):
         self.transform = {"ImageTransform": None,
