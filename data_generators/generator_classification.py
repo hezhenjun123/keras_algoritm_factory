@@ -10,14 +10,14 @@ from data_generators.generator_util import cache_file
 logging.getLogger().setLevel(logging.INFO)
 def create_dataset(df, config, transforms):
     output_shape = config["DATA_GENERATOR"]["OUTPUT_SHAPE"]
-    output_shape = (eval(output_shape[0]), eval(output_shape[1]))
+    output_shape = (output_shape[0], output_shape[1])
     output_image_channels = config["DATA_GENERATOR"]["OUTPUT_IMAGE_CHANNELS"]
     output_image_type = tf.dtypes.as_dtype(np.dtype(config["DATA_GENERATOR"]["OUTPUT_IMAGE_TYPE"]))
     data_dir = config["DATA_GENERATOR"]["DATA_DIR"]
     batch_size = config["BATCH_SIZE"]
-    drop_remainder = eval(config["DATA_GENERATOR"]["DROP_REMAINDER"])
+    drop_remainder = config["DATA_GENERATOR"]["DROP_REMAINDER"]
     cache_dir = config["DATA_GENERATOR"]["CACHE_DIR"]
-    repeat = eval(config["DATA_GENERATOR"]["REPEAT"])
+    repeat = config["DATA_GENERATOR"]["REPEAT"]
     num_parallel_calls = config["DATA_GENERATOR"]["NUM_PARALLEL_CALLS"]
     n_classes = config["NUM_CLASSES"]
 
@@ -27,10 +27,10 @@ def create_dataset(df, config, transforms):
     df = df.copy()
     df['image_path'] = df['image_path'].apply(get_join_root_dir_map(data_dir))
     df["label_name"] = df["label_name"].apply(str)
-    df["label"] = df["label"].apply(multi_hot_encode, args=(n_classes,))
+    df["image_level_label"] = df["image_level_label"].apply(multi_hot_encode, args=(n_classes,))
     dataset = tf.data.Dataset.from_tensor_slices(
         dict(image_path=df.image_path.values,
-             label=np.array(list(df['label'].values))))
+             image_level_label=np.array(list(df['image_level_label'].values))))
     dataset = dataset.map(load_data, num_parallel_calls=num_parallel_calls)
     dataset = dataset.cache(cache_file(cache_dir))
     if repeat is True:
@@ -43,7 +43,7 @@ def create_dataset(df, config, transforms):
         logging.info(dataset)
 
 
-    dataset = dataset.map(lambda row: ([row["image"], row['label']]))
+    dataset = dataset.map(lambda row: ([row["image"], row['image_level_label']]))
     dataset = dataset.batch(batch_size, drop_remainder=drop_remainder)
     dataset = dataset.prefetch(4)
     return dataset
@@ -68,8 +68,8 @@ def get_transform_map(transforms, output_shape, output_image_channels, output_im
 def load_data(row):
     image_path = row["image_path"]
     image = load_image(image_path)
-    label = row["label"]
-    new_row = dict(image=image, label=label)
+    label = row["image_level_label"]
+    new_row = dict(image=image, image_level_label=label)
     return new_row
 
 

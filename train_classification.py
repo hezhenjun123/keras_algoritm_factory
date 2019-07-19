@@ -9,7 +9,7 @@ import logging
 
 from utilities.smart_checkpoint import SmartCheckpoint
 from data_generators.generator_classification import create_dataset
-from data_generators.transforms import TransformSimpleClassiication
+from data_generators.transforms import TransformSimpleClassification
 from model.resnet import ResNet
 
 
@@ -57,8 +57,8 @@ def start_experiment(config, args):
         raise Exception("Incorrect RUN_ENV: {}".format(config["RUN_ENV"]))
 
 
-    train_transforms = TransformSimpleClassiication(config)
-    valid_transforms = TransformSimpleClassiication(config)
+    train_transforms = TransformSimpleClassification(config)
+    valid_transforms = TransformSimpleClassification(config)
     data_csv = pd.read_csv(data_csv, sep='\t').fillna("")
     logging.info(data_csv.head())
     logging.info("#" * 15 + "Reading training data" + "#" * 15)

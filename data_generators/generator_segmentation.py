@@ -51,14 +51,14 @@ def create_dataset(df, config, transforms=None):
     """
 
     output_shape = config["DATA_GENERATOR"]["OUTPUT_SHAPE"]
-    output_shape = (eval(output_shape[0]), eval(output_shape[1]))
+    output_shape = (output_shape[0], output_shape[1])
     output_image_channels = config["DATA_GENERATOR"]["OUTPUT_IMAGE_CHANNELS"]
     output_image_type = tf.dtypes.as_dtype(np.dtype(config["DATA_GENERATOR"]["OUTPUT_IMAGE_TYPE"]))
     data_dir = config["DATA_GENERATOR"]["DATA_DIR"]
     batch_size = config["BATCH_SIZE"]
-    drop_remainder = eval(config["DATA_GENERATOR"]["DROP_REMAINDER"])
+    drop_remainder = config["DATA_GENERATOR"]["DROP_REMAINDER"]
     cache_dir = config["DATA_GENERATOR"]["CACHE_DIR"]
-    repeat = eval(config["DATA_GENERATOR"]["REPEAT"])
+    repeat = config["DATA_GENERATOR"]["REPEAT"]
     num_parallel_calls = config["DATA_GENERATOR"]["NUM_PARALLEL_CALLS"]
 
 

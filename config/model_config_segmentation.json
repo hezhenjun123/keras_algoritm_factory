@@ -16,14 +16,14 @@
     "DIR_OUT" : "/workspace/output/"
   },
   "DATA_GENERATOR" : {
-    "OUTPUT_SHAPE" : ["2048", "2592"],
+    "OUTPUT_SHAPE" : [2048, 2592],
     "OUTPUT_IMAGE_CHANNELS" : 3,
     "OUTPUT_IMAGE_TYPE" : "float32",
     "DATA_DIR" : "s3://zoomlion-sample/",
-    "DROP_REMAINDER" : "False",
+    "DROP_REMAINDER" : false,
     "CACHE_DIR" : "cache",
     "NUM_PARALLEL_CALLS" : 4,
-    "REPEAT": "True"
+    "REPEAT": true
   },
   "TRANSFORM" : {
     "RESIZE" : [512, 512]

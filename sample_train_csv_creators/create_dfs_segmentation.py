@@ -35,7 +35,7 @@ label = [""]*len(img_paths)
 splits = [give_split(name) for name in seg_label_paths]
 
 df = pd.DataFrame(list(zip(img_paths, seg_label_paths, label_name, label, splits)),
-                  columns=['image_path', 'segmentation_path', 'label_name', 'label', 'split'])
+                  columns=['image_path', 'segmentation_path', 'label_name', 'image_level_label', 'split'])
 print(df.head())
 print("Length of the full dataframe is", len(df))
 print("Train/Validation split is\n", df['split'].value_counts())

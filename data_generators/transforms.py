@@ -10,7 +10,7 @@ class TransformBase:
         self.config = config
 
 
-class TransformSimpleClassiication(TransformBase):
+class TransformSimpleClassification(TransformBase):
     def __init__(self, config):
         super().__init__(config)
         random_crop_size = self.config["TRANSFORM"]["RANDOMCROP"]

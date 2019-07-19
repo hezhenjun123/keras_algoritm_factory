@@ -15,7 +15,7 @@ csv_path = "data/train_vibration0606.csv"
 
 if os.path.exists(csv_path) is True: raise Exception("training csv file exists")
 images = []
-schema = "image_path\tsegmentation_path\tlabel_name\tlabel\tsplit"
+schema = "image_path\tsegmentation_path\tlabel_name\timage_level_label\tsplit"
 for split, split_folder in train_valid_split.items():
     for label_name, label in class_labels.items():
         s3_prefix = f"{base_path}/{split_folder}/{label_name}"
