@@ -21,7 +21,7 @@ from data_generators.generator_segmentation import create_dataset
 from data_generators.transforms import TransformUVSegmentation
 
 
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "1"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 tf.logging.set_verbosity(tf.logging.INFO)
 logging.getLogger().setLevel(logging.DEBUG)
 

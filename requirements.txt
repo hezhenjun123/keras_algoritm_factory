@@ -16,7 +16,7 @@ fire
 cytoolz
 packaging
 requests
-tensorflow==1.13.1
+tensorflow-gpu==1.13.1
 tensorflow-serving-api-gpu
 pyarrow>=0.13.0
 albumentations>=0.3.0
