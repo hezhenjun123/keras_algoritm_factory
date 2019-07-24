@@ -1,35 +1,11 @@
 import os
 import tensorflow as tf
-from data_generators.generator_segmentation import create_dataset
 import numpy as np
 import copy
+import logging
+from data_generators.generator_segmentation_vanilla import GeneratorSegmentationVanilla
 
-
-def create_run_dir(save_dir):
-    """Creates a numbered directory named "run1". If directory "run1" already
-    exists then creates directory "run2", and so on.
-
-    Parameters
-    ----------
-    save_dir : str
-        The root directory where to create the "run{number}" folder.
-
-    Returns
-    -------
-    str
-        The full path of the newly created "run{number}" folder.
-    """
-    tf.gfile.MakeDirs(save_dir)
-    list_of_files = tf.gfile.ListDirectory(save_dir)
-    i = 1
-    while f"run{i}" in list_of_files:
-        i += 1
-    run_dir = os.path.join(save_dir, f"run{i}")
-    tf.gfile.MakeDirs(run_dir)
-    print("#" * 40)
-    print(f"Saving summaries on {run_dir}")
-    print("#" * 40)
-    return run_dir
+logging.getLogger().setLevel(logging.INFO)
 
 
 def get_plot_data(df, crop_and_expand, config):
@@ -57,12 +33,11 @@ def get_plot_data(df, crop_and_expand, config):
     config_now["BATCH_SIZE"] = 1
     config_now["DATA_GENERATOR"]["OUTPUT_SHAPE"] = ["None", "None"]
     config_now["DATA_GENERATOR"]["OUTPUT_IMAGE_TYPE"] = "uint8"
-    config_now["DATA_GENERATOR"]["REPEAT"] = "False"
-
+    config_now["DATA_GENERATOR"]["REPEAT"] = False
 
     with tf.Graph().as_default(), tf.Session() as sess:
-
-        dataset = create_dataset(df=df, config=config_now, transforms=None)
+        segmentation_generator = GeneratorSegmentationVanilla(config_now)
+        dataset = segmentation_generator.create_dataset_for_plot(df=df)
         iterator = dataset.make_one_shot_iterator()
         features = iterator.get_next()
         while True:
@@ -70,15 +45,16 @@ def get_plot_data(df, crop_and_expand, config):
                 feat = sess.run(features)
                 rnd_x = np.random.randint(0, 1536)
                 rnd_y = np.random.randint(0, 2080)
-                plot_data.append(
-                    (
-                        feat["image"][:, rnd_x:(rnd_x + crop_and_expand.resize[0]),
-                        rnd_y:(rnd_y + crop_and_expand.resize[1])],
-                        feat["segmentation_labels"][:, rnd_x:(rnd_x + crop_and_expand.resize[0]),
-                        rnd_y:(rnd_y + crop_and_expand.resize[1])],
-                        "",
-                    )
-                )
+                plot_data.append((
+                    feat["image"][:, rnd_x:(rnd_x +
+                                            crop_and_expand.resize[0]), rnd_y:(
+                                                rnd_y +
+                                                crop_and_expand.resize[1])],
+                    feat["segmentation_labels"][:, rnd_x:(
+                        rnd_x + crop_and_expand.resize[0]), rnd_y:(
+                            rnd_y + crop_and_expand.resize[1])],
+                    "",
+                ))
             except tf.errors.OutOfRangeError:
                 break
     return plot_data

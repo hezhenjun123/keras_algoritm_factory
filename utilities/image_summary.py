@@ -11,16 +11,15 @@ logging.getLogger().setLevel(logging.INFO)
 
 class ImageSummary(tf.keras.callbacks.Callback):
     """Callback that adds iamge summaries to an existing tensorboard calback."""
-
     def __init__(
-        self,
-        tensorboard_callback,
-        data,
-        update_freq=10,
-        transforms=None,
-        from_logits=False,
-        cmap="viridis",
-        **kwargs,
+            self,
+            tensorboard_callback,
+            data,
+            update_freq=10,
+            transforms=[None, None, None],
+            from_logits=False,
+            cmap="viridis",
+            **kwargs,
     ):
         """Initializes the callback.
 
@@ -55,8 +54,8 @@ class ImageSummary(tf.keras.callbacks.Callback):
         self.update_freq = update_freq
         if isinstance(cmap, str):
             self.colormap = (
-                matplotlib.cm.get_cmap(cmap)(np.arange(256))[:, :3] * 255
-            ).astype(np.uint8)
+                matplotlib.cm.get_cmap(cmap)(np.arange(256))[:, :3] *
+                255).astype(np.uint8)
         else:
             self.colormap = cmap
         self._apply_transforms(data, transforms)
@@ -92,8 +91,7 @@ class ImageSummary(tf.keras.callbacks.Callback):
             if image.shape[:3] != label.shape[:3]:
                 raise ValueError(
                     f"({i}-th elem) image and label should have the same size (first 3 dims). Got "
-                    f"{image.shape} and {label.shape}."
-                )
+                    f"{image.shape} and {label.shape}.")
             if image.dtype != np.uint8:
                 raise ValueError(
                     f"({i}-th elem) expected uint8 image, dtype is {image.dtype}."
@@ -102,7 +100,7 @@ class ImageSummary(tf.keras.callbacks.Callback):
             label = label[0]
 
             tr_image = image
-            label = label[:,:,0]
+            label = label[:, :, 0]
             tr_image = np.expand_dims(tr_image, axis=0)
             self.data.append((image, tr_image, label, name))
 
@@ -126,9 +124,8 @@ class ImageSummary(tf.keras.callbacks.Callback):
     def _colorize(self, indices):
         """Converts an matrix consisting of numbers in the range [0...1] to a color
         image for easier visualiations."""
-        assert (
-            indices.ndim == 2
-        ), f"expected matrix, got {indices.ndim}-dim array"
+        assert (indices.ndim == 2
+                ), f"expected matrix, got {indices.ndim}-dim array"
         indices = np.round(indices).astype(int)
         return self.colormap[indices]
 
@@ -149,9 +146,9 @@ class ImageSummary(tf.keras.callbacks.Callback):
         summary_values = []
         for image, tr_image, label, name in self.data:
             height, width, _ = image.shape
-            separator = np.full(
-                fill_value=255, shape=(height, 5, 3), dtype=np.uint8
-            )
+            separator = np.full(fill_value=255,
+                                shape=(height, 5, 3),
+                                dtype=np.uint8)
             pred = self.model.predict(tr_image)[0, ...]
             if pred.shape[:2] != image[:2]:
                 pred = cv2.resize(pred, (width, height))
@@ -173,7 +170,6 @@ class ImageSummary(tf.keras.callbacks.Callback):
                 tf.Summary.Value(
                     tag=f"Image_Pred_Label/{name}",
                     image=self._make_image(to_show),
-                )
-            )
+                ))
         summary = tf.Summary(value=summary_values)
         self.tensorboard_callback.writer.add_summary(summary, epoch)

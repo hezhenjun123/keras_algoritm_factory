@@ -4,7 +4,6 @@ import tensorflow as tf
 class LayerNormalization(tf.keras.layers.Layer):
     """Normalize a layer's activation through the channels. From 'Layer Normalization'
     (Lei Ba et al). https://arxiv.org/abs/1607.06450."""
-
     def __init__(self, eps=1e-6, **kwargs):
         """Initializes the layer.
 
@@ -18,12 +17,14 @@ class LayerNormalization(tf.keras.layers.Layer):
 
     def build(self, input_shape):
         channels = int(input_shape[-1])
-        self.gamma = self.add_weight(
-            name="gamma", shape=(1, 1, 1, channels), initializer="ones", trainable=True
-        )
-        self.beta = self.add_weight(
-            name="beta", shape=(1, 1, 1, channels), initializer="zeros", trainable=True
-        )
+        self.gamma = self.add_weight(name="gamma",
+                                     shape=(1, 1, 1, channels),
+                                     initializer="ones",
+                                     trainable=True)
+        self.beta = self.add_weight(name="beta",
+                                    shape=(1, 1, 1, channels),
+                                    initializer="zeros",
+                                    trainable=True)
 
     def call(self, x):
         mean, var = tf.nn.moments(x, axes=-1, keep_dims=True)
@@ -34,12 +35,11 @@ class LayerNormalization(tf.keras.layers.Layer):
         return input_shape
 
     def get_config(self):
-        return {'eps':self.eps}
+        return {'eps': self.eps}
 
 
 class ResizeBilinear(tf.keras.layers.Layer):
     """Layer to resize images using bilinear interpolation."""
-
     def __init__(self, factor=None, target_shape=None, **kwargs):
         """Initializes the resize layer. You should only provide one of factor or
         target_shape.
@@ -56,13 +56,15 @@ class ResizeBilinear(tf.keras.layers.Layer):
         if (factor is None) and (target_shape is None):
             raise ValueError("Please provide either factor or target_shape.")
         if (factor is not None) and (target_shape is not None):
-            raise ValueError("Please provide only one of factor or target_shape.")
+            raise ValueError(
+                "Please provide only one of factor or target_shape.")
         self.factor = factor
         self.target_shape = target_shape
 
     def build(self, input_shape):
         if len(input_shape) != 4:
-            raise ValueError(f"expected image input (4 dims), got {len(input_shape)}.")
+            raise ValueError(
+                f"expected image input (4 dims), got {len(input_shape)}.")
         height, width = map(int, input_shape[1:3])
         if self.factor is not None:
             self.target_shape = (
@@ -71,29 +73,22 @@ class ResizeBilinear(tf.keras.layers.Layer):
             )
 
     def call(self, inputs):
-        return tf.image.resize_bilinear(
-            inputs, size=self.target_shape, align_corners=True
-        )
+        return tf.image.resize_bilinear(inputs,
+                                        size=self.target_shape,
+                                        align_corners=True)
 
     def compute_output_shape(self, input_shape):
         if self.factor is not None:
-            height = (
-                None
-                if input_shape[1] is None
-                else int(round(self.factor * input_shape[1]))
-            )
-            width = (
-                None
-                if input_shape[2] is None
-                else int(round(self.factor * input_shape[2]))
-            )
+            height = (None if input_shape[1] is None else int(
+                round(self.factor * input_shape[1])))
+            width = (None if input_shape[2] is None else int(
+                round(self.factor * input_shape[2])))
         else:
             height, width = self.target_shape
         return [input_shape[0], height, width, input_shape[3]]
 
     def get_config(self):
-        return {'factor':self.factor,
-                'target_shape':self.target_shape}
+        return {'factor': self.factor, 'target_shape': self.target_shape}
 
 
 def UNet(
@@ -169,7 +164,8 @@ def UNet(
         ConvBlock = conv_block
 
     assert len(input_shape) == 3, "expected image input (3 dims)"
-    assert len(channel_list) > 0, "expected at least one channel in channel_list"
+    assert len(
+        channel_list) > 0, "expected at least one channel in channel_list"
     assert num_classes >= 2, "expected 2 or more classes"
 
     inputs = tf.keras.layers.Input(shape=input_shape, name=input_name)
@@ -269,10 +265,10 @@ def DefaultConvBlock(
     net_layers = []
     for _ in range(2):
         net_layers.append(
-            tf.keras.layers.Conv2D(
-                filters=channels, kernel_size=(3, 3), padding="same", use_bias=False
-            )
-        )
+            tf.keras.layers.Conv2D(filters=channels,
+                                   kernel_size=(3, 3),
+                                   padding="same",
+                                   use_bias=False))
         if Norm is not None:
             net_layers.append(Norm())
         net_layers.append(tf.keras.layers.Activation(activation))
