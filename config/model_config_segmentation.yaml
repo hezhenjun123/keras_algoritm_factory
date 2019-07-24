@@ -1,4 +1,4 @@
-RUN_ENV: aws #{aws, local}
+RUN_ENV: local #{aws, local}
 BATCH_SIZE: 4
 DATA_CSV: data/train_segmentation_new.csv
 LEARNING_RATE: 0.0001
@@ -41,8 +41,8 @@ TRAINING_DATA_CSV_SCHEMA:
 
 EXPERIMENT:
   EXPERIMENT_NAME: ExperimentSegmentation
-  MODEL_NAME: ModelUnetSegmentation
+  MODEL_NAME: ModelUnetSegmentationUV
   TRAIN_TRANSFORM: TransformUVSegmentation
-  VALID_TRANSFORM: TransformUVSegmentation
-  TRAIN_GENERATOR: GeneratorSegmentationVanilla
-  VALID_GENERATOR: GeneratorSegmentationVanilla
+  TRAIN_GENERATOR: GeneratorSegmentationUV
+  VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
+  VALID_GENERATOR: # If empty, use TRAIN_GENERATOR

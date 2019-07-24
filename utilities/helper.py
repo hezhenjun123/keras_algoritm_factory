@@ -1,9 +1,8 @@
-import os
 import tensorflow as tf
 import numpy as np
 import copy
 import logging
-from data_generators.generator_segmentation_vanilla import GeneratorSegmentationVanilla
+from data_generators.generator_segmentation_uv import GeneratorSegmentationUV
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -36,7 +35,7 @@ def get_plot_data(df, crop_and_expand, config):
     config_now["DATA_GENERATOR"]["REPEAT"] = False
 
     with tf.Graph().as_default(), tf.Session() as sess:
-        segmentation_generator = GeneratorSegmentationVanilla(config_now)
+        segmentation_generator = GeneratorSegmentationUV(config_now)
         dataset = segmentation_generator.create_dataset_for_plot(df=df)
         iterator = dataset.make_one_shot_iterator()
         features = iterator.get_next()

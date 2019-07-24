@@ -1,4 +1,4 @@
-RUN_ENV: aws #{aws, local}
+RUN_ENV: local #{aws, local}
 BATCH_SIZE: 16
 DATA_CSV: data/train_vibration0606.csv
 LEARNING_RATE: 0.00001
@@ -46,6 +46,6 @@ EXPERIMENT:
   EXPERIMENT_NAME: ExperimentClassification
   MODEL_NAME: ModelResnetClassification
   TRAIN_TRANSFORM: TransformSimpleClassification
-  VALID_TRANSFORM: TransformSimpleClassification
   TRAIN_GENERATOR: GeneratorClassificationVanilla
-  VALID_GENERATOR: GeneratorClassificationVanilla
+  VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
+  VALID_GENERATOR: # If empty, use TRAIN_GENERATOR

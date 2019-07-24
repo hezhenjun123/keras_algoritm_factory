@@ -14,6 +14,3 @@ class TransformUVSegmentation(TransformBase):
         mask = mask[:, :, [2]]
         mask = (mask > 255 * 0.66).astype(np.uint8)
         return {"mask": mask}
-
-    def apply_transforms(self, image, segmentation_labels):
-        return super().apply_transforms(image, segmentation_labels)

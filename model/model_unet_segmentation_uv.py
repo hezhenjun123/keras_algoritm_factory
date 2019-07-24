@@ -16,7 +16,7 @@ from utilities.helper import get_plot_data
 logging.getLogger().setLevel(logging.INFO)
 
 
-class ModelUnetSegmentation(ModelBase):
+class ModelUnetSegmentationUV(ModelBase):
     def __init__(self, config):
         super().__init__(config)
         self.num_plots = config["NUM_PLOTS"]

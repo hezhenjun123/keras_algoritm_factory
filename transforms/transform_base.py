@@ -24,3 +24,12 @@ class TransformBase:
         image = image
         seg_label = seg_label
         return [image, seg_label]
+
+    def has_transform(self):
+        if self.transform is not None and \
+                (self.transform[0] is not None or
+                 self.transform[1] is not None or
+                 self.transform[2] is not None):
+            return True
+        else:
+            return False

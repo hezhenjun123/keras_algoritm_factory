@@ -12,6 +12,3 @@ class TransformSimpleClassification(TransformBase):
             A.Resize(resize[0], resize[1])
         ])
         self.transform[0] = tfunc
-
-    def apply_transforms(self, image, segmentation_labels):
-        return super().apply_transforms(image, segmentation_labels)
