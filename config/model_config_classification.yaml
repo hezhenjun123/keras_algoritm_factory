@@ -41,7 +41,6 @@ TRAINING_DATA_CSV_SCHEMA:
   SPLIT_TRAIN_VAL: train
   SPLIT_VALID_VAL: valid
 
-
 EXPERIMENT:
   EXPERIMENT_NAME: ExperimentClassification
   MODEL_NAME: ModelResnetClassification

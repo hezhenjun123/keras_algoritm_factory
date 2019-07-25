@@ -5,8 +5,9 @@ from boto3 import client
 
 
 def give_split(name, train_generated_only=False):
-    if (train_generated_only or np.random.uniform() >
-        (.5)) and 'generated' not in name:
+    if (train_generated_only or
+        np.random.uniform() > (.5)) and \
+        'generated' not in name:
         return 'valid'
     else:
         return 'train'

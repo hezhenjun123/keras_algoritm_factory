@@ -11,4 +11,4 @@ class TransformSimpleClassification(TransformBase):
             A.RandomCrop(random_crop_size[0], random_crop_size[1]),
             A.Resize(resize[0], resize[1])
         ])
-        self.transform[0] = tfunc
+        self.transform["IMAGE_ONLY"] = tfunc

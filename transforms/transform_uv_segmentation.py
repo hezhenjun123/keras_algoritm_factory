@@ -7,8 +7,8 @@ class TransformUVSegmentation(TransformBase):
     def __init__(self, config):
         super().__init__(config)
         tfunc = A.Compose([A.Normalize()])
-        self.transform[0] = tfunc
-        self.transform[2] = self.threshold_label
+        self.transform["IMAGE_ONLY"] = tfunc
+        self.transform["LABEL_ONLY"] = self.threshold_label
 
     def threshold_label(self, mask=[]):
         mask = mask[:, :, [2]]

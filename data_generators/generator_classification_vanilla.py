@@ -31,7 +31,7 @@ class GeneratorClassificationVanilla(DataGeneratorBase):
         if self.repeat is True:
             dataset = dataset.repeat()
 
-        if transforms.transform[0] is not None:
+        if transforms.has_image_transform() is True:
             transforms_map = self.__get_transform_map(
                 transforms, self.output_shape, self.output_image_channels,
                 self.output_image_type)
@@ -47,13 +47,14 @@ class GeneratorClassificationVanilla(DataGeneratorBase):
     def __get_transform_map(self, transforms, output_shape,
                             output_image_channels, output_image_type):
         def transform_map(row):
-            logging.info(
-                tf.py_func(transforms.apply_transforms,
-                           [row["image"], row["label"]],
-                           [output_image_type, row["label"].dtype]))
+            res = tf.py_func(transforms.apply_transforms,
+                             [row["image"], row["label"]],
+                             [output_image_type, row["label"].dtype])
+            logging.info(res)
             image = tf.py_func(transforms.apply_transforms,
                                [row["image"], row["label"]],
                                [output_image_type, row["label"].dtype])[0]
+
             image.set_shape(output_shape + (output_image_channels, ))
             row["image"] = image
             return row

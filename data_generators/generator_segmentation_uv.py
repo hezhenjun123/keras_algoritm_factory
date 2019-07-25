@@ -1,5 +1,4 @@
 import tensorflow as tf
-import numpy as np
 import logging
 from data_generators.generator_base import DataGeneratorBase
 from utilities.crop_patches import CropAndExpand
