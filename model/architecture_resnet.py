@@ -1,5 +1,5 @@
 from tensorflow.keras.applications import ResNet50 as resnet_pretrained
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import Input, Dense, Dropout
 from tensorflow.keras import Model
 
 
@@ -13,7 +13,9 @@ def ResNet(input_shape,
            input_name='images',
            output_name='probs'):
     inp = Input(input_shape, name=input_name)
-    resnet = resnet_pretrained(include_top=False, weights='imagenet' if pretrained else None, pooling='max')(inp)
+    resnet = resnet_pretrained(include_top=False,
+                               weights='imagenet' if pretrained else None,
+                               pooling='max')(inp)
 
     for dense in channel_list:
         resnet = Dense(dense, activation=activation)(resnet)

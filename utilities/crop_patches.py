@@ -36,13 +36,11 @@ class CropPatches(tf.keras.layers.Layer):
         if image.shape.ndims == 3:
             image = tf.expand_dims(image, 0)
         # image = tf.expand_dims(image, 0)
-        cropped_images = tf.image.crop_and_resize(
-            image,
-            boxes=self.boxes,
-            box_ind=[0] * self.n,
-            crop_size=self.resize,
-            method="nearest"
-        )
+        cropped_images = tf.image.crop_and_resize(image,
+                                                  boxes=self.boxes,
+                                                  box_ind=[0] * self.n,
+                                                  crop_size=self.resize,
+                                                  method="nearest")
         cropped_images = tf.cast(cropped_images, image.dtype)
         return cropped_images
 

@@ -1,0 +1,48 @@
+RUN_ENV: local #{aws, local}
+BATCH_SIZE: 4
+DATA_CSV: data/train_segmentation_new.csv
+LEARNING_RATE: 0.0001
+EPOCHS: 700
+STEPS_PER_EPOCH: -1
+DROPOUT: 0
+NUM_CLASSES: 2
+CHANNEL_LIST: [32, 64, 128, 256]
+ACTIVATION: relu
+NUM_PLOTS: 5
+
+LOCAL_PARA:
+  DIR_OUT: ./out
+  DATA_DIR: .
+
+AWS_PARA:
+  DIR_OUT: /workspace/output/
+  DATA_DIR: s3://zoomlion-sample/
+
+DATA_GENERATOR:
+  OUTPUT_SHAPE: [2048, 2592]
+  OUTPUT_IMAGE_CHANNELS: 3
+  OUTPUT_IMAGE_TYPE: float32
+  DROP_REMAINDER: false
+  CACHE_DIR: cache
+  NUM_PARALLEL_CALLS: 4
+  REPEAT: true
+
+TRANSFORM:
+  RESIZE: [512, 512]
+
+TRAINING_DATA_CSV_SCHEMA:
+  IMAGE_PATH: image_path
+  SEGMENTATION_PATH: segmentation_path
+  LABEL_NAME: label_name
+  IMAGE_LEVEL_LABEL: image_level_label
+  SPLIT: split
+  SPLIT_TRAIN_VAL: train
+  SPLIT_VALID_VAL: valid
+
+EXPERIMENT:
+  EXPERIMENT_NAME: ExperimentSegmentation
+  MODEL_NAME: ModelUnetSegmentationUV
+  TRAIN_TRANSFORM: TransformUVSegmentation
+  TRAIN_GENERATOR: GeneratorSegmentationUV
+  VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
+  VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
