@@ -35,11 +35,12 @@ class GeneratorSegmentationVanilla(DataGeneratorBase):
             dataset = dataset.map(transform_map)
         dataset = dataset.batch(self.batch_size,
                                 drop_remainder=self.drop_remainder)
+        dataset = dataset.map(lambda row:
+                              (row["image"], row["segmentation_labels"]))
         dataset = dataset.prefetch(4)
         logging.info("==========================dataset=====================")
         logging.info(dataset)
-        dataset = dataset.map(lambda row:
-                              (row["image"], row["segmentation_labels"]))
+
         return dataset
 
     def __get_transform_map(self, transforms, output_shape,
