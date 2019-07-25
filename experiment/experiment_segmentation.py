@@ -21,7 +21,7 @@ class ExperimentSegmentation(ExperimentBase):
             "SPLIT_VALID_VAL"]
         self.data_csv = config["DATA_CSV"]
 
-    def __generate_transform(self):
+    def generate_transform(self):
         transform_factory = TransformFactory(self.config)
         self.train_transform = transform_factory.create_transform(
             self.config["EXPERIMENT"]["TRAIN_TRANSFORM"])
@@ -38,8 +38,8 @@ class ExperimentSegmentation(ExperimentBase):
         self.data_valid_split = data_from_train_csv[data_from_train_csv[
             self.split_col] == self.split_valid_val].sample(frac=1)
 
-    def __generate_dataset(self):
-        self.__generate_transform()
+    def generate_dataset(self):
+        self.generate_transform()
         self.__read_train_csv()
         generator_factory = DataGeneratorFactory(self.config)
         train_generator = generator_factory.create_generator(
@@ -52,7 +52,7 @@ class ExperimentSegmentation(ExperimentBase):
             df=self.data_train_split, transforms=self.valid_transform)
 
     def train(self):
-        self.__generate_dataset()
+        self.generate_dataset()
         model_factory = ModelFactory(self.config)
         model = model_factory.create_model(
             self.config["EXPERIMENT"]["MODEL_NAME"])
