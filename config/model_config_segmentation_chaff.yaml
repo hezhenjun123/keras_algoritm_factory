@@ -1,6 +1,6 @@
-RUN_ENV: local #{aws, local}
+RUN_ENV: aws #{aws, local}
 BATCH_SIZE: 4
-DATA_CSV: data/train_segmentation_new.csv
+DATA_CSV: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/train.csv
 LEARNING_RATE: 0.0001
 EPOCHS: 700
 STEPS_PER_EPOCH: -1
@@ -12,14 +12,14 @@ NUM_PLOTS: 5
 
 LOCAL_PARA:
   DIR_OUT: ./out
-  DATA_DIR: .
+  DATA_DIR: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/
 
 AWS_PARA:
   DIR_OUT: /workspace/output/
-  DATA_DIR: s3://zoomlion-sample/
+  DATA_DIR: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/
 
 DATA_GENERATOR:
-  OUTPUT_SHAPE: [2048, 2592]
+  OUTPUT_SHAPE: [512, 512]
   OUTPUT_IMAGE_CHANNELS: 3
   OUTPUT_IMAGE_TYPE: float32
   DROP_REMAINDER: false
@@ -31,8 +31,9 @@ TRANSFORM:
   RESIZE: [512, 512]
 
 TRAINING_DATA_CSV_SCHEMA:
+  SEPARATOR: ','
   IMAGE_PATH: image_path
-  SEGMENTATION_PATH: segmentation_path
+  SEGMENTATION_PATH: seg_label_path
   LABEL_NAME: label_name
   IMAGE_LEVEL_LABEL: image_level_label
   SPLIT: split
@@ -41,8 +42,8 @@ TRAINING_DATA_CSV_SCHEMA:
 
 EXPERIMENT:
   EXPERIMENT_NAME: ExperimentSegmentation
-  MODEL_NAME: ModelUnetSegmentationUV
-  TRAIN_TRANSFORM: TransformUVSegmentation
-  TRAIN_GENERATOR: GeneratorSegmentationUV
+  MODEL_NAME: ModelUnetSegmentationChaff
+  TRAIN_TRANSFORM: TransformSegmentationChaff
+  TRAIN_GENERATOR: GeneratorSegmentationVanilla
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR

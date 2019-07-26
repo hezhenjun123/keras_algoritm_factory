@@ -46,7 +46,7 @@ class ModelResnetClassification(ModelBase):
         if "num_valid_data" not in kwargs:
             self.num_valid_data = 100
         else:
-            self.num_valid_data = kwargs["num_train_data"]
+            self.num_valid_data = kwargs["num_valid_data"]
 
     def model_fit(self, train_dataset, valid_dataset, **kwargs):
         self.__set_model_parameters(**kwargs)

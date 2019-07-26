@@ -12,11 +12,11 @@ from utilities.crop_patches import CropAndExpand
 from utilities.cos_anneal import CosineAnnealingScheduler
 from utilities.smart_checkpoint import SmartCheckpoint
 from utilities.helper import get_plot_data
-import numpy as np
+
 logging.getLogger().setLevel(logging.INFO)
 
 
-class ModelUnetSegmentationUV(ModelBase):
+class ModelUnetSegmentationChaff(ModelBase):
     def __init__(self, config):
         super().__init__(config)
         self.num_plots = config["NUM_PLOTS"]
@@ -45,21 +45,9 @@ class ModelUnetSegmentationUV(ModelBase):
         self.model = model
 
     def __callback_compile(self):
-        boxes = [[x / 4, y / 4, (x + 1) / 4,
-                  min((y + 1) / 4, .95)] for x in range(4) for y in range(4)]
-        crop_and_expand = CropAndExpand(resize=self.resize, boxes=boxes)
         plot_df = self.valid_data_dataframe.sample(n=self.num_plots,
                                                    random_state=69)
-        data_to_plot_raw = get_plot_data(plot_df, self.config)
-        data_to_plot = []
-        for img,label,name in data_to_plot_raw:
-            rnd_x = np.random.randint(0, img.shape[1]-crop_and_expand.resize[0])
-            rnd_y = np.random.randint(0, img.shape[2]-crop_and_expand.resize[1])
-            img = img[:, rnd_x:(rnd_x + crop_and_expand.resize[0]),
-                         rnd_y:(rnd_y + crop_and_expand.resize[1])]
-            label = label[:, rnd_x:(rnd_x + crop_and_expand.resize[0]),
-                             rnd_y:(rnd_y + crop_and_expand.resize[1])]
-            data_to_plot.append((img,label,name))
+        data_to_plot = get_plot_data(plot_df, self.config)
         summaries_dir = os.path.join(self.save_dir, "summaries")
         tensorboard_callback = tf.keras.callbacks.TensorBoard(
             log_dir=summaries_dir)
@@ -113,8 +101,8 @@ class ModelUnetSegmentationUV(ModelBase):
         self.__model_compile()
         self.__callback_compile()
         if self.steps_per_epoch == -1:
-            steps_per_epoch = ceil(self.num_train_data * 16 / self.batch_size)
-        valid_steps = ceil(self.num_valid_data * 16 / self.batch_size)
+            steps_per_epoch = ceil(self.num_train_data / self.batch_size)
+        valid_steps = ceil(self.num_valid_data / self.batch_size)
 
         logging.info(
             'STARTING TRAINING, {} train steps, {} valid steps'.format(

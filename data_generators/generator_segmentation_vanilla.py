@@ -9,8 +9,6 @@ class GeneratorSegmentationVanilla(DataGeneratorBase):
     def __init__(self, config):
         super().__init__(config)
         self.batch_size = config["BATCH_SIZE"]
-        resize_config = config["TRANSFORM"]["RESIZE"]
-        self.resize = (resize_config[0], resize_config[1])
 
     def create_dataset(self, df, transforms=None):
         df = df.copy()
@@ -21,8 +19,8 @@ class GeneratorSegmentationVanilla(DataGeneratorBase):
             self.get_join_root_dir_map(self.data_dir))
 
         dataset = tf.data.Dataset.from_tensor_slices(
-            dict(image_path=df.image_path.values,
-                 segmentation_path=df.segmentation_path.values))
+            dict(image_path=df[self.image_path].values,
+                 segmentation_path=df[self.segmentation_path].values))
         dataset = dataset.map(self.__load_data,
                               num_parallel_calls=self.num_parallel_calls)
         dataset = dataset.cache(self.cache_file(self.cache_dir))

@@ -99,7 +99,7 @@ class ImageSummary(tf.keras.callbacks.Callback):
             image = image[0, ...]
             label = label[0]
 
-            tr_image = image
+            tr_image,_ = transforms.apply_transforms(image,label)
             label = label[:, :, 0]
             tr_image = np.expand_dims(tr_image, axis=0)
             self.data.append((image, tr_image, label, name))
@@ -144,7 +144,7 @@ class ImageSummary(tf.keras.callbacks.Callback):
         if epoch % self.update_freq != 0:
             return
         summary_values = []
-        for image, tr_image, label, name in self.data:
+        for i,(image, tr_image, label, name) in enumerate(self.data):
             height, width, _ = image.shape
             separator = np.full(fill_value=255,
                                 shape=(height, 5, 3),
@@ -168,7 +168,7 @@ class ImageSummary(tf.keras.callbacks.Callback):
             )
             summary_values.append(
                 tf.Summary.Value(
-                    tag=f"Image_Pred_Label/{name}",
+                    tag=f"Image_Pred_Label/{i}_{name}",
                     image=self._make_image(to_show),
                 ))
         summary = tf.Summary(value=summary_values)

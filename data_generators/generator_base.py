@@ -69,6 +69,6 @@ class DataGeneratorBase:
     def cache_file(self, cache_dir):
         if os.path.exists(cache_dir) is False:
             os.makedirs(cache_dir)
-        curr_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        curr_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')[:-3]
         cache_file = os.path.join(cache_dir, f"cache_{curr_time}")
         return cache_file

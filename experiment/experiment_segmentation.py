@@ -12,8 +12,7 @@ class ExperimentSegmentation(ExperimentBase):
     def __init__(self, config):
         super().__init__(config)
         self.batch_size = self.config["BATCH_SIZE"]
-        resize_config = config["TRANSFORM"]["RESIZE"]
-        self.resize = (resize_config[0], resize_config[1])
+        self.csv_separator = config["TRAINING_DATA_CSV_SCHEMA"]["SEPARATOR"]
         self.split_col = config["TRAINING_DATA_CSV_SCHEMA"]["SPLIT"]
         self.split_train_val = config["TRAINING_DATA_CSV_SCHEMA"][
             "SPLIT_TRAIN_VAL"]
@@ -29,7 +28,7 @@ class ExperimentSegmentation(ExperimentBase):
             self.config["EXPERIMENT"]["VALID_TRANSFORM"])
 
     def __read_train_csv(self):
-        data_from_train_csv = pd.read_csv(self.data_csv, sep='\t').fillna("")
+        data_from_train_csv = pd.read_csv(self.data_csv, sep=self.csv_separator).fillna("")
         logging.info(data_from_train_csv.head())
         logging.info("#" * 15 + "Reading training data" + "#" * 15)
         self.data_train_split = data_from_train_csv[data_from_train_csv[
@@ -49,7 +48,7 @@ class ExperimentSegmentation(ExperimentBase):
         self.train_dataset = train_generator.create_dataset(
             df=self.data_train_split, transforms=self.train_transform)
         self.valid_dataset = valid_generator.create_dataset(
-            df=self.data_train_split, transforms=self.valid_transform)
+            df=self.data_valid_split, transforms=self.valid_transform)
 
     def train(self):
         self.generate_dataset()

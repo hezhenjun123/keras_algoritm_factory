@@ -46,7 +46,7 @@ class ExperimentClassification(ExperimentBase):
         self.train_dataset = train_generator.create_dataset(
             df=self.data_train_split, transforms=self.train_transform)
         self.valid_dataset = valid_generator.create_dataset(
-            df=self.data_train_split, transforms=self.valid_transform)
+            df=self.data_valid_split, transforms=self.valid_transform)
 
     def train(self):
         self.generate_dataset()
