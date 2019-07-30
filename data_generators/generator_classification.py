@@ -15,45 +15,39 @@ class GeneratorClassification(DataGeneratorBase):
 
     def create_dataset(self, df, transforms):
         if isinstance(df, pd.DataFrame) == False:
-            raise ValueError(
-                "ERROR: Dataset is not DataFrame. DataFrame is required")
+            raise ValueError("ERROR: Dataset is not DataFrame. DataFrame is required")
         df = df.copy()
-        df[self.image_path] = df[self.image_path].apply(
-            self.get_join_root_dir_map(self.data_dir))
+        df[self.image_path] = df[self.image_path].apply(self.get_join_root_dir_map(self.data_dir))
         df[self.label_name] = df[self.label_name].apply(str)
-        df[self.image_level_label] = df[self.image_level_label].apply(
-            self.__multi_hot_encode, args=(self.n_classes,))
+        df[self.image_level_label] = df[self.image_level_label].apply(self.__multi_hot_encode,
+                                                                      args=(self.n_classes,))
         dataset = tf.data.Dataset.from_tensor_slices(
             dict(image_path=df.image_path.values,
                  label=np.array(list(df[self.image_level_label].values))))
-        dataset = dataset.map(self.__load_data,
-                              num_parallel_calls=self.num_parallel_calls)
-        dataset = dataset.cache(self.cache_file(self.cache_dir))
+        dataset = dataset.map(self.__load_data, num_parallel_calls=self.num_parallel_calls)
+        dataset = dataset.cache(self.cache_file_location(self.cache_dir))
         if self.repeat is True:
             dataset = dataset.repeat()
 
         if transforms.has_image_transform() is True:
-            transforms_map = self.__get_transform_map(
-                transforms, self.output_shape, self.output_image_channels,
-                self.output_image_type)
+            transforms_map = self.__get_transform_map(transforms, self.output_shape,
+                                                      self.output_image_channels,
+                                                      self.output_image_type)
             dataset = dataset.map(transforms_map)
             logging.info(dataset)
         dataset = dataset.map(lambda row: ([row["image"], row['label']]))
-        dataset = dataset.batch(self.batch_size,
-                                drop_remainder=self.drop_remainder)
+        dataset = dataset.batch(self.batch_size, drop_remainder=self.drop_remainder)
         dataset = dataset.prefetch(4)
         return dataset
 
-    def __get_transform_map(self, transforms, output_shape,
-                            output_image_channels, output_image_type):
+    def __get_transform_map(self, transforms, output_shape, output_image_channels,
+                            output_image_type):
 
         def transform_map(row):
-            res = tf.py_func(transforms.apply_transforms,
-                             [row["image"], row["label"]],
+            res = tf.py_func(transforms.apply_transforms, [row["image"], row["label"]],
                              [output_image_type, row["label"].dtype])
             logging.info(res)
-            image = tf.py_func(transforms.apply_transforms,
-                               [row["image"], row["label"]],
+            image = tf.py_func(transforms.apply_transforms, [row["image"], row["label"]],
                                [output_image_type, row["label"].dtype])[0]
 
             image.set_shape(output_shape + (output_image_channels,))

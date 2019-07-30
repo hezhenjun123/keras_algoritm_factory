@@ -10,8 +10,7 @@ class DataGeneratorBase:
     def __init__(self, config):
         output_shape = config["DATA_GENERATOR"]["OUTPUT_SHAPE"]
         self.output_shape = (output_shape[0], output_shape[1])
-        self.output_image_channels = config["DATA_GENERATOR"][
-            "OUTPUT_IMAGE_CHANNELS"]
+        self.output_image_channels = config["DATA_GENERATOR"]["OUTPUT_IMAGE_CHANNELS"]
         self.output_image_type = tf.dtypes.as_dtype(
             np.dtype(config["DATA_GENERATOR"]["OUTPUT_IMAGE_TYPE"]))
         if config["RUN_ENV"] == "aws":
@@ -26,12 +25,10 @@ class DataGeneratorBase:
         self.cache_dir = config["DATA_GENERATOR"]["CACHE_DIR"]
         self.repeat = config["DATA_GENERATOR"]["REPEAT"]
         self.num_parallel_calls = config["DATA_GENERATOR"]["NUM_PARALLEL_CALLS"]
-        self.segmentation_path = config["TRAINING_DATA_CSV_SCHEMA"][
-            "SEGMENTATION_PATH"]
+        self.segmentation_path = config["TRAINING_DATA_CSV_SCHEMA"]["SEGMENTATION_PATH"]
         self.image_path = config["TRAINING_DATA_CSV_SCHEMA"]["IMAGE_PATH"]
         self.label_name = config["TRAINING_DATA_CSV_SCHEMA"]["LABEL_NAME"]
-        self.image_level_label = config["TRAINING_DATA_CSV_SCHEMA"][
-            "IMAGE_LEVEL_LABEL"]
+        self.image_level_label = config["TRAINING_DATA_CSV_SCHEMA"]["IMAGE_LEVEL_LABEL"]
         self.split = config["TRAINING_DATA_CSV_SCHEMA"]["SPLIT"]
         self.n_classes = config["NUM_CLASSES"]
 
@@ -68,7 +65,7 @@ class DataGeneratorBase:
         image = tf.image.decode_image(image)
         return image
 
-    def cache_file(self, cache_dir):
+    def cache_file_location(self, cache_dir):
         if os.path.exists(cache_dir) is False:
             os.makedirs(cache_dir)
         curr_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')[:-3]

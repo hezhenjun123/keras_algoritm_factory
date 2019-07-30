@@ -17,9 +17,8 @@ class ExperimentClassification(ExperimentBase):
     def run_experiment(self):
         train_transform, valid_transform = self.generate_transform()
         data_train_split, data_valid_split = self.read_train_csv()
-        train_dataset, valid_dataset = self.generate_dataset(
-            data_train_split, data_valid_split, train_transform,
-            valid_transform)
+        train_dataset, valid_dataset = self.generate_dataset(data_train_split, data_valid_split,
+                                                             train_transform, valid_transform)
         model = self.generate_model()
 
         callbacks = self.__compile_callback()
@@ -34,16 +33,13 @@ class ExperimentClassification(ExperimentBase):
         checkpoints_dir = os.path.join(self.save_dir, "checkpoints")
         callbacks = [
             tf.keras.callbacks.TensorBoard(log_dir=summaries_dir),
-            SmartCheckpoint(checkpoints_dir,
-                            file_format='epoch_{epoch:04d}/cp.ckpt',
-                            period=10)
+            SmartCheckpoint(checkpoints_dir, file_format='epoch_{epoch:04d}/cp.ckpt', period=10)
         ]
         return callbacks
 
     def model_compile_para(self):
         compile_para = dict()
-        compile_para["optimizer"] = tf.keras.optimizers.Adam(
-            learning_rate=self.learning_rate)
+        compile_para["optimizer"] = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         compile_para["loss"] = 'categorical_crossentropy'
         compile_para["metrics"] = ['accuracy']
         return compile_para

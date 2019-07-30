@@ -36,8 +36,7 @@ def get_plot_data(df, config):
 
     with tf.Graph().as_default(), tf.Session() as sess:
         generator_factory = DataGeneratorFactory(config_now)
-        generator = generator_factory.create_generator(
-            config_now["EXPERIMENT"]["VALID_GENERATOR"])
+        generator = generator_factory.create_generator(config_now["EXPERIMENT"]["VALID_GENERATOR"])
         dataset = generator.create_dataset(df=df, transforms=None)
         iterator = dataset.make_one_shot_iterator()
         features = iterator.get_next()

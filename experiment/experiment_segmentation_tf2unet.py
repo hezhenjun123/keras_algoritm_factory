@@ -29,9 +29,8 @@ class ExperimentSegmentationTF2Unet(ExperimentBase):
     def run_experiment(self):
         train_transform, valid_transform = self.generate_transform()
         data_train_split, data_valid_split = self.read_train_csv()
-        train_dataset, valid_dataset = self.generate_dataset(
-            data_train_split, data_valid_split, train_transform,
-            valid_transform)
+        train_dataset, valid_dataset = self.generate_dataset(data_train_split, data_valid_split,
+                                                             train_transform, valid_transform)
         model = self.generate_model()
 
         callbacks = self.__compile_callbacks()
@@ -39,23 +38,19 @@ class ExperimentSegmentationTF2Unet(ExperimentBase):
 
     def model_compile_para(self):
         compile_para = dict()
-        compile_para["optimizer"] = tf.keras.optimizers.Adam(
-            lr=self.learning_rate)
+        compile_para["optimizer"] = tf.keras.optimizers.Adam(lr=self.learning_rate)
         compile_para["loss"] = {
             "probabilities": tf.keras.losses.BinaryCrossentropy(),
             "predictions": DummyLoss()
         }
         compile_para["metrics"] = {
-            "probabilities":
-                'accuracy',
-            "predictions":
-                tf.keras.metrics.MeanIoU(num_classes=self.num_classes)
+            "probabilities": 'accuracy',
+            "predictions": tf.keras.metrics.MeanIoU(num_classes=self.num_classes)
         }
         return compile_para
 
     def __compile_callbacks(self):
         callbacks = [
-            tf.keras.callbacks.TensorBoard(log_dir=self.log_directory,
-                                           update_freq='batch')
+            tf.keras.callbacks.TensorBoard(log_dir=self.log_directory, update_freq='batch')
         ]
         return callbacks

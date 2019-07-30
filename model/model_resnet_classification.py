@@ -38,6 +38,7 @@ class ModelResnetClassification(ModelBase):
 
     def fit_model(self, train_dataset, valid_dataset, callbacks, **kwargs):
         self.__set_model_parameters(**kwargs)
+        #FIXME: May want to consodiate the logic below to model_base
         if self.train_steps_per_epoch == -1:
             train_steps_per_epoch = ceil(self.num_train_data / self.batch_size)
         else:

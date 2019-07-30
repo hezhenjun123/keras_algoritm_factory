@@ -25,9 +25,8 @@ class ExperimentSegmentationTF1Unet(ExperimentBase):
     def run_experiment(self):
         train_transform, valid_transform = self.generate_transform()
         data_train_split, data_valid_split = self.read_train_csv()
-        train_dataset, valid_dataset = self.generate_dataset(
-            data_train_split, data_valid_split, train_transform,
-            valid_transform)
+        train_dataset, valid_dataset = self.generate_dataset(data_train_split, data_valid_split,
+                                                             train_transform, valid_transform)
         model = self.generate_model()
 
         kwarg_para = {
@@ -50,8 +49,7 @@ class ExperimentSegmentationTF1Unet(ExperimentBase):
         plot_df = valid_data_dataframe.sample(n=self.num_plots, random_state=69)
         data_to_plot = get_plot_data(plot_df, self.config)
         summaries_dir = os.path.join(self.save_dir, "summaries")
-        tensorboard_callback = tf.keras.callbacks.TensorBoard(
-            log_dir=summaries_dir)
+        tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=summaries_dir)
         checkpoints_dir = os.path.join(self.save_dir, "checkpoints/")
         if self.num_classes == 2:
             cmap = "viridis"

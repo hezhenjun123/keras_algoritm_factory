@@ -35,8 +35,7 @@ for image_file in image_files:
         img_transform = np.expand_dims(img_transform, axis=0)
         pred_res = model.predict(x=img_transform)
         # logging.info("pred results: {}".format(pred_res))
-        logging.info("pred label: {}, file: {}".format(
-            np.argmax(pred_res) + 1, file))
+        logging.info("pred label: {}, file: {}".format(np.argmax(pred_res) + 1, file))
         num_total += 1
         if np.argmax(pred_res) + 1 != label: num_incorrect += 1
 logging.info("total num: {}, incorrect: {}".format(num_total, num_incorrect))

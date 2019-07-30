@@ -1,11 +1,7 @@
 class TransformBase:
 
     def __init__(self, config):
-        self.transform = {
-            "IMAGE_ONLY": None,
-            "IMAGE_LABEL": None,
-            "LABEL_ONLY": None
-        }
+        self.transform = {"IMAGE_ONLY": None, "IMAGE_LABEL": None, "LABEL_ONLY": None}
         self.config = config
 
     def apply_transforms(self, image, label):
@@ -29,8 +25,7 @@ class TransformBase:
             return False
 
     def has_image_transform(self):
-        if self.transform is not None and self.transform[
-                "IMAGE_ONLY"] is not None:
+        if self.transform is not None and self.transform["IMAGE_ONLY"] is not None:
             return True
         else:
             return False

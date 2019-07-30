@@ -16,24 +16,22 @@ os.environ['S3_REQUEST_TIMEOUT_MSEC'] = '6000000'
 def read_config(args):
     MODULE_CONFIG_FILE = 'config/{}'.format(args.config)
     if os.path.exists(MODULE_CONFIG_FILE) is False:
-        raise Exception(
-            "config file does not exist: {}".format(MODULE_CONFIG_FILE))
+        raise Exception("config file does not exist: {}".format(MODULE_CONFIG_FILE))
     with open(MODULE_CONFIG_FILE) as f:
         module_config = yaml.safe_load(f)
 
     if module_config["EXPERIMENT"]["VALID_TRANSFORM"] is None:
-        module_config["EXPERIMENT"]["VALID_TRANSFORM"] = module_config[
-            "EXPERIMENT"]["TRAIN_TRANSFORM"]
+        module_config["EXPERIMENT"]["VALID_TRANSFORM"] = module_config["EXPERIMENT"][
+            "TRAIN_TRANSFORM"]
     if module_config["EXPERIMENT"]["VALID_GENERATOR"] is None:
-        module_config["EXPERIMENT"]["VALID_GENERATOR"] = module_config[
-            "EXPERIMENT"]["TRAIN_GENERATOR"]
+        module_config["EXPERIMENT"]["VALID_GENERATOR"] = module_config["EXPERIMENT"][
+            "TRAIN_GENERATOR"]
     return module_config
 
 
 def run_experiments(config):
     experiment_factory = ExperimentFactory(config)
-    experiment = experiment_factory.create_experiment(
-        config["EXPERIMENT"]["EXPERIMENT_NAME"])
+    experiment = experiment_factory.create_experiment(config["EXPERIMENT"]["EXPERIMENT_NAME"])
     experiment.run_experiment()
 
 
