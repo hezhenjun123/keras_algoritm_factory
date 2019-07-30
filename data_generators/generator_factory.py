@@ -1,6 +1,5 @@
 from data_generators.generator_classification import GeneratorClassification
 from data_generators.generator_segmentation import GeneratorSegmentation
-from data_generators.generator_segmentation_uv import GeneratorSegmentationUV
 from data_generators.generator_segmentation_tf2unet import GeneratorSegmentationTF2Unet
 
 
