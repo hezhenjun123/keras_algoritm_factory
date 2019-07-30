@@ -1,13 +1,16 @@
+import logging
 from math import ceil
 from model.model_base import ModelBase
-from model.architecture_resnet import ResNet
+from model.architecture_unet import UNet
 
 
+logging.getLogger().setLevel(logging.INFO)
 
-class ModelResnetClassification(ModelBase):
+
+class ModelUnetTF1Segmentation(ModelBase):
     def __init__(self, config):
         super().__init__(config)
-        self.pretrained = config["PRETRAINED"]
+        self.num_plots = config["NUM_PLOTS"]
         self.dropout = config["DROPOUT"]
         self.channel_list = config["CHANNEL_LIST"]
         self.activation = config["ACTIVATION"]
@@ -15,15 +18,20 @@ class ModelResnetClassification(ModelBase):
 
 
     def create_model(self):
-        model = ResNet(input_shape=(*self.resize, 3),
-                       pretrained=self.pretrained,
-                       channel_list=self.channel_list,
-                       num_classes=self.num_classes,
-                       activation=self.activation,
-                       dropout_prob=self.dropout,
-                       name='unet',
-                       input_name='images',
-                       output_name='logits')
+        model = UNet(
+            input_shape=(*self.resize, 3),
+            channel_list=self.channel_list,
+            num_classes=self.num_classes,
+            return_logits=False,
+            activation=self.activation,
+            dropout_prob=self.dropout,
+            dropout_type="spatial",
+            name="unet",
+            input_name="images",
+            output_name="seg_map",
+            conv_block="default",
+            normalization="layernorm",
+        )
         model.summary()
         return model
 
@@ -39,6 +47,16 @@ class ModelResnetClassification(ModelBase):
         else:
             self.num_valid_data = kwargs["num_valid_data"]
 
+        if "valid_transforms" not in kwargs:
+            raise Exception("Need valid_transforms for plot")
+        else:
+            self.valid_transforms = kwargs["valid_transforms"]
+
+        if "valid_data_dataframe" not in kwargs:
+            raise Exception("Need valid_data_dataframe for plot")
+        else:
+            self.valid_data_dataframe = kwargs["valid_data_dataframe"]
+
     def fit_model(self, train_dataset, valid_dataset, callbacks, **kwargs):
         self.__set_model_parameters(**kwargs)
         if self.steps_per_epoch == -1:
@@ -46,6 +64,10 @@ class ModelResnetClassification(ModelBase):
         else:
             steps_per_epoch = self.steps_per_epoch
         valid_steps = ceil(self.num_valid_data / self.batch_size)
+
+        logging.info(
+            'STARTING TRAINING, {} train steps, {} valid steps'.format(
+                steps_per_epoch, valid_steps))
         self.model.fit(train_dataset,
                        epochs=self.epochs,
                        steps_per_epoch=steps_per_epoch,

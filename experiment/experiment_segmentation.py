@@ -1,8 +1,15 @@
 import logging
-import pandas as pd
+import os
+import tensorflow as tf
+
+from loss.dice import Dice
+from metric.mean_iou import MeanIOU
+from utilities.image_summary import ImageSummary
+from utilities.color import generate_colormap
+from utilities.cos_anneal import CosineAnnealingScheduler
+from utilities.smart_checkpoint import SmartCheckpoint
+from utilities.helper import get_plot_data
 from experiment.experiment_base import ExperimentBase
-from transforms.transform_factory import TransformFactory
-from data_generators.generator_factory import DataGeneratorFactory
 from model.model_factory import ModelFactory
 
 logging.getLogger().setLevel(logging.INFO)
@@ -11,54 +18,68 @@ logging.getLogger().setLevel(logging.INFO)
 class ExperimentSegmentation(ExperimentBase):
     def __init__(self, config):
         super().__init__(config)
-        self.batch_size = self.config["BATCH_SIZE"]
-        self.csv_separator = config["TRAINING_DATA_CSV_SCHEMA"]["SEPARATOR"]
-        self.split_col = config["TRAINING_DATA_CSV_SCHEMA"]["SPLIT"]
-        self.split_train_val = config["TRAINING_DATA_CSV_SCHEMA"][
-            "SPLIT_TRAIN_VAL"]
-        self.split_valid_val = config["TRAINING_DATA_CSV_SCHEMA"][
-            "SPLIT_VALID_VAL"]
-        self.data_csv = config["DATA_CSV"]
+        self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
+        self.learning_rate = config["LEARNING_RATE"]
+        self.num_plots = config["NUM_PLOTS"]
+        self.num_classes = config["NUM_CLASSES"]
 
-    def generate_transform(self):
-        transform_factory = TransformFactory(self.config)
-        self.train_transform = transform_factory.create_transform(
-            self.config["EXPERIMENT"]["TRAIN_TRANSFORM"])
-        self.valid_transform = transform_factory.create_transform(
-            self.config["EXPERIMENT"]["VALID_TRANSFORM"])
-
-    def __read_train_csv(self):
-        data_from_train_csv = pd.read_csv(self.data_csv, sep=self.csv_separator).fillna("")
-        logging.info(data_from_train_csv.head())
-        logging.info("#" * 15 + "Reading training data" + "#" * 15)
-        self.data_train_split = data_from_train_csv[data_from_train_csv[
-            self.split_col] == self.split_train_val].sample(frac=1)
-        logging.info("#" * 15 + "Reading valid data" + "#" * 15)
-        self.data_valid_split = data_from_train_csv[data_from_train_csv[
-            self.split_col] == self.split_valid_val].sample(frac=1)
-
-    def generate_dataset(self):
-        self.generate_transform()
-        self.__read_train_csv()
-        generator_factory = DataGeneratorFactory(self.config)
-        train_generator = generator_factory.create_generator(
-            self.config["EXPERIMENT"]["TRAIN_GENERATOR"])
-        valid_generator = generator_factory.create_generator(
-            self.config["EXPERIMENT"]["VALID_GENERATOR"])
-        self.train_dataset = train_generator.create_dataset(
-            df=self.data_train_split, transforms=self.train_transform)
-        self.valid_dataset = valid_generator.create_dataset(
-            df=self.data_valid_split, transforms=self.valid_transform)
-
-    def train(self):
-        self.generate_dataset()
+    def run_experiment(self):
+        train_transform, valid_transform = self.generate_transform()
+        data_train_split, data_valid_split = self.read_train_csv()
+        train_dataset, valid_dataset = self.generate_dataset(data_train_split, data_valid_split, train_transform,
+                                                             valid_transform)
         model_factory = ModelFactory(self.config)
-        model = model_factory.create_model(
-            self.config["EXPERIMENT"]["MODEL_NAME"])
+        model = model_factory.create_model(self.model_name)
+
+        compile_para = self.__model_compile_para()
+        model.compile_model(**compile_para)
+
+
         kwarg_para = {
-            "num_train_data": len(self.data_train_split),
-            "num_valid_data": len(self.data_valid_split),
-            "valid_transforms": self.valid_transform,
-            "valid_data_dataframe": self.data_valid_split
+            "num_train_data": len(data_train_split),
+            "num_valid_data": len(data_valid_split),
+            "valid_transforms": valid_transform,
+            "valid_data_dataframe": data_valid_split
         }
-        model.model_fit(self.train_dataset, self.valid_dataset, **kwarg_para)
+        callbacks = self.__compile_callback(data_valid_split, valid_transform)
+        model.fit_model(train_dataset, valid_dataset, callbacks, **kwarg_para)
+
+    def __model_compile_para(self):
+        compile_para = dict()
+        compile_para["optimizer"] = tf.keras.optimizers.Adam(self.learning_rate)
+        compile_para["loss"] = Dice()
+        compile_para["metrics"] = [MeanIOU(num_classes=self.num_classes)]
+        return compile_para
+
+
+    def __compile_callback(self, valid_data_dataframe, valid_transforms):
+        plot_df = valid_data_dataframe.sample(n=self.num_plots,
+                                                   random_state=69)
+        data_to_plot = get_plot_data(plot_df, self.config)
+        summaries_dir = os.path.join(self.save_dir, "summaries")
+        tensorboard_callback = tf.keras.callbacks.TensorBoard(
+            log_dir=summaries_dir)
+        checkpoints_dir = os.path.join(self.save_dir, "checkpoints/")
+        if self.num_classes == 2:
+            cmap = "viridis"
+        else:
+            cmap = generate_colormap(self.num_classes, "ADE20K")
+        callbacks = [
+            tensorboard_callback,
+            ImageSummary(
+                tensorboard_callback,
+                data_to_plot,
+                update_freq=10,
+                transforms=valid_transforms,
+                cmap=cmap,
+            ),
+            CosineAnnealingScheduler(20, self.learning_rate),
+            SmartCheckpoint(destination_path=checkpoints_dir,
+                            file_format='epoch_{epoch:04d}/cp.ckpt',
+                            save_weights_only=False,
+                            verbose=1,
+                            monitor='val_mean_iou',
+                            mode='max',
+                            save_best_only=True),
+        ]
+        return callbacks

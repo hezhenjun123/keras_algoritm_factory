@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-AWS_REGION="us-east-2"
+export AWS_REGION="us-east-2"
 
 RUN_ENV="$(head -n 1 config/$1 | cut -d' ' -f2)"
 echo "RUN_ENV: $RUN_ENV"

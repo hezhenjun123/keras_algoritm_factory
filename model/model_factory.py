@@ -1,14 +1,15 @@
 from model.model_resnet_classification import ModelResnetClassification
 from model.model_unet_segmentation_uv import ModelUnetSegmentationUV
-from model.model_unet_segmentation_chaff import ModelUnetSegmentationChaff
-
+from model.model_unet_tf1_segmentation import ModelUnetTF1Segmentation
+from model.model_unet_backbone_segmentation import BackboneUNetModel
 
 class ModelFactory:
 
     model_registry = {
         "ModelResnetClassification": ModelResnetClassification,
         "ModelUnetSegmentationUV": ModelUnetSegmentationUV,
-        "ModelUnetSegmentationChaff":ModelUnetSegmentationChaff
+        "ModelUnetTF1Segmentation": ModelUnetTF1Segmentation,
+        "BackboneUNetModel": BackboneUNetModel
     }
 
     def __init__(self, config):

@@ -1,8 +1,9 @@
-import tensorflow as tf
-import numpy as np
 import copy
 import logging
 from data_generators.generator_factory import  DataGeneratorFactory
+# import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 logging.getLogger().setLevel(logging.INFO)
 

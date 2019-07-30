@@ -1,6 +1,8 @@
-import tensorflow as tf
+# import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import logging
-tf.logging.set_verbosity(tf.logging.INFO)
+# tf.logging.set_verbosity(tf.logging.INFO)
 
 # def MeanIOU(num_classes, from_logits=False):
 #     def mean_iou(y_true, y_pred):

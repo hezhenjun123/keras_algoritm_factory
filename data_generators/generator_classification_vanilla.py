@@ -1,8 +1,9 @@
-import tensorflow as tf
 import numpy as np
 import pandas as pd
 import logging
-
+# import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 from data_generators.generator_base import DataGeneratorBase
 
 logging.getLogger().setLevel(logging.INFO)
@@ -37,7 +38,7 @@ class GeneratorClassificationVanilla(DataGeneratorBase):
                 self.output_image_type)
             dataset = dataset.map(transforms_map)
             logging.info(dataset)
-
+        dataset.shuffle(100)
         dataset = dataset.map(lambda row: ([row["image"], row['label']]))
         dataset = dataset.batch(self.batch_size,
                                 drop_remainder=self.drop_remainder)

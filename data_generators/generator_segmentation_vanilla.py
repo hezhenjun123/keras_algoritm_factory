@@ -1,4 +1,6 @@
-import tensorflow as tf
+# import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import logging
 from data_generators.generator_base import DataGeneratorBase
 
@@ -10,7 +12,7 @@ class GeneratorSegmentationVanilla(DataGeneratorBase):
         super().__init__(config)
         self.batch_size = config["BATCH_SIZE"]
 
-    def create_dataset(self, df, transforms=None):
+    def create_dataset_dict(self, df, transforms=None):
         df = df.copy()
         df[self.segmentation_path] = df[self.segmentation_path].fillna("")
         df[self.segmentation_path] = df[self.segmentation_path].apply(
@@ -33,6 +35,10 @@ class GeneratorSegmentationVanilla(DataGeneratorBase):
             dataset = dataset.map(transform_map)
         dataset = dataset.batch(self.batch_size,
                                 drop_remainder=self.drop_remainder)
+        return dataset
+
+    def create_dataset(self, df, transforms=None):
+        dataset = self.create_dataset_dict(df, transforms)
         dataset = dataset.map(lambda row:
                               (row["image"], row["segmentation_labels"]))
         dataset = dataset.prefetch(4)

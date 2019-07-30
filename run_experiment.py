@@ -34,7 +34,7 @@ def run_experiments(config):
     experiment_factory = ExperimentFactory(config)
     experiment = experiment_factory.create_experiment(
         config["EXPERIMENT"]["EXPERIMENT_NAME"])
-    experiment.train()
+    experiment.run_experiment()
 
 
 def main(args):
