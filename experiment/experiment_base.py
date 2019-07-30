@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 from transforms.transform_factory import TransformFactory
 from data_generators.generator_factory import DataGeneratorFactory
+from model.model_factory import ModelFactory
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
@@ -32,6 +33,7 @@ class ExperimentBase:
         else:
             run_env = config["RUN_ENV"]
             raise Exception(f"Incorrect RUN_ENV: {run_env}")
+        self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
 
     def generate_transform(self):
         transform_factory = TransformFactory(self.config)
@@ -65,6 +67,16 @@ class ExperimentBase:
         valid_dataset = valid_generator.create_dataset(
             df=data_valid_split, transforms=valid_transform)
         return [train_dataset, valid_dataset]
+
+    def generate_model(self):
+        model_factory = ModelFactory(self.config)
+        model = model_factory.create_model(self.model_name)
+        compile_para = self.model_compile_para()
+        model.compile_model(**compile_para)
+        return model
+
+    def model_compile_para(self):
+        raise NotImplementedError
 
     def run_experiment(self):
         raise NotImplementedError

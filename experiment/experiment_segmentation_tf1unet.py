@@ -10,7 +10,6 @@ from utilities.cos_anneal import CosineAnnealingScheduler
 from utilities.smart_checkpoint import SmartCheckpoint
 from utilities.helper import get_plot_data
 from experiment.experiment_base import ExperimentBase
-from model.model_factory import ModelFactory
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -19,7 +18,6 @@ class ExperimentSegmentationTF1Unet(ExperimentBase):
 
     def __init__(self, config):
         super().__init__(config)
-        self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
         self.learning_rate = config["LEARNING_RATE"]
         self.num_plots = config["NUM_PLOTS"]
         self.num_classes = config["NUM_CLASSES"]
@@ -30,11 +28,7 @@ class ExperimentSegmentationTF1Unet(ExperimentBase):
         train_dataset, valid_dataset = self.generate_dataset(
             data_train_split, data_valid_split, train_transform,
             valid_transform)
-        model_factory = ModelFactory(self.config)
-        model = model_factory.create_model(self.model_name)
-
-        compile_para = self.__model_compile_para()
-        model.compile_model(**compile_para)
+        model = self.generate_model()
 
         kwarg_para = {
             "num_train_data": len(data_train_split),
@@ -45,7 +39,7 @@ class ExperimentSegmentationTF1Unet(ExperimentBase):
         callbacks = self.__compile_callback(data_valid_split, valid_transform)
         model.fit_model(train_dataset, valid_dataset, callbacks, **kwarg_para)
 
-    def __model_compile_para(self):
+    def model_compile_para(self):
         compile_para = dict()
         compile_para["optimizer"] = tf.keras.optimizers.Adam(self.learning_rate)
         compile_para["loss"] = Dice()

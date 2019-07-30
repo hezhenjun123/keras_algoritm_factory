@@ -1,6 +1,5 @@
 import logging
 from experiment.experiment_base import ExperimentBase
-from model.model_factory import ModelFactory
 import tensorflow as tf
 from tensorflow.python.keras.utils import losses_utils
 
@@ -26,7 +25,6 @@ class ExperimentSegmentationTF2Unet(ExperimentBase):
         self.learning_rate = config["LEARNING_RATE"]
         self.log_directory = self.config["MODEL"]["LOG_DIRECTORY"]
         self.num_classes = config["NUM_CLASSES"]
-        self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
 
     def run_experiment(self):
         train_transform, valid_transform = self.generate_transform()
@@ -34,16 +32,12 @@ class ExperimentSegmentationTF2Unet(ExperimentBase):
         train_dataset, valid_dataset = self.generate_dataset(
             data_train_split, data_valid_split, train_transform,
             valid_transform)
-        model_factory = ModelFactory(self.config)
-        model = model_factory.create_model(self.model_name)
-
-        compile_para = self.__model_compile_para()
-        model.compile_model(**compile_para)
+        model = self.generate_model()
 
         callbacks = self.__compile_callbacks()
         model.fit_model(train_dataset, valid_dataset, callbacks)
 
-    def __model_compile_para(self):
+    def model_compile_para(self):
         compile_para = dict()
         compile_para["optimizer"] = tf.keras.optimizers.Adam(
             lr=self.learning_rate)

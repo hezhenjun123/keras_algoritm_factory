@@ -1,7 +1,6 @@
 import os
 import logging
 from experiment.experiment_base import ExperimentBase
-from model.model_factory import ModelFactory
 from utilities.smart_checkpoint import SmartCheckpoint
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
@@ -13,7 +12,6 @@ class ExperimentClassification(ExperimentBase):
 
     def __init__(self, config):
         super().__init__(config)
-        self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
         self.learning_rate = config["LEARNING_RATE"]
 
     def run_experiment(self):
@@ -22,11 +20,7 @@ class ExperimentClassification(ExperimentBase):
         train_dataset, valid_dataset = self.generate_dataset(
             data_train_split, data_valid_split, train_transform,
             valid_transform)
-        model_factory = ModelFactory(self.config)
-        model = model_factory.create_model(self.model_name)
-
-        compile_para = self.__model_compile_para()
-        model.compile_model(**compile_para)
+        model = self.generate_model()
 
         callbacks = self.__compile_callback()
         kwarg_para = {
@@ -46,9 +40,10 @@ class ExperimentClassification(ExperimentBase):
         ]
         return callbacks
 
-    def __model_compile_para(self):
+    def model_compile_para(self):
         compile_para = dict()
-        compile_para["optimizer"] = tf.train.AdamOptimizer(self.learning_rate)
+        compile_para["optimizer"] = tf.keras.optimizers.Adam(
+            learning_rate=self.learning_rate)
         compile_para["loss"] = 'categorical_crossentropy'
         compile_para["metrics"] = ['accuracy']
         return compile_para

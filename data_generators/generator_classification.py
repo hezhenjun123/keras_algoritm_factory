@@ -38,7 +38,6 @@ class GeneratorClassification(DataGeneratorBase):
                 self.output_image_type)
             dataset = dataset.map(transforms_map)
             logging.info(dataset)
-        dataset.shuffle(100)
         dataset = dataset.map(lambda row: ([row["image"], row['label']]))
         dataset = dataset.batch(self.batch_size,
                                 drop_remainder=self.drop_remainder)
