@@ -3,14 +3,14 @@ import logging
 import pandas as pd
 from transforms.transform_factory import TransformFactory
 from data_generators.generator_factory import DataGeneratorFactory
-# import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
-
 logging.getLogger().setLevel(logging.INFO)
 
+
 class ExperimentBase:
+
     def __init__(self, config):
         self.config = config
         self.split_col = config["TRAINING_DATA_CSV_SCHEMA"]["SPLIT"]
@@ -35,12 +35,15 @@ class ExperimentBase:
 
     def generate_transform(self):
         transform_factory = TransformFactory(self.config)
-        train_transform = transform_factory.create_transform(self.train_transform_name)
-        valid_transform = transform_factory.create_transform(self.valid_transform_name)
+        train_transform = transform_factory.create_transform(
+            self.train_transform_name)
+        valid_transform = transform_factory.create_transform(
+            self.valid_transform_name)
         return [train_transform, valid_transform]
 
     def read_train_csv(self):
-        data_from_train_csv = pd.read_csv(self.data_csv, sep=self.csv_separator).fillna("")
+        data_from_train_csv = pd.read_csv(self.data_csv,
+                                          sep=self.csv_separator).fillna("")
         logging.info(data_from_train_csv.head())
         logging.info("#" * 15 + "Reading training data" + "#" * 15)
         data_train_split = data_from_train_csv[data_from_train_csv[
@@ -50,20 +53,21 @@ class ExperimentBase:
             self.split_col] == self.split_valid_val].sample(frac=1)
         return [data_train_split, data_valid_split]
 
-    def generate_dataset(self, data_train_split, data_valid_split, train_transform, valid_transform):
+    def generate_dataset(self, data_train_split, data_valid_split,
+                         train_transform, valid_transform):
         generator_factory = DataGeneratorFactory(self.config)
-        train_generator = generator_factory.create_generator(self.train_generator_name)
-        valid_generator = generator_factory.create_generator(self.valid_generator_name)
+        train_generator = generator_factory.create_generator(
+            self.train_generator_name)
+        valid_generator = generator_factory.create_generator(
+            self.valid_generator_name)
         train_dataset = train_generator.create_dataset(
             df=data_train_split, transforms=train_transform)
         valid_dataset = valid_generator.create_dataset(
             df=data_valid_split, transforms=valid_transform)
         return [train_dataset, valid_dataset]
 
-
     def run_experiment(self):
         raise NotImplementedError
-
 
     def __create_run_dir(self, save_dir):
         """Creates a numbered directory named "run1". If directory "run1" already

@@ -1,10 +1,10 @@
 import logging
 
-
 logging.getLogger().setLevel(logging.INFO)
 
 
 class ModelBase:
+
     def __init__(self, config):
         self.config = config
         self.batch_size = config["BATCH_SIZE"]
@@ -12,11 +12,11 @@ class ModelBase:
         self.learning_rate = config["LEARNING_RATE"]
         self.num_classes = config["NUM_CLASSES"]
         self.epochs = config["EPOCHS"]
-        self.steps_per_epoch = config["STEPS_PER_EPOCH"]
+        self.train_steps_per_epoch = config["TRAIN_STEPS_PER_EPOCH"]
+        self.valid_steps_per_epoch = config["VALID_STEPS_PER_EPOCH"]
         resize_config = config["TRANSFORM"]["RESIZE"]
         self.resize = (resize_config[0], resize_config[1])
         logging.info(config)
-
 
     def create_model(self):
         raise NotImplementedError
@@ -29,5 +29,3 @@ class ModelBase:
 
     def fit_model(self, data_train, data_valid, callbacks, **kwargs):
         raise NotImplementedError
-
-

@@ -1,4 +1,3 @@
-# import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 import logging
@@ -7,7 +6,8 @@ from data_generators.generator_base import DataGeneratorBase
 logging.getLogger().setLevel(logging.INFO)
 
 
-class GeneratorSegmentationVanilla(DataGeneratorBase):
+class GeneratorSegmentation(DataGeneratorBase):
+
     def __init__(self, config):
         super().__init__(config)
         self.batch_size = config["BATCH_SIZE"]
@@ -29,9 +29,10 @@ class GeneratorSegmentationVanilla(DataGeneratorBase):
         if self.repeat is True:
             dataset = dataset.repeat()
         if transforms is not None and transforms.has_transform() is True:
-            transform_map = self.__get_transform_map(
-                transforms, self.output_shape, self.output_image_channels,
-                self.output_image_type)
+            transform_map = self.__get_transform_map(transforms,
+                                                     self.output_shape,
+                                                     self.output_image_channels,
+                                                     self.output_image_type)
             dataset = dataset.map(transform_map)
         dataset = dataset.batch(self.batch_size,
                                 drop_remainder=self.drop_remainder)
@@ -49,6 +50,7 @@ class GeneratorSegmentationVanilla(DataGeneratorBase):
 
     def __get_transform_map(self, transforms, output_shape,
                             output_image_channels, output_image_type):
+
         def transform_map(row):
             logging.info(
                 tf.py_func(transforms.apply_transforms,
@@ -58,11 +60,11 @@ class GeneratorSegmentationVanilla(DataGeneratorBase):
                                    [row["image"], row["segmentation_labels"]],
                                    [output_image_type, tf.uint8])
             image = augmented[0]
-            image.set_shape(output_shape + (output_image_channels, ))
+            image.set_shape(output_shape + (output_image_channels,))
             logging.info(image)
             label = augmented[1]
 
-            label.set_shape(output_shape + (1, ))
+            label.set_shape(output_shape + (1,))
             logging.info(label)
             row["image"] = image
             row["segmentation_labels"] = label

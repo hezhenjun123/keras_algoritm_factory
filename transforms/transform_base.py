@@ -1,4 +1,5 @@
 class TransformBase:
+
     def __init__(self, config):
         self.transform = {
             "IMAGE_ONLY": None,

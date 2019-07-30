@@ -1,4 +1,3 @@
-# import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
@@ -6,6 +5,7 @@ tf.disable_v2_behavior()
 class LayerNormalization(tf.keras.layers.Layer):
     """Normalize a layer's activation through the channels. From 'Layer Normalization'
     (Lei Ba et al). https://arxiv.org/abs/1607.06450."""
+
     def __init__(self, eps=1e-6, **kwargs):
         """Initializes the layer.
 
@@ -42,6 +42,7 @@ class LayerNormalization(tf.keras.layers.Layer):
 
 class ResizeBilinear(tf.keras.layers.Layer):
     """Layer to resize images using bilinear interpolation."""
+
     def __init__(self, factor=None, target_shape=None, **kwargs):
         """Initializes the resize layer. You should only provide one of factor or
         target_shape.

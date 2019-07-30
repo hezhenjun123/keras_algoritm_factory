@@ -1,7 +1,6 @@
 import copy
 import logging
-from data_generators.generator_factory import  DataGeneratorFactory
-# import tensorflow as tf
+from data_generators.generator_factory import DataGeneratorFactory
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
@@ -44,7 +43,7 @@ def get_plot_data(df, config):
         features = iterator.get_next()
         while True:
             try:
-                image,segmentation_labels = sess.run(features)
+                image, segmentation_labels = sess.run(features)
                 plot_data.append((
                     image,
                     segmentation_labels,

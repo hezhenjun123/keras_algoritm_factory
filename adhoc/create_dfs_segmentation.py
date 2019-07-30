@@ -42,9 +42,9 @@ assert len(img_paths) == len(
     seg_label_paths), 'Something is not matching in lengths'
 
 assert len(
-    set([os.path.basename(x) for x in img_paths]) -
-    set([os.path.basename(x).replace('_segmap', '')
-         for x in img_paths])) == 0, 'Names do not match up'
+    set([os.path.basename(x) for x in img_paths])
+    - set([os.path.basename(x).replace('_segmap', '')
+           for x in img_paths])) == 0, 'Names do not match up'
 
 label_name = [""] * len(img_paths)
 label = [""] * len(img_paths)

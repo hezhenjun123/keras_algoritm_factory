@@ -2,7 +2,8 @@ import albumentations as A
 from transforms.transform_base import TransformBase
 
 
-class TransformSimpleClassification(TransformBase):
+class TransformClassification(TransformBase):
+
     def __init__(self, config):
         super().__init__(config)
         random_crop_size = self.config["TRANSFORM"]["RANDOMCROP"]

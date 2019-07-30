@@ -1,14 +1,14 @@
 from experiment.experiment_classification import ExperimentClassification
-from experiment.experiment_segmentation import ExperimentSegmentation
-from experiment.experiment_segmentation_unet_backbone import ExperimentSegmentationUnetBackbone
+from experiment.experiment_segmentation_tf1unet import ExperimentSegmentationTF1Unet
+from experiment.experiment_segmentation_tf2unet import ExperimentSegmentationTF2Unet
 
 
 class ExperimentFactory:
 
     experiment_registry = {
         "ExperimentClassification": ExperimentClassification,
-        "ExperimentSegmentation": ExperimentSegmentation,
-        "ExperimentSegmentationUnetBackbone": ExperimentSegmentationUnetBackbone
+        "ExperimentSegmentationTF1Unet": ExperimentSegmentationTF1Unet,
+        "ExperimentSegmentationTF2Unet": ExperimentSegmentationTF2Unet
     }
 
     def __init__(self, config):

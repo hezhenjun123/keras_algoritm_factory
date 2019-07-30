@@ -15,7 +15,8 @@ from model.model_factory import ModelFactory
 logging.getLogger().setLevel(logging.INFO)
 
 
-class ExperimentSegmentation(ExperimentBase):
+class ExperimentSegmentationTF1Unet(ExperimentBase):
+
     def __init__(self, config):
         super().__init__(config)
         self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
@@ -26,14 +27,14 @@ class ExperimentSegmentation(ExperimentBase):
     def run_experiment(self):
         train_transform, valid_transform = self.generate_transform()
         data_train_split, data_valid_split = self.read_train_csv()
-        train_dataset, valid_dataset = self.generate_dataset(data_train_split, data_valid_split, train_transform,
-                                                             valid_transform)
+        train_dataset, valid_dataset = self.generate_dataset(
+            data_train_split, data_valid_split, train_transform,
+            valid_transform)
         model_factory = ModelFactory(self.config)
         model = model_factory.create_model(self.model_name)
 
         compile_para = self.__model_compile_para()
         model.compile_model(**compile_para)
-
 
         kwarg_para = {
             "num_train_data": len(data_train_split),
@@ -51,10 +52,8 @@ class ExperimentSegmentation(ExperimentBase):
         compile_para["metrics"] = [MeanIOU(num_classes=self.num_classes)]
         return compile_para
 
-
     def __compile_callback(self, valid_data_dataframe, valid_transforms):
-        plot_df = valid_data_dataframe.sample(n=self.num_plots,
-                                                   random_state=69)
+        plot_df = valid_data_dataframe.sample(n=self.num_plots, random_state=69)
         data_to_plot = get_plot_data(plot_df, self.config)
         summaries_dir = os.path.join(self.save_dir, "summaries")
         tensorboard_callback = tf.keras.callbacks.TensorBoard(
@@ -66,13 +65,13 @@ class ExperimentSegmentation(ExperimentBase):
             cmap = generate_colormap(self.num_classes, "ADE20K")
         callbacks = [
             tensorboard_callback,
-            ImageSummary(
-                tensorboard_callback,
-                data_to_plot,
-                update_freq=10,
-                transforms=valid_transforms,
-                cmap=cmap,
-            ),
+            # ImageSummary(
+            #     tensorboard_callback,
+            #     data_to_plot,
+            #     update_freq=10,
+            #     transforms=valid_transforms,
+            #     cmap=cmap,
+            # ),
             CosineAnnealingScheduler(20, self.learning_rate),
             SmartCheckpoint(destination_path=checkpoints_dir,
                             file_format='epoch_{epoch:04d}/cp.ckpt',

@@ -6,6 +6,7 @@ from tensorflow.keras.callbacks import Callback
 class CosineAnnealingScheduler(Callback):
     """Cosine annealing scheduler.
     """
+
     def __init__(self, T_max, eta_max, eta_min=0, verbose=0):
         super(CosineAnnealingScheduler, self).__init__()
         self.T_max = T_max

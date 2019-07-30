@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import logging
-# import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 from data_generators.generator_base import DataGeneratorBase
@@ -9,7 +8,8 @@ from data_generators.generator_base import DataGeneratorBase
 logging.getLogger().setLevel(logging.INFO)
 
 
-class GeneratorClassificationVanilla(DataGeneratorBase):
+class GeneratorClassification(DataGeneratorBase):
+
     def __init__(self, config):
         super().__init__(config)
 
@@ -22,7 +22,7 @@ class GeneratorClassificationVanilla(DataGeneratorBase):
             self.get_join_root_dir_map(self.data_dir))
         df[self.label_name] = df[self.label_name].apply(str)
         df[self.image_level_label] = df[self.image_level_label].apply(
-            self.__multi_hot_encode, args=(self.n_classes, ))
+            self.__multi_hot_encode, args=(self.n_classes,))
         dataset = tf.data.Dataset.from_tensor_slices(
             dict(image_path=df.image_path.values,
                  label=np.array(list(df[self.image_level_label].values))))
@@ -47,6 +47,7 @@ class GeneratorClassificationVanilla(DataGeneratorBase):
 
     def __get_transform_map(self, transforms, output_shape,
                             output_image_channels, output_image_type):
+
         def transform_map(row):
             res = tf.py_func(transforms.apply_transforms,
                              [row["image"], row["label"]],
@@ -56,7 +57,7 @@ class GeneratorClassificationVanilla(DataGeneratorBase):
                                [row["image"], row["label"]],
                                [output_image_type, row["label"].dtype])[0]
 
-            image.set_shape(output_shape + (output_image_channels, ))
+            image.set_shape(output_shape + (output_image_channels,))
             row["image"] = image
             return row
 
@@ -70,6 +71,6 @@ class GeneratorClassificationVanilla(DataGeneratorBase):
         return new_row
 
     def __multi_hot_encode(self, label_indicies, n_classes):
-        encoded = np.zeros((n_classes, ))
+        encoded = np.zeros((n_classes,))
         encoded[label_indicies] = 1
         return encoded

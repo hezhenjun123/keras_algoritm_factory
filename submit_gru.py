@@ -1,9 +1,6 @@
 from landingzone import gru
 
-
-CONFIG_FILE = [
-    "model_config_segmentation_chaff.yaml"
-]
+CONFIG_FILE = ["model_config_segmentation_chaff_tf1.yaml"]
 
 
 def run_gru_job():

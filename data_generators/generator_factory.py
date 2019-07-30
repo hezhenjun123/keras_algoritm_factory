@@ -1,5 +1,5 @@
-from data_generators.generator_classification_vanilla import GeneratorClassificationVanilla
-from data_generators.generator_segmentation_vanilla import GeneratorSegmentationVanilla
+from data_generators.generator_classification import GeneratorClassification
+from data_generators.generator_segmentation import GeneratorSegmentation
 from data_generators.generator_segmentation_uv import GeneratorSegmentationUV
 from data_generators.generator_segmentation_tf2unet import GeneratorSegmentationTF2Unet
 
@@ -7,9 +7,8 @@ from data_generators.generator_segmentation_tf2unet import GeneratorSegmentation
 class DataGeneratorFactory:
 
     generator_registry = {
-        "GeneratorClassificationVanilla": GeneratorClassificationVanilla,
-        "GeneratorSegmentationVanilla": GeneratorSegmentationVanilla,
-        "GeneratorSegmentationUV": GeneratorSegmentationUV,
+        "GeneratorClassification": GeneratorClassification,
+        "GeneratorSegmentation": GeneratorSegmentation,
         "GeneratorSegmentationTF2Unet": GeneratorSegmentationTF2Unet
     }
 

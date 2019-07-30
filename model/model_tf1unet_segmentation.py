@@ -3,11 +3,11 @@ from math import ceil
 from model.model_base import ModelBase
 from model.architecture_unet import UNet
 
-
 logging.getLogger().setLevel(logging.INFO)
 
 
-class ModelUnetTF1Segmentation(ModelBase):
+class ModelTF1UnetSegmentation(ModelBase):
+
     def __init__(self, config):
         super().__init__(config)
         self.num_plots = config["NUM_PLOTS"]
@@ -15,7 +15,6 @@ class ModelUnetTF1Segmentation(ModelBase):
         self.channel_list = config["CHANNEL_LIST"]
         self.activation = config["ACTIVATION"]
         self.model = self.create_model()
-
 
     def create_model(self):
         model = UNet(
@@ -34,7 +33,6 @@ class ModelUnetTF1Segmentation(ModelBase):
         )
         model.summary()
         return model
-
 
     def __set_model_parameters(self, **kwargs):
         if "num_train_data" not in kwargs:
@@ -59,19 +57,21 @@ class ModelUnetTF1Segmentation(ModelBase):
 
     def fit_model(self, train_dataset, valid_dataset, callbacks, **kwargs):
         self.__set_model_parameters(**kwargs)
-        if self.steps_per_epoch == -1:
-            steps_per_epoch = ceil(self.num_train_data / self.batch_size)
+        if self.train_steps_per_epoch == -1:
+            train_steps_per_epoch = ceil(self.num_train_data / self.batch_size)
         else:
-            steps_per_epoch = self.steps_per_epoch
-        valid_steps = ceil(self.num_valid_data / self.batch_size)
+            train_steps_per_epoch = self.train_steps_per_epoch
+        if self.valid_steps_per_epoch == -1:
+            valid_steps_per_epoch = ceil(self.num_valid_data / self.batch_size)
+        else:
+            valid_steps_per_epoch = self.valid_steps_per_epoch
 
-        logging.info(
-            'STARTING TRAINING, {} train steps, {} valid steps'.format(
-                steps_per_epoch, valid_steps))
+        logging.info('STARTING TRAINING, {} train steps, {} valid steps'.format(
+            train_steps_per_epoch, valid_steps_per_epoch))
         self.model.fit(train_dataset,
                        epochs=self.epochs,
-                       steps_per_epoch=steps_per_epoch,
+                       steps_per_epoch=train_steps_per_epoch,
                        validation_data=valid_dataset,
-                       validation_steps=valid_steps,
+                       validation_steps=valid_steps_per_epoch,
                        verbose=2,
                        callbacks=callbacks)

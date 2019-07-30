@@ -3,6 +3,7 @@ import tensorflow as tf
 
 class CropPatches(tf.keras.layers.Layer):
     r"""Crop the input image and label into batch of patches"""
+
     def __init__(self, resize, boxes):
         r"""Initialize the CropPatches
         Parameters
@@ -67,6 +68,7 @@ class CropPatches(tf.keras.layers.Layer):
 class CropAndExpand(tf.keras.layers.Layer):
     r"""Function to Crop the images and labels into patches and expand the
     input data records"""
+
     def __init__(self, resize, boxes):
         r"""Initialize CropAndExpand
         Parameters

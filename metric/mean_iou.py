@@ -1,8 +1,5 @@
-# import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
-import logging
-# tf.logging.set_verbosity(tf.logging.INFO)
 
 # def MeanIOU(num_classes, from_logits=False):
 #     def mean_iou(y_true, y_pred):
@@ -32,6 +29,7 @@ def MeanIOU(num_classes, from_logits=False):
     mean_iou : function
         Function to compute the mean IoU given labels and predictions.
     """
+
     def mean_iou(y_true, y_pred):
         """Function to be used in Keras' training loop.
 

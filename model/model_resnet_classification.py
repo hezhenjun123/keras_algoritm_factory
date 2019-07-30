@@ -3,8 +3,8 @@ from model.model_base import ModelBase
 from model.architecture_resnet import ResNet
 
 
-
 class ModelResnetClassification(ModelBase):
+
     def __init__(self, config):
         super().__init__(config)
         self.pretrained = config["PRETRAINED"]
@@ -12,7 +12,6 @@ class ModelResnetClassification(ModelBase):
         self.channel_list = config["CHANNEL_LIST"]
         self.activation = config["ACTIVATION"]
         self.model = self.create_model()
-
 
     def create_model(self):
         model = ResNet(input_shape=(*self.resize, 3),
@@ -27,13 +26,11 @@ class ModelResnetClassification(ModelBase):
         model.summary()
         return model
 
-
     def __set_model_parameters(self, **kwargs):
         if "num_train_data" not in kwargs:
             self.num_train_data = 1000
         else:
             self.num_train_data = kwargs["num_train_data"]
-
         if "num_valid_data" not in kwargs:
             self.num_valid_data = 100
         else:
@@ -41,15 +38,18 @@ class ModelResnetClassification(ModelBase):
 
     def fit_model(self, train_dataset, valid_dataset, callbacks, **kwargs):
         self.__set_model_parameters(**kwargs)
-        if self.steps_per_epoch == -1:
-            steps_per_epoch = ceil(self.num_train_data / self.batch_size)
+        if self.train_steps_per_epoch == -1:
+            train_steps_per_epoch = ceil(self.num_train_data / self.batch_size)
         else:
-            steps_per_epoch = self.steps_per_epoch
-        valid_steps = ceil(self.num_valid_data / self.batch_size)
+            train_steps_per_epoch = self.train_steps_per_epoch
+        if self.valid_steps_per_epoch == -1:
+            valid_steps_per_epoch = ceil(self.num_valid_data / self.batch_size)
+        else:
+            valid_steps_per_epoch = self.valid_steps_per_epoch
         self.model.fit(train_dataset,
                        epochs=self.epochs,
-                       steps_per_epoch=steps_per_epoch,
+                       steps_per_epoch=train_steps_per_epoch,
                        validation_data=valid_dataset,
-                       validation_steps=valid_steps,
+                       validation_steps=valid_steps_per_epoch,
                        verbose=2,
                        callbacks=callbacks)

@@ -3,8 +3,13 @@ BATCH_SIZE: 4
 DATA_CSV: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/train.csv
 LEARNING_RATE: 0.0001
 EPOCHS: 700
-STEPS_PER_EPOCH: 10000
+TRAIN_STEPS_PER_EPOCH: -1
+VALID_STEPS_PER_EPOCH: -1
+DROPOUT: 0
 NUM_CLASSES: 2
+CHANNEL_LIST: [32, 64, 128, 256]
+ACTIVATION: relu
+NUM_PLOTS: 5
 
 LOCAL_PARA:
   DIR_OUT: ./out
@@ -15,7 +20,7 @@ AWS_PARA:
   DATA_DIR: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/
 
 DATA_GENERATOR:
-  OUTPUT_SHAPE: [128, 128]
+  OUTPUT_SHAPE: [512, 512]
   OUTPUT_IMAGE_CHANNELS: 3
   OUTPUT_IMAGE_TYPE: float32
   DROP_REMAINDER: false
@@ -24,7 +29,7 @@ DATA_GENERATOR:
   REPEAT: true
 
 TRANSFORM:
-  RESIZE: [128, 128]
+  RESIZE: [512, 512]
 
 TRAINING_DATA_CSV_SCHEMA:
   SEPARATOR: ','
@@ -36,21 +41,10 @@ TRAINING_DATA_CSV_SCHEMA:
   SPLIT_TRAIN_VAL: train
   SPLIT_VALID_VAL: valid
 
-MODEL:
-  LAYER_SIZE: 64
-  LAYER_COUNT: 3
-  BACKBONE: mobilenet-v2
-  IS_BACKBONE_TRAINABLE: false
-  VALIDATION_STEPS: 50
-  MODEL_DIRECTORY: out
-  CHECKPOINT_DIRECTORY: checkpoint
-  LOG_DIRECTORY: log
-
-
 EXPERIMENT:
-  EXPERIMENT_NAME: ExperimentSegmentationUnetBackbone
-  MODEL_NAME: BackboneUNetModel
-  TRAIN_TRANSFORM: TransformSegmentationChaff
-  TRAIN_GENERATOR: GeneratorSegmentationTF2Unet
+  EXPERIMENT_NAME: ExperimentSegmentationTF1Unet
+  MODEL_NAME: ModelTF1UnetSegmentation
+  TRAIN_TRANSFORM: TransformSegmentation
+  TRAIN_GENERATOR: GeneratorSegmentation
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
