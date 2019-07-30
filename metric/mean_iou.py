@@ -1,6 +1,5 @@
-import tensorflow as tf
-import logging
-tf.logging.set_verbosity(tf.logging.INFO)
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 # def MeanIOU(num_classes, from_logits=False):
 #     def mean_iou(y_true, y_pred):
@@ -30,6 +29,7 @@ def MeanIOU(num_classes, from_logits=False):
     mean_iou : function
         Function to compute the mean IoU given labels and predictions.
     """
+
     def mean_iou(y_true, y_pred):
         """Function to be used in Keras' training loop.
 
@@ -59,10 +59,7 @@ def MeanIOU(num_classes, from_logits=False):
             y_pred = tf.argmax(y_pred, axis=-1)
         y_true = tf.reshape(y_true, [-1])
         y_pred = tf.reshape(y_pred, [-1])
-        cm = tf.confusion_matrix(y_true,
-                                 y_pred,
-                                 num_classes=num_classes,
-                                 dtype=tf.float64)
+        cm = tf.confusion_matrix(y_true, y_pred, num_classes=num_classes, dtype=tf.float64)
         sum_over_row = tf.reduce_sum(cm, 0)
         sum_over_col = tf.reduce_sum(cm, 1)
         cm_diag = tf.diag_part(cm)
@@ -71,18 +68,15 @@ def MeanIOU(num_classes, from_logits=False):
         # The mean is only computed over classes that appear in the label or
         # prediction tensor. If the denominator is
         # 0, we need to ignore the class.
-        num_valid_entries = tf.reduce_sum(
-            tf.cast(tf.not_equal(denominator, 0), dtype=tf.float64))
+        num_valid_entries = tf.reduce_sum(tf.cast(tf.not_equal(denominator, 0), dtype=tf.float64))
 
         # If the value of the denominator is 0, set it to 1 to avoid zero
         # division.
-        denominator = tf.where(denominator > 0, denominator,
-                               tf.ones_like(denominator))
+        denominator = tf.where(denominator > 0, denominator, tf.ones_like(denominator))
         iou = cm_diag / denominator
 
         # If the number of valid entries is 0 (no classes) we return 0.
-        result = tf.where(num_valid_entries > 0,
-                          tf.reduce_sum(iou) / num_valid_entries, 0)
+        result = tf.where(num_valid_entries > 0, tf.reduce_sum(iou) / num_valid_entries, 0)
         return result
 
     return mean_iou

@@ -1,14 +1,12 @@
-from transforms.transform_simple_classiication import TransformSimpleClassification
-from transforms.transform_segmentation_uv import TransformSegmentationUV
-from transforms.transform_segmentation_chaff import TransformSegmentationChaff
+from transforms.transform_classiication import TransformClassification
+from transforms.transform_segmentation import TransformSegmentation
 
 
 class TransformFactory:
 
     transform_registry = {
-        "TransformSimpleClassification": TransformSimpleClassification,
-        "TransformSegmentationUV": TransformSegmentationUV,
-        "TransformSegmentationChaff": TransformSegmentationChaff
+        "TransformClassification": TransformClassification,
+        "TransformSegmentation": TransformSegmentation
     }
 
     def __init__(self, config):

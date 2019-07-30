@@ -12,10 +12,9 @@ class SmartCheckpoint(Callback):
         self.file_format = file_format
         self.__create_local_folder__()
         self.checkpoint_path = os.path.join(
-            self.local_dir if self.local_dir is not None else
-            self.destination_path, self.file_format)
-        self.checkpoint_callback = ModelCheckpoint(self.checkpoint_path,
-                                                   **kwargs)
+            self.local_dir if self.local_dir is not None else self.destination_path,
+            self.file_format)
+        self.checkpoint_callback = ModelCheckpoint(self.checkpoint_path, **kwargs)
 
     def __create_local_folder__(self):
         #only use local temp directory if destionation is s3
@@ -28,8 +27,7 @@ class SmartCheckpoint(Callback):
         if epoch == 0:
             self.checkpoint_callback.model = self.model
 
-        ckpt_path_formatted = self.checkpoint_path.format(epoch=epoch + 1,
-                                                          **logs)
+        ckpt_path_formatted = self.checkpoint_path.format(epoch=epoch + 1, **logs)
         ckpt_path_directory = os.path.dirname(ckpt_path_formatted)
         os.makedirs(ckpt_path_directory, exist_ok=True)
         self.checkpoint_callback.on_epoch_end(epoch, logs)

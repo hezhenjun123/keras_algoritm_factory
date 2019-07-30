@@ -3,14 +3,17 @@ import io
 import matplotlib.cm
 import numpy as np
 from scipy.special import expit as sigmoid
-import tensorflow as tf
+
 from PIL import Image
 import logging
 logging.getLogger().setLevel(logging.INFO)
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 
 class ImageSummary(tf.keras.callbacks.Callback):
     """Callback that adds iamge summaries to an existing tensorboard calback."""
+
     def __init__(
             self,
             tensorboard_callback,
@@ -53,9 +56,8 @@ class ImageSummary(tf.keras.callbacks.Callback):
         self.from_logits = from_logits
         self.update_freq = update_freq
         if isinstance(cmap, str):
-            self.colormap = (
-                matplotlib.cm.get_cmap(cmap)(np.arange(256))[:, :3] *
-                255).astype(np.uint8)
+            self.colormap = (matplotlib.cm.get_cmap(cmap)(np.arange(256))[:, :3] * 255).astype(
+                np.uint8)
         else:
             self.colormap = cmap
         self._apply_transforms(data, transforms)
@@ -66,40 +68,32 @@ class ImageSummary(tf.keras.callbacks.Callback):
         self.data = []
         for i, elem in enumerate(data):
             if not (hasattr(elem, "__len__") and len(elem) == 3):
-                raise ValueError(
-                    f"({i}-th elem) expected the elements of data to be triplets."
-                )
+                raise ValueError(f"({i}-th elem) expected the elements of data to be triplets.")
             image, label, name = elem
             if not isinstance(image, np.ndarray):
                 raise ValueError(
-                    f"({i}-th elem) the first element of the triplet should be a numpy array."
-                )
+                    f"({i}-th elem) the first element of the triplet should be a numpy array.")
             if not isinstance(label, np.ndarray):
                 raise ValueError(
-                    f"({i}-th elem) the second element of the triplet should be a numpy array."
-                )
+                    f"({i}-th elem) the second element of the triplet should be a numpy array.")
             if not isinstance(name, str):
                 raise ValueError(
-                    f"({i}-th elem) the third element of the triplet should be a string."
-                )
+                    f"({i}-th elem) the third element of the triplet should be a string.")
             if image.ndim != 4 or label.ndim != 4:
                 raise ValueError(f"({i}-th elem) expected 4-dim arrays.")
             if image.shape[0] != 1 or label.shape[0] != 1:
                 raise ValueError(
-                    f"({i}-th elem) expected only one image/label, that is first dimension of 1."
-                )
+                    f"({i}-th elem) expected only one image/label, that is first dimension of 1.")
             if image.shape[:3] != label.shape[:3]:
                 raise ValueError(
                     f"({i}-th elem) image and label should have the same size (first 3 dims). Got "
                     f"{image.shape} and {label.shape}.")
             if image.dtype != np.uint8:
-                raise ValueError(
-                    f"({i}-th elem) expected uint8 image, dtype is {image.dtype}."
-                )
+                raise ValueError(f"({i}-th elem) expected uint8 image, dtype is {image.dtype}.")
             image = image[0, ...]
             label = label[0]
 
-            tr_image,_ = transforms.apply_transforms(image,label)
+            tr_image, _ = transforms.apply_transforms(image, label)
             label = label[:, :, 0]
             tr_image = np.expand_dims(tr_image, axis=0)
             self.data.append((image, tr_image, label, name))
@@ -124,8 +118,7 @@ class ImageSummary(tf.keras.callbacks.Callback):
     def _colorize(self, indices):
         """Converts an matrix consisting of numbers in the range [0...1] to a color
         image for easier visualiations."""
-        assert (indices.ndim == 2
-                ), f"expected matrix, got {indices.ndim}-dim array"
+        assert (indices.ndim == 2), f"expected matrix, got {indices.ndim}-dim array"
         indices = np.round(indices).astype(int)
         return self.colormap[indices]
 
@@ -144,11 +137,9 @@ class ImageSummary(tf.keras.callbacks.Callback):
         if epoch % self.update_freq != 0:
             return
         summary_values = []
-        for i,(image, tr_image, label, name) in enumerate(self.data):
+        for i, (image, tr_image, label, name) in enumerate(self.data):
             height, width, _ = image.shape
-            separator = np.full(fill_value=255,
-                                shape=(height, 5, 3),
-                                dtype=np.uint8)
+            separator = np.full(fill_value=255, shape=(height, 5, 3), dtype=np.uint8)
             pred = self.model.predict(tr_image)[0, ...]
             if pred.shape[:2] != image[:2]:
                 pred = cv2.resize(pred, (width, height))

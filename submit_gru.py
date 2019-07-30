@@ -1,9 +1,6 @@
 from landingzone import gru
 
-
-CONFIG_FILE = [
-    "model_config_segmentation_chaff.yaml"
-]
+CONFIG_FILE = ["model_config_segmentation_chaff_tf1.yaml"]
 
 
 def run_gru_job():
@@ -12,7 +9,7 @@ def run_gru_job():
                    project_name='wheat_yield',
                    job_decription=f'GRU RUN {config}',
                    cmd=f'run_experiment.sh {config}',
-                   instance_type='p3.2xlarge')
+                   instance_type='p2.xlarge')
 
 
 def main():

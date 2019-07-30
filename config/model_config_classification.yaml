@@ -3,7 +3,8 @@ BATCH_SIZE: 16
 DATA_CSV: data/train_vibration0606.csv
 LEARNING_RATE: 0.00001
 EPOCHS: 700
-STEPS_PER_EPOCH: -1
+TRAIN_STEPS_PER_EPOCH: -1
+VALID_STEPS_PER_EPOCH: -1
 PRETRAINED: true
 DROPOUT: 0.25
 NUM_CLASSES: 3
@@ -33,6 +34,7 @@ TRANSFORM:
   RANDOMCROP: [388, 388]
 
 TRAINING_DATA_CSV_SCHEMA:
+  SEPARATOR: '\t'
   IMAGE_PATH: image_path
   SEGMENTATION_PATH: segmentation_path
   LABEL_NAME: label_name
@@ -44,7 +46,7 @@ TRAINING_DATA_CSV_SCHEMA:
 EXPERIMENT:
   EXPERIMENT_NAME: ExperimentClassification
   MODEL_NAME: ModelResnetClassification
-  TRAIN_TRANSFORM: TransformSimpleClassification
-  TRAIN_GENERATOR: GeneratorClassificationVanilla
+  TRAIN_TRANSFORM: TransformClassification
+  TRAIN_GENERATOR: GeneratorClassification
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR

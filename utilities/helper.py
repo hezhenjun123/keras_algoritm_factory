@@ -1,8 +1,8 @@
-import tensorflow as tf
-import numpy as np
 import copy
 import logging
-from data_generators.generator_factory import  DataGeneratorFactory
+from data_generators.generator_factory import DataGeneratorFactory
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -36,14 +36,13 @@ def get_plot_data(df, config):
 
     with tf.Graph().as_default(), tf.Session() as sess:
         generator_factory = DataGeneratorFactory(config_now)
-        generator = generator_factory.create_generator(
-            config_now["EXPERIMENT"]["VALID_GENERATOR"])
+        generator = generator_factory.create_generator(config_now["EXPERIMENT"]["VALID_GENERATOR"])
         dataset = generator.create_dataset(df=df, transforms=None)
         iterator = dataset.make_one_shot_iterator()
         features = iterator.get_next()
         while True:
             try:
-                image,segmentation_labels = sess.run(features)
+                image, segmentation_labels = sess.run(features)
                 plot_data.append((
                     image,
                     segmentation_labels,

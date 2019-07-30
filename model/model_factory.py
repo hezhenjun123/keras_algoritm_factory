@@ -1,14 +1,14 @@
 from model.model_resnet_classification import ModelResnetClassification
-from model.model_unet_segmentation_uv import ModelUnetSegmentationUV
-from model.model_unet_segmentation_chaff import ModelUnetSegmentationChaff
+from model.model_tf1unet_segmentation import ModelTF1UnetSegmentation
+from model.model_tf2unet_segmentation import ModelTF2UnetSegmentation
 
 
 class ModelFactory:
 
     model_registry = {
         "ModelResnetClassification": ModelResnetClassification,
-        "ModelUnetSegmentationUV": ModelUnetSegmentationUV,
-        "ModelUnetSegmentationChaff":ModelUnetSegmentationChaff
+        "ModelTF1UnetSegmentation": ModelTF1UnetSegmentation,
+        "ModelTF2UnetSegmentation": ModelTF2UnetSegmentation
     }
 
     def __init__(self, config):

@@ -20,8 +20,7 @@ schema = "image_path\tsegmentation_path\tlabel_name\timage_level_label\tsplit"
 for split, split_folder in train_valid_split.items():
     for label_name, label in class_labels.items():
         s3_prefix = f"{base_path}/{split_folder}/{label_name}"
-        object_list = conn.list_objects(Bucket=s3_bucket,
-                                        Prefix=s3_prefix)['Contents']
+        object_list = conn.list_objects(Bucket=s3_bucket, Prefix=s3_prefix)['Contents']
         for item in object_list:
             full_path = item["Key"]
             if full_path.endswith(ext) is False: continue
