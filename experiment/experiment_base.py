@@ -28,8 +28,7 @@ class ExperimentBase:
         elif config["RUN_ENV"] == "local":
             self.save_dir = self.__create_run_dir(config["LOCAL_PARA"]["DIR_OUT"])
         else:
-            run_env = config["RUN_ENV"]
-            raise Exception(f"Incorrect RUN_ENV: {run_env}")
+            raise Exception(f"Incorrect RUN_ENV: {config['RUN_ENV']}")
         self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
 
     def generate_transform(self):
@@ -42,11 +41,12 @@ class ExperimentBase:
         data_from_train_csv = pd.read_csv(self.data_csv, sep=self.csv_separator).fillna("")
         logging.info(data_from_train_csv.head())
         logging.info("#" * 15 + "Reading training data" + "#" * 15)
-        data_train_split = data_from_train_csv[data_from_train_csv[self.split_col] ==
-                                               self.split_train_val].sample(frac=1)
+        train_data_filter = data_from_train_csv[self.split_col] == self.split_train_val
+        data_train_split = data_from_train_csv[train_data_filter].sample(frac=1)
+
         logging.info("#" * 15 + "Reading valid data" + "#" * 15)
-        data_valid_split = data_from_train_csv[data_from_train_csv[self.split_col] ==
-                                               self.split_valid_val].sample(frac=1)
+        valid_data_filter = data_from_train_csv[self.split_col] == self.split_valid_val
+        data_valid_split = data_from_train_csv[valid_data_filter].sample(frac=1)
         return [data_train_split, data_valid_split]
 
     def generate_dataset(self, data_train_split, data_valid_split, train_transform,

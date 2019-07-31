@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 class ModelTF2UnetSegmentation(ModelBase):
 
     def __init__(self, config):
-        self.config = config
         super().__init__(config)
         self.is_backbone_trainable = self.config["MODEL"]["IS_BACKBONE_TRAINABLE"]
         self.backbone = self.config["MODEL"]["BACKBONE"]

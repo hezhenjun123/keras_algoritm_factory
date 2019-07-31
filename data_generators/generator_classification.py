@@ -10,9 +10,6 @@ logging.getLogger().setLevel(logging.INFO)
 
 class GeneratorClassification(DataGeneratorBase):
 
-    def __init__(self, config):
-        super().__init__(config)
-
     def create_dataset(self, df, transforms):
         if isinstance(df, pd.DataFrame) == False:
             raise ValueError("ERROR: Dataset is not DataFrame. DataFrame is required")
@@ -26,10 +23,10 @@ class GeneratorClassification(DataGeneratorBase):
                  label=np.array(list(df[self.image_level_label].values))))
         dataset = dataset.map(self.__load_data, num_parallel_calls=self.num_parallel_calls)
         dataset = dataset.cache(self.cache_file_location(self.cache_dir))
-        if self.repeat is True:
+        if self.repeat:
             dataset = dataset.repeat()
 
-        if transforms.has_image_transform() is True:
+        if transforms.has_image_transform():
             transforms_map = self.__get_transform_map(transforms, self.output_shape,
                                                       self.output_image_channels,
                                                       self.output_image_type)
@@ -47,9 +44,7 @@ class GeneratorClassification(DataGeneratorBase):
             res = tf.py_func(transforms.apply_transforms, [row["image"], row["label"]],
                              [output_image_type, row["label"].dtype])
             logging.info(res)
-            image = tf.py_func(transforms.apply_transforms, [row["image"], row["label"]],
-                               [output_image_type, row["label"].dtype])[0]
-
+            image = res[0]
             image.set_shape(output_shape + (output_image_channels,))
             row["image"] = image
             return row
