@@ -15,8 +15,8 @@ class GeneratorSegmentation(DataGeneratorBase):
     def create_dataset_dict(self, df, transforms=None):
         df = df.copy()
         join_root_dir = self.get_join_root_dir_map(self.data_dir)
-        df[self.segmentation_path] = df[self.segmentation_path]
-                                        .fillna("")
+        df[self.segmentation_path] = df[self.segmentation_path] \
+                                        .fillna("") \
                                         .apply(join_root_dir)
         df[self.image_path] = df[self.image_path].apply(join_root_dir)
 
