@@ -1,15 +1,15 @@
 from landingzone import gru
 
-CONFIG_FILE = ["model_config_segmentation_chaff_tf1.yaml"]
+CONFIG_FILE = ["model_config_segmentation_chaff_tf2.yaml"]
 
 
 def run_gru_job():
     for config in CONFIG_FILE:
-        gru.submit(job_name='wheat_experiment',
+        gru.submit(job_name='wheat_chaff_segmentation',
                    project_name='wheat_yield',
                    job_decription=f'GRU RUN {config}',
                    cmd=f'run_experiment.sh {config}',
-                   instance_type='p2.xlarge')
+                   instance_type='p2.xlarge')  # p2.xlarge, p3.2xlarge
 
 
 def main():

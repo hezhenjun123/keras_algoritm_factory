@@ -1,4 +1,3 @@
-from math import ceil
 from model.model_base import ModelBase
 from model.architecture_resnet import ResNet
 
@@ -26,31 +25,12 @@ class ModelResnetClassification(ModelBase):
         model.summary()
         return model
 
-    def __set_model_parameters(self, **kwargs):
-        if "num_train_data" not in kwargs:
-            self.num_train_data = 1000
-        else:
-            self.num_train_data = kwargs["num_train_data"]
-        if "num_valid_data" not in kwargs:
-            self.num_valid_data = 100
-        else:
-            self.num_valid_data = kwargs["num_valid_data"]
-
     def fit_model(self, train_dataset, valid_dataset, callbacks, **kwargs):
-        self.__set_model_parameters(**kwargs)
-        #FIXME: May want to consodiate the logic below to model_base
-        if self.train_steps_per_epoch == -1:
-            train_steps_per_epoch = ceil(self.num_train_data / self.batch_size)
-        else:
-            train_steps_per_epoch = self.train_steps_per_epoch
-        if self.valid_steps_per_epoch == -1:
-            valid_steps_per_epoch = ceil(self.num_valid_data / self.batch_size)
-        else:
-            valid_steps_per_epoch = self.valid_steps_per_epoch
+        self.set_runtime_parameters(**kwargs)
         self.model.fit(train_dataset,
                        epochs=self.epochs,
-                       steps_per_epoch=train_steps_per_epoch,
+                       steps_per_epoch=self.train_steps_per_epoch,
                        validation_data=valid_dataset,
-                       validation_steps=valid_steps_per_epoch,
+                       validation_steps=self.valid_steps_per_epoch,
                        verbose=2,
                        callbacks=callbacks)

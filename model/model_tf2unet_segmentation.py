@@ -129,6 +129,7 @@ class ModelTF2UnetSegmentation(ModelBase):
 
     def fit_model(self, training_data_source, validation_data_source, callbacks, **kwargs):
         print(self.model.summary())
+        self.set_runtime_parameters(**kwargs)
         self.model.fit(x=training_data_source,
                        epochs=self.epochs,
                        callbacks=callbacks,

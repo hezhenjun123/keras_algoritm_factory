@@ -34,7 +34,13 @@ class ExperimentSegmentationTF2Unet(ExperimentBase):
         model = self.generate_model()
 
         callbacks = self.__compile_callbacks()
-        model.fit_model(train_dataset, valid_dataset, callbacks)
+
+        kwarg_para = {
+            "num_train_data": len(data_train_split),
+            "num_valid_data": len(data_valid_split),
+        }
+
+        model.fit_model(train_dataset, valid_dataset, callbacks, **kwarg_para)
 
     def model_compile_para(self):
         compile_para = dict()
