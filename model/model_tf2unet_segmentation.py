@@ -70,9 +70,12 @@ class ModelTF2UnetSegmentation(ModelBase):
         upsampled = hidden
         predictions = tf.keras.layers.Lambda(lambda x: tf.keras.backend.greater(x, 0.5),
                                              name="predictions")(upsampled)
-        return tf.keras.Model(inputs=inputs,
+
+        model = tf.keras.Model(inputs=inputs,
                               outputs=[upsampled, predictions],
                               name="segmentation_model")
+        logging.info(model.summary())
+        return model
 
     def downsample_layer(self, inputs, resize_factor):
         residual = tf.keras.layers.MaxPool2D(pool_size=(resize_factor, resize_factor))(inputs)
@@ -128,14 +131,14 @@ class ModelTF2UnetSegmentation(ModelBase):
         return factors
 
     def fit_model(self, training_data_source, validation_data_source, callbacks, **kwargs):
-        print(self.model.summary())
         self.set_runtime_parameters(**kwargs)
         self.model.fit(x=training_data_source,
                        epochs=self.epochs,
                        callbacks=callbacks,
                        steps_per_epoch=self.train_steps_per_epoch,
                        validation_steps=self.valid_steps_per_epoch,
-                       validation_data=validation_data_source)
+                       validation_data=validation_data_source,
+                       verbose=2)
 
         self.model.save(self.checkpoint_directory)
 
