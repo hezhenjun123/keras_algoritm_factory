@@ -68,7 +68,6 @@ class DataGeneratorBase:
     def cache_file_location(self, cache_dir):
         if os.path.exists(cache_dir) is False:
             os.makedirs(cache_dir)
-        # FIXME: do we need millisecond precison for cache folder? - BK
         curr_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')[:-3]
         cache_file = os.path.join(cache_dir, f"cache_{curr_time}")
         num = 1
