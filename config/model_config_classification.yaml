@@ -1,6 +1,5 @@
 RUN_ENV: local #{aws, local}
 BATCH_SIZE: 16
-DATA_CSV: data/train_vibration0606.csv
 LEARNING_RATE: 0.00001
 EPOCHS: 700
 TRAIN_STEPS_PER_EPOCH: -1
@@ -33,15 +32,19 @@ TRANSFORM:
   RESIZE: [300, 300]
   RANDOMCROP: [388, 388]
 
-TRAINING_DATA_CSV_SCHEMA:
+TRAINING_DATA_INFO:
+  TRAIN_CSV_FILE: data/train_vibration0606.csv
+  VALID_CSV_FILE: data/train_vibration0606.csv
+  SPLIT: split
+  SPLIT_TRAIN_VAL: train
+  SPLIT_VALID_VAL: valid
+
   SEPARATOR: '\t'
   IMAGE_PATH: image_path
   SEGMENTATION_PATH: segmentation_path
   LABEL_NAME: label_name
   IMAGE_LEVEL_LABEL: image_level_label
-  SPLIT: split
-  SPLIT_TRAIN_VAL: train
-  SPLIT_VALID_VAL: valid
+
 
 EXPERIMENT:
   EXPERIMENT_NAME: ExperimentClassification

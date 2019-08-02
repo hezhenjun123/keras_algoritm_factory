@@ -1,6 +1,5 @@
 RUN_ENV: local #{aws, local}
 BATCH_SIZE: 4
-DATA_CSV: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/train.csv
 LEARNING_RATE: 0.0001
 EPOCHS: 700
 TRAIN_STEPS_PER_EPOCH: -1
@@ -31,15 +30,19 @@ DATA_GENERATOR:
 TRANSFORM:
   RESIZE: [512, 512]
 
-TRAINING_DATA_CSV_SCHEMA:
+TRAINING_DATA_INFO:
+  TRAIN_CSV_FILE: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/train.csv
+  VALID_CSV_FILE: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/train.csv
+  SPLIT: split
+  SPLIT_TRAIN_VAL: train
+  SPLIT_VALID_VAL: valid
+
   SEPARATOR: ','
   IMAGE_PATH: image_path
   SEGMENTATION_PATH: seg_label_path
   LABEL_NAME: label_name
   IMAGE_LEVEL_LABEL: image_level_label
-  SPLIT: split
-  SPLIT_TRAIN_VAL: train
-  SPLIT_VALID_VAL: valid
+
 
 EXPERIMENT:
   EXPERIMENT_NAME: ExperimentSegmentationTF1Unet

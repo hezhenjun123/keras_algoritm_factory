@@ -9,7 +9,6 @@ class ModelBase:
     def __init__(self, config):
         self.config = config
         self.batch_size = config["BATCH_SIZE"]
-        self.data_csv = config["DATA_CSV"]
         self.learning_rate = config["LEARNING_RATE"]
         self.num_classes = config["NUM_CLASSES"]
         self.epochs = config["EPOCHS"]

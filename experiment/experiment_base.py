@@ -14,11 +14,12 @@ class ExperimentBase:
 
     def __init__(self, config):
         self.config = config
-        self.split_col = config["TRAINING_DATA_CSV_SCHEMA"]["SPLIT"]
-        self.split_train_val = config["TRAINING_DATA_CSV_SCHEMA"]["SPLIT_TRAIN_VAL"]
-        self.split_valid_val = config["TRAINING_DATA_CSV_SCHEMA"]["SPLIT_VALID_VAL"]
-        self.data_csv = config["DATA_CSV"]
-        self.csv_separator = config["TRAINING_DATA_CSV_SCHEMA"]["SEPARATOR"]
+        self.split_col = config["TRAINING_DATA_INFO"]["SPLIT"]
+        self.split_train_val = config["TRAINING_DATA_INFO"]["SPLIT_TRAIN_VAL"]
+        self.split_valid_val = config["TRAINING_DATA_INFO"]["SPLIT_VALID_VAL"]
+        self.train_csv = config["TRAINING_DATA_INFO"]["TRAIN_CSV_FILE"]
+        self.valid_csv = config["TRAINING_DATA_INFO"]["VALID_CSV_FILE"]
+        self.csv_separator = config["TRAINING_DATA_INFO"]["SEPARATOR"]
         self.train_transform_name = self.config["EXPERIMENT"]["TRAIN_TRANSFORM"]
         self.valid_transform_name = self.config["EXPERIMENT"]["VALID_TRANSFORM"]
         self.train_generator_name = self.config["EXPERIMENT"]["TRAIN_GENERATOR"]
@@ -38,15 +39,16 @@ class ExperimentBase:
         return [train_transform, valid_transform]
 
     def read_train_csv(self):
-        data_from_train_csv = pd.read_csv(self.data_csv, sep=self.csv_separator).fillna("")
+        data_from_train_csv = pd.read_csv(self.train_csv, sep=self.csv_separator).fillna("")
         logging.info(data_from_train_csv.head())
         logging.info("#" * 15 + "Reading training data" + "#" * 15)
         train_data_filter = data_from_train_csv[self.split_col] == self.split_train_val
         data_train_split = data_from_train_csv[train_data_filter].sample(frac=1)
 
+        data_from_valid_csv = pd.read_csv(self.valid_csv, sep=self.csv_separator).fillna("")
         logging.info("#" * 15 + "Reading valid data" + "#" * 15)
-        valid_data_filter = data_from_train_csv[self.split_col] == self.split_valid_val
-        data_valid_split = data_from_train_csv[valid_data_filter].sample(frac=1)
+        valid_data_filter = data_from_valid_csv[self.split_col] == self.split_valid_val
+        data_valid_split = data_from_valid_csv[valid_data_filter].sample(frac=1)
         return [data_train_split, data_valid_split]
 
     def generate_dataset(self, data_train_split, data_valid_split, train_transform,
