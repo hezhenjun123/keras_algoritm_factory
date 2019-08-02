@@ -9,7 +9,7 @@ def run_gru_job():
                    project_name='wheat_yield',
                    job_decription=f'GRU RUN {config}',
                    cmd=f'run_experiment.sh {config}',
-                   instance_type='p2.xlarge',
+                   instance_type='p3.2xlarge',
                    timeout_hour=24)  # p2.xlarge, p3.2xlarge
 
 

@@ -25,11 +25,11 @@ class DataGeneratorBase:
         self.cache_dir = config["DATA_GENERATOR"]["CACHE_DIR"]
         self.repeat = config["DATA_GENERATOR"]["REPEAT"]
         self.num_parallel_calls = config["DATA_GENERATOR"]["NUM_PARALLEL_CALLS"]
-        self.segmentation_path = config["TRAINING_DATA_CSV_SCHEMA"]["SEGMENTATION_PATH"]
-        self.image_path = config["TRAINING_DATA_CSV_SCHEMA"]["IMAGE_PATH"]
-        self.label_name = config["TRAINING_DATA_CSV_SCHEMA"]["LABEL_NAME"]
-        self.image_level_label = config["TRAINING_DATA_CSV_SCHEMA"]["IMAGE_LEVEL_LABEL"]
-        self.split = config["TRAINING_DATA_CSV_SCHEMA"]["SPLIT"]
+        self.segmentation_path = config["TRAINING_DATA_INFO"]["SEGMENTATION_PATH"]
+        self.image_path = config["TRAINING_DATA_INFO"]["IMAGE_PATH"]
+        self.label_name = config["TRAINING_DATA_INFO"]["LABEL_NAME"]
+        self.image_level_label = config["TRAINING_DATA_INFO"]["IMAGE_LEVEL_LABEL"]
+        self.split = config["TRAINING_DATA_INFO"]["SPLIT"]
         self.n_classes = config["NUM_CLASSES"]
 
     def create_dataset(self, df, transforms):
