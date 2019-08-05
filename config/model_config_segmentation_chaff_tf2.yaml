@@ -1,4 +1,4 @@
-RUN_ENV: local #{aws, local}
+RUN_ENV: aws #{aws, local}
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 1000
@@ -15,7 +15,7 @@ AWS_PARA:
   DATA_DIR: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/
 
 DATA_GENERATOR:
-  OUTPUT_SHAPE: [128, 128]
+  OUTPUT_SHAPE: [512, 512]
   OUTPUT_IMAGE_CHANNELS: 3
   OUTPUT_IMAGE_TYPE: float32
   DROP_REMAINDER: false
@@ -24,7 +24,7 @@ DATA_GENERATOR:
   REPEAT: true
 
 TRANSFORM:
-  RESIZE: [128, 128]
+  RESIZE: [512, 512]
 
 TRAINING_DATA_INFO:
   TRAIN_CSV_FILE: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/train.csv
@@ -43,7 +43,7 @@ MODEL:
   LAYER_SIZE: 64
   LAYER_COUNT: 3
   BACKBONE: mobilenet-v2
-  IS_BACKBONE_TRAINABLE: false
+  IS_BACKBONE_TRAINABLE: true
   MODEL_DIRECTORY: out
   CHECKPOINT_DIRECTORY: checkpoint
   LOG_DIRECTORY: log
