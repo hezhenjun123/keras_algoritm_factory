@@ -57,19 +57,10 @@ class ModelTF2UnetSegmentation(ModelBase):
                                                   activation='relu',
                                                   padding='same')(inputs)
         downsampled = [processed_inputs]
-        logging.info("=======================resize_factor====================")
-        logging.info(self.get_resize_factors())
         for layer_resize_factor in self.get_resize_factors():
-            logging.info("=======================downsample layer resize====================")
-            logging.info(layer_resize_factor)
-            logging.info(downsampled[-1].shape)
             downsampled.append(self.downsample_layer(downsampled[-1], layer_resize_factor))
         for layer_resize_factor, downsampled_input in zip(reversed(self.get_resize_factors()),
                                                           reversed(downsampled[1:])):
-            logging.info("=======================upsample layer resize====================")
-            logging.info(layer_resize_factor)
-            logging.info(hidden.shape)
-            logging.info(downsampled_input.shape)
             hidden = self.upsample_layer(hidden, downsampled_input, layer_resize_factor)
         hidden = tf.keras.layers.Conv2D(filters=1,
                                         padding='same',
