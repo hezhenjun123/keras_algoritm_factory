@@ -8,8 +8,8 @@ class TransformClassification(TransformBase):
         super().__init__(config)
         random_crop_size = self.config["TRANSFORM"]["RANDOMCROP"]
         resize = self.config["TRANSFORM"]["RESIZE"]
-        tfunc = A.Compose([
+        tfunc =[
             A.RandomCrop(random_crop_size[0], random_crop_size[1]),
             A.Resize(resize[0], resize[1])
-        ])
+        ]
         self.transform["IMAGE_ONLY"] = tfunc

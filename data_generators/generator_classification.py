@@ -15,7 +15,7 @@ class GeneratorClassification(DataGeneratorBase):
             raise ValueError("ERROR: Dataset is not DataFrame. DataFrame is required")
         df = df.copy()
         df[self.image_path] = df[self.image_path].apply(self.get_join_root_dir_map(self.data_dir))
-        df[self.label_name] = df[self.label_name].apply(str)
+        # df[self.label_name] = df[self.label_name].apply(str)
         df[self.image_level_label] = df[self.image_level_label].apply(self.__multi_hot_encode,
                                                                       args=(self.n_classes,))
         dataset = tf.data.Dataset.from_tensor_slices(
