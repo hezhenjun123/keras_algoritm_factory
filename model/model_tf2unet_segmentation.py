@@ -47,7 +47,7 @@ class ModelTF2UnetSegmentation(ModelBase):
             mobilenet_v2.trainable = self.is_backbone_trainable
             hidden = mobilenet_v2(inputs)
         else:
-            hidden = tf.keras.layers.MaxPool2D(pool_size=(32, 32))(inputs)
+            raise Exception("Backbone didn't setup")
         hidden = tf.keras.layers.Conv2D(filters=self.layer_size,
                                         kernel_size=3,
                                         activation='relu',
@@ -57,10 +57,19 @@ class ModelTF2UnetSegmentation(ModelBase):
                                                   activation='relu',
                                                   padding='same')(inputs)
         downsampled = [processed_inputs]
+        logging.info("=======================resize_factor====================")
+        logging.info(self.get_resize_factors())
         for layer_resize_factor in self.get_resize_factors():
+            logging.info("=======================downsample layer resize====================")
+            logging.info(layer_resize_factor)
+            logging.info(downsampled[-1].shape)
             downsampled.append(self.downsample_layer(downsampled[-1], layer_resize_factor))
         for layer_resize_factor, downsampled_input in zip(reversed(self.get_resize_factors()),
                                                           reversed(downsampled[1:])):
+            logging.info("=======================upsample layer resize====================")
+            logging.info(layer_resize_factor)
+            logging.info(hidden.shape)
+            logging.info(downsampled_input.shape)
             hidden = self.upsample_layer(hidden, downsampled_input, layer_resize_factor)
         hidden = tf.keras.layers.Conv2D(filters=1,
                                         padding='same',
@@ -72,8 +81,8 @@ class ModelTF2UnetSegmentation(ModelBase):
                                              name="predictions")(upsampled)
 
         model = tf.keras.Model(inputs=inputs,
-                              outputs=[upsampled, predictions],
-                              name="segmentation_model")
+                               outputs=[upsampled, predictions],
+                               name="segmentation_model")
         logging.info(model.summary())
         return model
 
@@ -101,34 +110,8 @@ class ModelTF2UnetSegmentation(ModelBase):
         return hidden
 
     def get_resize_factors(self):
-        total_resize = self.image_shape[0] // 4
-        prime_factors = list(sorted(self.get_prime_factors(total_resize)))
-        assert len(prime_factors) >= self.layer_count, \
-            "Not possible to resize by " + str(total_resize) + "x using " + \
-            str(self.layer_count) + " layers"
-        while len(prime_factors) > self.layer_count:
-            prime_factors = list(sorted([prime_factors[0] * prime_factors[1]] + prime_factors[2:]))
+        prime_factors = [2, 4, 4]
         return prime_factors
-
-    # a given number n
-    def get_prime_factors(self, n):
-        factors = []
-        # Print the number of two's that divide n
-        while n % 2 == 0:
-            factors.append(2)
-            n = n / 2
-        # n must be odd at this point
-        # so a skip of 2 ( i = i + 2) can be used
-        for i in range(3, int(math.sqrt(n)) + 1, 2):
-            # while i divides n , print i ad divide n
-            while n % i == 0:
-                factors.append(i)
-                n = n / i
-        # Condition if n is a prime
-        # number greater than 2
-        if n > 2:
-            factors.append(n)
-        return factors
 
     def fit_model(self, training_data_source, validation_data_source, callbacks, **kwargs):
         self.set_runtime_parameters(**kwargs)
