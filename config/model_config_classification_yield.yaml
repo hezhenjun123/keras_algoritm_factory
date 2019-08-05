@@ -1,6 +1,5 @@
-RUN_ENV: aws #{aws, local}
+RUN_ENV: local #{aws, local}
 BATCH_SIZE: 16
-DATA_CSV: s3://landing-client-zoomlion/yield_classification/yield_hopper/train.csv
 LEARNING_RATE: 0.00001
 EPOCHS: 100
 TRAIN_STEPS_PER_EPOCH: -1
@@ -35,15 +34,18 @@ TRANSFORM:
   BUFFER_SIZE: 60
   USE_SPLICER: false
 
-TRAINING_DATA_CSV_SCHEMA:
-  SEPARATOR: ','
-  IMAGE_PATH: image_path
-  SEGMENTATION_PATH: segmentation_path
-  LABEL_NAME: label_name
-  IMAGE_LEVEL_LABEL: image_level_label
+
+TRAINING_DATA_INFO:
+  TRAIN_CSV_FILE: s3://landing-client-zoomlion/yield_classification/yield_hopper/train.csv
+  VALID_CSV_FILE: s3://landing-client-zoomlion/yield_classification/yield_hopper/train.csv
   SPLIT: split
   SPLIT_TRAIN_VAL: train
   SPLIT_VALID_VAL: valid
+  SEPARATOR: ','
+  IMAGE_PATH: image_path
+  SEGMENTATION_PATH: seg_label_path
+  LABEL_NAME: label_name
+  IMAGE_LEVEL_LABEL: image_level_label
 
 EXPERIMENT:
   EXPERIMENT_NAME: ExperimentClassification
