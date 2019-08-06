@@ -1,4 +1,4 @@
-RUN_ENV: local #{aws, local}
+RUN_ENV: aws #{aws, local}
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 1000
