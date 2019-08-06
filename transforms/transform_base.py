@@ -10,7 +10,7 @@ class TransformBase:
                 image = transform_func(image=image)["image"]
         if self.transform["IMAGE_LABEL"] is not None:
             for transform_func in self.transform["IMAGE_LABEL"]:
-                augmented = transform_func(image=image)
+                augmented = transform_func(image=image, mask=label)
                 image = augmented["image"]
                 label = augmented["mask"]
         if self.transform["LABEL_ONLY"] is not None:
