@@ -14,6 +14,7 @@ from experiment.experiment_base import ExperimentBase
 logging.getLogger().setLevel(logging.INFO)
 
 
+
 class ExperimentSegmentationTF1Unet(ExperimentBase):
 
     def __init__(self, config):
@@ -46,8 +47,8 @@ class ExperimentSegmentationTF1Unet(ExperimentBase):
         return compile_para
 
     def __compile_callback(self, valid_data_dataframe, valid_transforms):
-        plot_df = valid_data_dataframe.sample(n=self.num_plots, random_state=69)
-        data_to_plot = get_plot_data(plot_df, self.config)
+        # plot_df = valid_data_dataframe.sample(n=self.num_plots, random_state=69)
+        # data_to_plot = get_plot_data(plot_df, self.config)
         summaries_dir = os.path.join(self.save_dir, "summaries")
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=summaries_dir)
         checkpoints_dir = os.path.join(self.save_dir, "checkpoints/")

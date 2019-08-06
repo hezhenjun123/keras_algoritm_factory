@@ -1,6 +1,5 @@
 import os
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 from datetime import datetime
 import numpy as np
 
@@ -61,7 +60,7 @@ class DataGeneratorBase:
         tf.Tensor
             A Tensor of type `tf.uint8` and shape `(H, W, C)`.
         """
-        image = tf.read_file(path)
+        image = tf.io.read_file(path)
         image = tf.image.decode_image(image)
         return image
 

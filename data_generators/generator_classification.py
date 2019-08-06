@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
 import logging
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 from data_generators.generator_base import DataGeneratorBase
 
 logging.getLogger().setLevel(logging.INFO)
@@ -41,7 +40,7 @@ class GeneratorClassification(DataGeneratorBase):
                             output_image_type):
 
         def transform_map(row):
-            res = tf.py_func(transforms.apply_transforms, [row["image"], row["label"]],
+            res = tf.compat.v1.py_func(transforms.apply_transforms, [row["image"], row["label"]],
                              [output_image_type, row["label"].dtype])
             logging.info(res)
             image = res[0]

@@ -4,8 +4,7 @@ import pandas as pd
 from transforms.transform_factory import TransformFactory
 from data_generators.generator_factory import DataGeneratorFactory
 from model.model_factory import ModelFactory
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -89,14 +88,15 @@ class ExperimentBase:
         str
             The full path of the newly created "run{number}" folder.
         """
-        tf.gfile.MakeDirs(save_dir)
-        list_of_files = tf.gfile.ListDirectory(save_dir)
+        tf.io.gfile.mkdir(save_dir)
+        list_of_files = tf.io.gfile.listdir(save_dir)
         i = 1
         while f"run{i}" in list_of_files:
             i += 1
         run_dir = os.path.join(save_dir, f"run{i}")
-        tf.gfile.MakeDirs(run_dir)
+        tf.io.gfile.mkdir(run_dir)
         logging.info("#" * 40)
         logging.info(f"Saving summaries on {run_dir}")
         logging.info("#" * 40)
         return run_dir
+

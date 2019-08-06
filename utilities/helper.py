@@ -1,8 +1,7 @@
 import copy
 import logging
 from data_generators.generator_factory import DataGeneratorFactory
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -34,20 +33,20 @@ def get_plot_data(df, config):
     config_now["DATA_GENERATOR"]["OUTPUT_IMAGE_TYPE"] = "uint8"
     config_now["DATA_GENERATOR"]["REPEAT"] = False
 
-    with tf.Graph().as_default(), tf.Session() as sess:
-        generator_factory = DataGeneratorFactory(config_now)
-        generator = generator_factory.create_generator(config_now["EXPERIMENT"]["VALID_GENERATOR"])
-        dataset = generator.create_dataset(df=df, transforms=None)
-        iterator = dataset.make_one_shot_iterator()
-        features = iterator.get_next()
-        while True:
-            try:
-                image, segmentation_labels = sess.run(features)
-                plot_data.append((
-                    image,
-                    segmentation_labels,
-                    "",
-                ))
-            except tf.errors.OutOfRangeError:
-                break
+    # with tf.Graph().as_default(), tf.Session() as sess:
+    generator_factory = DataGeneratorFactory(config_now)
+    generator = generator_factory.create_generator(config_now["EXPERIMENT"]["VALID_GENERATOR"])
+    dataset = generator.create_dataset(df=df, transforms=None)
+    iterator = tf.compat.v1.data.make_one_shot_iterator(dataset)
+    while True:
+        try:
+            image, segmentation_labels = iterator.get_next()
+            plot_data.append((
+                image,
+                segmentation_labels,
+                "",
+            ))
+        except tf.errors.OutOfRangeError:
+            break
+
     return plot_data

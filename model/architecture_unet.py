@@ -1,6 +1,4 @@
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
-
+import tensorflow as tf
 
 class LayerNormalization(tf.keras.layers.Layer):
     """Normalize a layer's activation through the channels. From 'Layer Normalization'
@@ -29,7 +27,7 @@ class LayerNormalization(tf.keras.layers.Layer):
                                     trainable=True)
 
     def call(self, x):
-        mean, var = tf.nn.moments(x, axes=-1, keep_dims=True)
+        mean, var = tf.nn.moments(x, axes=-1, keepdims=True)
         x_norm = (x - mean) / tf.sqrt(var + self.eps)
         return self.gamma * x_norm + self.beta
 
@@ -74,7 +72,7 @@ class ResizeBilinear(tf.keras.layers.Layer):
             )
 
     def call(self, inputs):
-        return tf.image.resize_bilinear(inputs, size=self.target_shape, align_corners=True)
+        return tf.compat.v1.image.resize_bilinear(inputs, size=self.target_shape, align_corners=True)
 
     def compute_output_shape(self, input_shape):
         if self.factor is not None:

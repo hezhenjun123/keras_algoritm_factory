@@ -1,5 +1,4 @@
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 import logging
 from data_generators.generator_base import DataGeneratorBase
 
@@ -48,7 +47,7 @@ class GeneratorSegmentation(DataGeneratorBase):
                             output_image_type):
 
         def transform_map(row):
-            augmented = tf.py_func(transforms.apply_transforms,
+            augmented = tf.compat.v1.py_func(transforms.apply_transforms,
                                    [row["image"], row["segmentation_labels"]],
                                    [output_image_type, tf.uint8])
             logging.info(augmented)

@@ -1,5 +1,4 @@
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 
 # def MeanIOU(num_classes, from_logits=False):
 #     def mean_iou(y_true, y_pred):
@@ -59,10 +58,10 @@ def MeanIOU(num_classes, from_logits=False):
             y_pred = tf.argmax(y_pred, axis=-1)
         y_true = tf.reshape(y_true, [-1])
         y_pred = tf.reshape(y_pred, [-1])
-        cm = tf.confusion_matrix(y_true, y_pred, num_classes=num_classes, dtype=tf.float64)
+        cm = tf.compat.v1.confusion_matrix(y_true, y_pred, num_classes=num_classes, dtype=tf.float64)
         sum_over_row = tf.reduce_sum(cm, 0)
         sum_over_col = tf.reduce_sum(cm, 1)
-        cm_diag = tf.diag_part(cm)
+        cm_diag = tf.compat.v1.diag_part(cm)
         denominator = sum_over_row + sum_over_col - cm_diag
 
         # The mean is only computed over classes that appear in the label or

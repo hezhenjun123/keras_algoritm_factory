@@ -2,8 +2,7 @@ import os
 import logging
 from experiment.experiment_base import ExperimentBase
 from utilities.smart_checkpoint import SmartCheckpoint
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 
 logging.getLogger().setLevel(logging.INFO)
 

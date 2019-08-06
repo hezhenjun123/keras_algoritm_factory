@@ -7,9 +7,8 @@ from scipy.special import expit as sigmoid
 from PIL import Image
 import logging
 logging.getLogger().setLevel(logging.INFO)
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
 
+import tensorflow as tf
 
 class ImageSummary(tf.keras.callbacks.Callback):
     """Callback that adds iamge summaries to an existing tensorboard calback."""
