@@ -10,6 +10,7 @@ from utilities.color import generate_colormap
 from utilities.cos_anneal import CosineAnnealingScheduler
 from utilities.smart_checkpoint import SmartCheckpoint
 from utilities.helper import get_plot_data
+
 logging.getLogger().setLevel(logging.INFO)
 
 
@@ -26,6 +27,7 @@ class ExperimentSegmentationTF2Unet(ExperimentBase):
         train_dataset, valid_dataset = self.generate_dataset(data_train_split, data_valid_split,
                                                              train_transform, valid_transform)
         model = self.generate_model()
+
 
         callbacks = self.__compile_callbacks(data_valid_split, valid_transform)
 
@@ -72,6 +74,6 @@ class ExperimentSegmentationTF2Unet(ExperimentBase):
                             verbose=1,
                             monitor='val_mean_iou',
                             mode='max',
-                            save_best_only=True),
+                            save_best_only=False),
         ]
         return callbacks
