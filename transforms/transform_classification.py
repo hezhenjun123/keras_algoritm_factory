@@ -8,7 +8,7 @@ class TransformClassification(TransformBase):
         super().__init__(config)
         random_crop_size = self.config["TRANSFORM"]["RANDOMCROP"]
         resize = self.config["TRANSFORM"]["RESIZE"]
-        tfunc =[
+        tfunc = [
             A.RandomCrop(random_crop_size[0], random_crop_size[1]),
             A.Resize(resize[0], resize[1])
         ]

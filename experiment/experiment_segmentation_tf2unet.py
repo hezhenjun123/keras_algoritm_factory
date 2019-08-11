@@ -11,6 +11,7 @@ from utilities.cos_anneal import CosineAnnealingScheduler
 from utilities.smart_checkpoint import SmartCheckpoint
 from utilities.helper import get_plot_data
 
+
 logging.getLogger().setLevel(logging.INFO)
 
 

@@ -41,7 +41,7 @@ class GeneratorClassification(DataGeneratorBase):
 
         def transform_map(row):
             res = tf.compat.v1.py_func(transforms.apply_transforms, [row["image"], row["label"]],
-                             [output_image_type, row["label"].dtype])
+                                       [output_image_type, row["label"].dtype])
             logging.info(res)
             image = res[0]
             image.set_shape(output_shape + (output_image_channels,))

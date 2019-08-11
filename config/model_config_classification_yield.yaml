@@ -1,4 +1,5 @@
 RUN_ENV: local #{aws, local}
+RUN_MODE: train #{train, inference}
 BATCH_SIZE: 16
 LEARNING_RATE: 0.00001
 EPOCHS: 100
@@ -12,14 +13,9 @@ DENSE_LIST: [256, 128]  #ignored for ModelResnetClassification
 LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
 LOAD_MODEL_DIRECTORY: null #can be s3 path, hdf5 file format
 ACTIVATION: relu
+DIR_OUT: /workspace/output/
+DATA_DIR: s3://landing-client-zoomlion/yield_classification/yield_hopper/
 
-LOCAL_PARA:
-  DIR_OUT: ./out
-  DATA_DIR: s3://landing-client-zoomlion/yield_classification/yield_hopper/
-
-AWS_PARA:
-  DIR_OUT: /workspace/output/
-  DATA_DIR: s3://landing-client-zoomlion/yield_classification/yield_hopper/
 
 DATA_GENERATOR:
   OUTPUT_SHAPE: [null, null]
@@ -55,3 +51,8 @@ EXPERIMENT:
   TRAIN_GENERATOR: GeneratorClassification
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
+
+
+LOCAL_OVERRIDE:
+  DIR_OUT: ./out
+  DATA_DIR:

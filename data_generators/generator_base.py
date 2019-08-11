@@ -2,6 +2,9 @@ import os
 import tensorflow as tf
 from datetime import datetime
 import numpy as np
+import logging
+
+logging.getLogger().setLevel(logging.INFO)
 
 
 class DataGeneratorBase:
@@ -12,13 +15,7 @@ class DataGeneratorBase:
         self.output_image_channels = config["DATA_GENERATOR"]["OUTPUT_IMAGE_CHANNELS"]
         self.output_image_type = tf.dtypes.as_dtype(
             np.dtype(config["DATA_GENERATOR"]["OUTPUT_IMAGE_TYPE"]))
-        if config["RUN_ENV"] == "aws":
-            self.data_dir = config["AWS_PARA"]["DATA_DIR"]
-        elif config["RUN_ENV"] == "local":
-            self.data_dir = config["LOCAL_PARA"]["DATA_DIR"]
-        else:
-            self.run_env = config["RUN_ENV"]
-            raise Exception(f"Incorrect run env: {self.run_env}")
+        self.data_dir = config["DATA_DIR"]
         self.batch_size = config["BATCH_SIZE"]
         self.drop_remainder = config["DATA_GENERATOR"]["DROP_REMAINDER"]
         self.cache_dir = config["DATA_GENERATOR"]["CACHE_DIR"]
@@ -30,6 +27,21 @@ class DataGeneratorBase:
         self.image_level_label = config["TRAINING_DATA_INFO"]["IMAGE_LEVEL_LABEL"]
         self.split = config["TRAINING_DATA_INFO"]["SPLIT"]
         self.n_classes = config["NUM_CLASSES"]
+        if config["RUN_MODE"] == "inference":
+            self.__inference_override(config)
+        if config["RUN_ENV"] == "local":
+            self.__local_override_config(config)
+
+    def __local_override_config(self, config):
+        if config["LOCAL_OVERRIDE"]["DATA_DIR"] is not None and \
+                len(config["LOCAL_OVERRIDE"]["DATA_DIR"].strip()) > 0:
+            self.data_dir = config["LOCAL_OVERRIDE"]["DATA_DIR"]
+            logging.info(f"=====Override data_dir with {self.data_dir}")
+
+    def __inference_override(self, config):
+        logging.info("=====Override config with inference configs=====")
+        self.repeat = False
+        self.data_dir = config["INFERENCE"]["INFERENCE_DATA_DIR"]
 
     def create_dataset(self, df, transforms):
         raise NotImplementedError()
@@ -60,6 +72,7 @@ class DataGeneratorBase:
         tf.Tensor
             A Tensor of type `tf.uint8` and shape `(H, W, C)`.
         """
+        logging.info(path)
         image = tf.io.read_file(path)
         image = tf.image.decode_image(image)
         return image

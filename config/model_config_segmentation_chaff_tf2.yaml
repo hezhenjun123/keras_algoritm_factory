@@ -1,4 +1,5 @@
-RUN_ENV: aws #{aws, local}
+RUN_ENV: local #{aws, local}
+RUN_MODE: train #{train, inference}
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 1000
@@ -7,14 +8,9 @@ VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
 LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
 LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield/trosenflanz/wheat_chaff_segmentation/run_038/checkpoints/epoch_0017/cp.hdf5 #can be s3 path, hdf5 file format
+DIR_OUT: /workspace/output/
+DATA_DIR: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/
 
-LOCAL_PARA:
-  DIR_OUT: ./out
-  DATA_DIR: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/
-
-AWS_PARA:
-  DIR_OUT: /workspace/output/
-  DATA_DIR: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/
 
 DATA_GENERATOR:
   OUTPUT_SHAPE: [512, 512]
@@ -54,3 +50,7 @@ EXPERIMENT:
   TRAIN_GENERATOR: GeneratorSegmentationTF2Unet
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
+
+LOCAL_OVERRIDE:
+  DIR_OUT: ./out
+  DATA_DIR:

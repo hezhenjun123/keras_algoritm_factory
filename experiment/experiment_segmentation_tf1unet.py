@@ -14,7 +14,6 @@ from experiment.experiment_base import ExperimentBase
 logging.getLogger().setLevel(logging.INFO)
 
 
-
 class ExperimentSegmentationTF1Unet(ExperimentBase):
 
     def __init__(self, config):

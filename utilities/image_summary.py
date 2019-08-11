@@ -10,6 +10,7 @@ logging.getLogger().setLevel(logging.INFO)
 
 import tensorflow as tf
 
+
 class ImageSummary(tf.keras.callbacks.Callback):
     """Callback that adds iamge summaries to an existing tensorboard calback."""
 
