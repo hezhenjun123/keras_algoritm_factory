@@ -23,13 +23,13 @@ class ExperimentBase:
         self.valid_transform_name = self.config["EXPERIMENT"]["VALID_TRANSFORM"]
         self.train_generator_name = self.config["EXPERIMENT"]["TRAIN_GENERATOR"]
         self.valid_generator_name = self.config["EXPERIMENT"]["VALID_GENERATOR"]
-        if config["RUN_ENV"] == "aws":
-            self.save_dir = config["AWS_PARA"]["DIR_OUT"]
-        elif config["RUN_ENV"] == "local":
-            self.save_dir = self.__create_run_dir(config["LOCAL_PARA"]["DIR_OUT"])
-        else:
-            raise Exception(f"Incorrect RUN_ENV: {config['RUN_ENV']}")
+        self.save_dir = config["DIR_OUT"]
         self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
+        if config["RUN_ENV"] == "local":
+            self.__local_override_config(config)
+
+    def __local_override_config(self, config):
+        self.save_dir = self.__create_run_dir(config["LOCAL_OVERRIDE"]["DIR_OUT"])
 
     def generate_transform(self):
         transform_factory = TransformFactory(self.config)
@@ -99,4 +99,3 @@ class ExperimentBase:
         logging.info(f"Saving summaries on {run_dir}")
         logging.info("#" * 40)
         return run_dir
-

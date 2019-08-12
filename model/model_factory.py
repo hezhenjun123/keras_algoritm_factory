@@ -8,7 +8,7 @@ class ModelFactory:
 
     model_registry = {
         "ModelResnetClassification": ModelResnetClassification,
-        "ModelResnetClassificationYield":ModelResnetClassificationYield,
+        "ModelResnetClassificationYield": ModelResnetClassificationYield,
         "ModelTF1UnetSegmentation": ModelTF1UnetSegmentation,
         "ModelTF2UnetSegmentation": ModelTF2UnetSegmentation
     }

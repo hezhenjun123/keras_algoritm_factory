@@ -1,18 +1,16 @@
-RUN_ENV: aws #{aws, local}
+RUN_ENV: local #{aws, local}
+RUN_MODE: inference #{train, inference}
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 300
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
+LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL_DIRECTORY:
+DIR_OUT: /workspace/output/  #directory on the ec2 host, to save output files from code
+DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-lodging/segmentation/data-v0.2/
 
-LOCAL_PARA:
-  DIR_OUT: ./out
-  DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-lodging/segmentation/data-v0.2/
-
-AWS_PARA:
-  DIR_OUT: /workspace/output/
-  DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-lodging/segmentation/data-v0.2/
 
 DATA_GENERATOR:
   OUTPUT_SHAPE: [512, 512]
@@ -56,3 +54,25 @@ EXPERIMENT:
   TRAIN_GENERATOR: GeneratorSegmentationTF2Unet
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
+
+
+INFERENCE:
+  INFERENCE_NAME: InferenceLodgingTF2
+  #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
+  INFERENCE_CSV_FILE: inference-data/data-v0.2/train.csv
+  INFERENCE_DATA_DIR: inference-data/data-v0.2/
+  LOAD_MODEL_PATH: wheat_lodging_segmentation_run/run_004/checkpoints/epoch_0138/cp.hdf5
+  SPLIT: split #Column name in the csv file
+  SPLIT_VAL: valid #Column content in the csv file
+  SEPARATOR: ','
+  IMAGE_PATH: image_path
+  SEGMENTATION_PATH: seg_label_path
+  LABEL_NAME: label_name
+  IMAGE_LEVEL_LABEL: image_level_label
+  NUM_PROCESS_IMAGE: 1
+  PRED_IMAGE_DIR: pred_image
+
+
+LOCAL_OVERRIDE:
+  DIR_OUT: ./out
+  DATA_DIR:

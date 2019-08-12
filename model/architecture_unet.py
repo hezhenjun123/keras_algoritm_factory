@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 class LayerNormalization(tf.keras.layers.Layer):
     """Normalize a layer's activation through the channels. From 'Layer Normalization'
     (Lei Ba et al). https://arxiv.org/abs/1607.06450."""
@@ -72,7 +73,9 @@ class ResizeBilinear(tf.keras.layers.Layer):
             )
 
     def call(self, inputs):
-        return tf.compat.v1.image.resize_bilinear(inputs, size=self.target_shape, align_corners=True)
+        return tf.compat.v1.image.resize_bilinear(inputs,
+                                                  size=self.target_shape,
+                                                  align_corners=True)
 
     def compute_output_shape(self, input_shape):
         if self.factor is not None:

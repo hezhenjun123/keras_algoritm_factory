@@ -47,9 +47,11 @@ class GeneratorSegmentation(DataGeneratorBase):
                             output_image_type):
 
         def transform_map(row):
+            original_image = row["image"]
+            original_segmentation_labels = row["segmentation_labels"]
             augmented = tf.compat.v1.py_func(transforms.apply_transforms,
-                                   [row["image"], row["segmentation_labels"]],
-                                   [output_image_type, tf.uint8])
+                                             [row["image"], row["segmentation_labels"]],
+                                             [output_image_type, tf.uint8])
             logging.info(augmented)
             image = augmented[0]
             image.set_shape(output_shape + (output_image_channels,))
@@ -60,6 +62,8 @@ class GeneratorSegmentation(DataGeneratorBase):
             logging.info(label)
             row["image"] = image
             row["segmentation_labels"] = label
+            row["original_image"] = original_image
+            row["original_segmentation_labels"] = original_segmentation_labels
             return row
 
         return transform_map
@@ -67,7 +71,6 @@ class GeneratorSegmentation(DataGeneratorBase):
     def __load_data(self, row):
         image = self.load_image(row["image_path"])
         label = self.load_image(row["segmentation_path"])
-
         new_row = dict(
             image=image,
             segmentation_labels=label,

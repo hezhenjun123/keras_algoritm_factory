@@ -59,6 +59,7 @@ def MeanIOU(num_classes, from_logits=False):
         y_true = tf.reshape(y_true, [-1])
         y_pred = tf.reshape(y_pred, [-1])
         cm = tf.math.confusion_matrix(y_true, y_pred, num_classes=num_classes, dtype=tf.float64)
+
         sum_over_row = tf.reduce_sum(cm, 0)
         sum_over_col = tf.reduce_sum(cm, 1)
         cm_diag = tf.compat.v1.diag_part(cm)

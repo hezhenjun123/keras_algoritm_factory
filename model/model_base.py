@@ -5,6 +5,7 @@ from utilities import file_system_manipulation as fsm
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+
 class ModelBase:
 
     def __init__(self, config):
@@ -29,10 +30,10 @@ class ModelBase:
     def load_model(self):
         logger.debug(f"Loading model from {self.model_directory}")
         if fsm.is_s3_path(self.model_directory):
-            load_path = fsm.s3_to_local(self.model_directory,'./model.hdf5')[0]
+            load_path = fsm.s3_to_local(self.model_directory, './model.hdf5')[0]
         else:
             load_path = self.model_directory
-        return tf.keras.models.load_model(load_path,compile=False)
+        return tf.keras.models.load_model(load_path, compile=False)
 
     def create_model(self):
         raise NotImplementedError
@@ -62,7 +63,7 @@ class ModelBase:
                        validation_steps=self.valid_steps_per_epoch,
                        verbose=2,
                        callbacks=callbacks)
-                       
+
     def predict(self, predict_data_source, steps=None):
         return self.model.predict(x=predict_data_source, steps=steps)
 

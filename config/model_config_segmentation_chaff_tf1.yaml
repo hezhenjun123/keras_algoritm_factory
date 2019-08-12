@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 RUN_ENV: aws #{aws, local}
+=======
+RUN_ENV: local #{aws, local}
+RUN_MODE: train #{train, inference}
+>>>>>>> add inference class and config
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 700
@@ -11,14 +16,9 @@ ACTIVATION: relu
 NUM_PLOTS: 5
 LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
 LOAD_MODEL_DIRECTORY: null #can be s3 path, hdf5 file format
+DIR_OUT: /workspace/output/
+DATA_DIR: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/
 
-LOCAL_PARA:
-  DIR_OUT: ./out
-  DATA_DIR: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/
-
-AWS_PARA:
-  DIR_OUT: /workspace/output/
-  DATA_DIR: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/
 
 DATA_GENERATOR:
   OUTPUT_SHAPE: [512, 512]
@@ -52,3 +52,8 @@ EXPERIMENT:
   TRAIN_GENERATOR: GeneratorSegmentation
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
+
+
+LOCAL_OVERRIDE:
+  DIR_OUT: ./out
+  DATA_DIR:

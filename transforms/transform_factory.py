@@ -1,6 +1,6 @@
 from transforms.transform_classification import TransformClassification
 from transforms.transform_segmentation import TransformSegmentation
-from  transforms.transform_classification_yield import TransformClassificationYield
+from transforms.transform_classification_yield import TransformClassificationYield
 
 
 class TransformFactory:

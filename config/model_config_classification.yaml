@@ -1,4 +1,5 @@
 RUN_ENV: local #{aws, local}
+RUN_MODE: train #{train, inference}
 BATCH_SIZE: 16
 LEARNING_RATE: 0.00001
 EPOCHS: 700
@@ -9,15 +10,14 @@ DROPOUT: 0.25
 NUM_CLASSES: 3
 CHANNEL_LIST: [512, 256, 128]
 ACTIVATION: relu
+
 LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
 LOAD_MODEL_DIRECTORY: null #can be s3 path, hdf5 file format
-LOCAL_PARA:
-  DIR_OUT: ./out
-  DATA_DIR: wheat-vibration-0606
 
-AWS_PARA:
-  DIR_OUT: /workspace/output/
-  DATA_DIR: s3://zoomlion-sample/archive/wheat-vibration-0606/
+RESIZE: [300, 300]
+DIR_OUT: /workspace/output/
+DATA_DIR: s3://zoomlion-sample/archive/wheat-vibration-0606/
+
 
 DATA_GENERATOR:
   OUTPUT_SHAPE: [null, null]
@@ -52,3 +52,8 @@ EXPERIMENT:
   TRAIN_GENERATOR: GeneratorClassification
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
+
+
+LOCAL_OVERRIDE:
+  DIR_OUT: ./out
+  DATA_DIR: wheat-vibration-0606
