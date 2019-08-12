@@ -5,6 +5,8 @@ EPOCHS: 1000
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
+LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield/trosenflanz/wheat_chaff_segmentation/run_038/checkpoints/epoch_0017/cp.hdf5 #can be s3 path, hdf5 file format
 
 LOCAL_PARA:
   DIR_OUT: ./out
@@ -44,10 +46,6 @@ MODEL:
   LAYER_COUNT: 3
   BACKBONE: mobilenet-v2
   IS_BACKBONE_TRAINABLE: true
-  MODEL_DIRECTORY: out
-  CHECKPOINT_DIRECTORY: checkpoint
-  LOG_DIRECTORY: log
-
 
 EXPERIMENT:
   EXPERIMENT_NAME: ExperimentSegmentationTF2Unet

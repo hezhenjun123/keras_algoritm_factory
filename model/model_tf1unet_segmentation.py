@@ -45,15 +45,3 @@ class ModelTF1UnetSegmentation(ModelBase):
             raise Exception("Need valid_data_dataframe for plot")
         else:
             self.valid_data_dataframe = kwargs["valid_data_dataframe"]
-
-    def fit_model(self, train_dataset, valid_dataset, callbacks, **kwargs):
-        self.set_runtime_parameters(**kwargs)
-        logging.info('STARTING TRAINING, {} train steps, {} valid steps'.format(
-            self.train_steps_per_epoch, self.valid_steps_per_epoch))
-        self.model.fit(train_dataset,
-                       epochs=self.epochs,
-                       steps_per_epoch=self.train_steps_per_epoch,
-                       validation_data=valid_dataset,
-                       validation_steps=self.valid_steps_per_epoch,
-                       verbose=2,
-                       callbacks=callbacks)

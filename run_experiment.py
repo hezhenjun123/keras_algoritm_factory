@@ -26,6 +26,10 @@ def read_config(args):
     if module_config["EXPERIMENT"]["VALID_GENERATOR"] is None:
         module_config["EXPERIMENT"]["VALID_GENERATOR"] = module_config["EXPERIMENT"][
             "TRAIN_GENERATOR"]
+    if module_config["LOAD_MODEL"] is None or "LOAD_MODEL" not in module_config:
+        module_config["LOAD_MODEL"]=False
+    if "LOAD_MODEL_DIRECORY" not in module_config:
+        module_config["LOAD_MODEL_DIRECORY"]=None
     return module_config
 
 

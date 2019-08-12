@@ -10,7 +10,7 @@ class ModelResnetClassification(ModelBase):
         self.dropout = config["DROPOUT"]
         self.channel_list = config["CHANNEL_LIST"]
         self.activation = config["ACTIVATION"]
-        self.model = self.create_model()
+        self.model = self.get_or_load_model()
 
     def create_model(self):
         model = ResNet(input_shape=(*self.resize, 3),
@@ -24,13 +24,3 @@ class ModelResnetClassification(ModelBase):
                        output_name='logits')
         model.summary()
         return model
-
-    def fit_model(self, train_dataset, valid_dataset, callbacks, **kwargs):
-        self.set_runtime_parameters(**kwargs)
-        self.model.fit(train_dataset,
-                       epochs=self.epochs,
-                       steps_per_epoch=self.train_steps_per_epoch,
-                       validation_data=valid_dataset,
-                       validation_steps=self.valid_steps_per_epoch,
-                       verbose=2,
-                       callbacks=callbacks)

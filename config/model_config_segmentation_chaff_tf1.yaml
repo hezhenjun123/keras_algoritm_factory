@@ -1,4 +1,4 @@
-RUN_ENV: local #{aws, local}
+RUN_ENV: aws #{aws, local}
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 700
@@ -9,14 +9,16 @@ NUM_CLASSES: 2
 CHANNEL_LIST: [32, 64, 128, 256]
 ACTIVATION: relu
 NUM_PLOTS: 5
+LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL_DIRECTORY: null #can be s3 path, hdf5 file format
 
 LOCAL_PARA:
   DIR_OUT: ./out
-  DATA_DIR: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/
+  DATA_DIR: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/
 
 AWS_PARA:
   DIR_OUT: /workspace/output/
-  DATA_DIR: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/
+  DATA_DIR: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/
 
 DATA_GENERATOR:
   OUTPUT_SHAPE: [512, 512]
@@ -31,8 +33,8 @@ TRANSFORM:
   RESIZE: [512, 512]
 
 TRAINING_DATA_INFO:
-  TRAIN_CSV_FILE: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/train.csv
-  VALID_CSV_FILE: s3://landing-client-zoomlion/chaff_segmentation/chaff_hopper/train.csv
+  TRAIN_CSV_FILE: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/train.csv
+  VALID_CSV_FILE: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/train.csv
   SPLIT: split
   SPLIT_TRAIN_VAL: train
   SPLIT_VALID_VAL: valid

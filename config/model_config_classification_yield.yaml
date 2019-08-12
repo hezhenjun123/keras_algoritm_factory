@@ -9,7 +9,8 @@ DROPOUT: 0.5
 NUM_CLASSES: 3
 CHANNEL_LIST: [256,128]
 DENSE_LIST: [256, 128]  #ignored for ModelResnetClassification
-
+LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL_DIRECTORY: null #can be s3 path, hdf5 file format
 ACTIVATION: relu
 
 LOCAL_PARA:

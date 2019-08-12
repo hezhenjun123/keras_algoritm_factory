@@ -36,7 +36,7 @@ class ExperimentSegmentationTF1Unet(ExperimentBase):
             "valid_transforms": valid_transform,
             "valid_data_dataframe": data_valid_split
         }
-        callbacks = self.__compile_callback(data_valid_split, valid_transform)
+        callbacks = self.__compile_callbacks(data_valid_split, valid_transform)
         model.fit_model(train_dataset, valid_dataset, callbacks, **kwarg_para)
 
     def model_compile_para(self):
@@ -46,16 +46,16 @@ class ExperimentSegmentationTF1Unet(ExperimentBase):
         compile_para["metrics"] = [MeanIOU(num_classes=self.num_classes)]
         return compile_para
 
-    def __compile_callback(self, valid_data_dataframe, valid_transforms):
+    def __compile_callbacks(self, valid_data_dataframe, valid_transforms):
         # plot_df = valid_data_dataframe.sample(n=self.num_plots, random_state=69)
         # data_to_plot = get_plot_data(plot_df, self.config)
         summaries_dir = os.path.join(self.save_dir, "summaries")
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=summaries_dir)
         checkpoints_dir = os.path.join(self.save_dir, "checkpoints/")
-        if self.num_classes == 2:
-            cmap = "viridis"
-        else:
-            cmap = generate_colormap(self.num_classes, "ADE20K")
+        # if self.num_classes == 2:
+        #     cmap = "viridis"
+        # else:
+        #     cmap = generate_colormap(self.num_classes, "ADE20K")
         callbacks = [
             tensorboard_callback,
             # ImageSummary(

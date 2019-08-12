@@ -1,8 +1,9 @@
 import logging
 from math import ceil
-
-logging.getLogger().setLevel(logging.INFO)
-
+import tensorflow as tf
+from utilities import file_system_manipulation as fsm
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class ModelBase:
 
@@ -14,9 +15,24 @@ class ModelBase:
         self.epochs = config["EPOCHS"]
         self.train_steps_per_epoch = config["TRAIN_STEPS_PER_EPOCH"]
         self.valid_steps_per_epoch = config["VALID_STEPS_PER_EPOCH"]
+        self.model_preload = self.config["LOAD_MODEL"]
+        self.model_directory = self.config["LOAD_MODEL_DIRECTORY"]
         resize_config = config["TRANSFORM"]["RESIZE"]
         self.resize = (resize_config[0], resize_config[1])
         logging.info(config)
+
+    def get_or_load_model(self):
+        if self.model_preload:
+            return self.load_model()
+        return self.create_model()
+
+    def load_model(self):
+        logger.debug(f"Loading model from {self.model_directory}")
+        if fsm.is_s3_path(self.model_directory):
+            load_path = fsm.s3_to_local(self.model_directory,'./model.hdf5')[0]
+        else:
+            load_path = self.model_directory
+        return tf.keras.models.load_model(load_path,compile=False)
 
     def create_model(self):
         raise NotImplementedError
@@ -35,5 +51,20 @@ class ModelBase:
             if self.valid_steps_per_epoch == -1:
                 self.valid_steps_per_epoch = ceil(self.num_valid_data / self.batch_size)
 
-    def fit_model(self, data_train, data_valid, callbacks, **kwargs):
-        raise NotImplementedError
+    def fit_model(self, train_dataset, valid_dataset, callbacks, **kwargs):
+        self.set_runtime_parameters(**kwargs)
+        logging.info('STARTING TRAINING, {} train steps, {} valid steps'.format(
+            self.train_steps_per_epoch, self.valid_steps_per_epoch))
+        self.model.fit(train_dataset,
+                       epochs=self.epochs,
+                       steps_per_epoch=self.train_steps_per_epoch,
+                       validation_data=valid_dataset,
+                       validation_steps=self.valid_steps_per_epoch,
+                       verbose=2,
+                       callbacks=callbacks)
+                       
+    def predict(self, predict_data_source, steps=None):
+        return self.model.predict(x=predict_data_source, steps=steps)
+
+    def evaluate(self, predict_data_source, steps=None):
+        return self.model.evaluate(x=predict_data_source, steps=steps)

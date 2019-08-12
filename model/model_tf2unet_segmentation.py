@@ -15,28 +15,13 @@ class ModelTF2UnetSegmentation(ModelBase):
         self.is_backbone_trainable = self.config["MODEL"]["IS_BACKBONE_TRAINABLE"]
         self.backbone = self.config["MODEL"]["BACKBONE"]
         self.layer_size = self.config["MODEL"]["LAYER_SIZE"]
-        self.model_directory = self.config["MODEL"]["MODEL_DIRECTORY"]
-        self.checkpoint_directory = self.config["MODEL"]["CHECKPOINT_DIRECTORY"]
         self.layer_count = self.config["MODEL"]["LAYER_COUNT"]
         output_shape = self.config["DATA_GENERATOR"]["OUTPUT_SHAPE"]
         output_image_channels = self.config["DATA_GENERATOR"]["OUTPUT_IMAGE_CHANNELS"]
         self.image_shape = (output_shape[0], output_shape[1], output_image_channels)
         self.model = self.get_or_load_model()
 
-    def get_or_load_model(self):
-        if self.model_exists():
-            return self.load_model()
-        return self.create_model()
-
-    def model_exists(self):
-        if os.path.basename(self.model_directory) != 'checkpoint':
-            return False
-        return os.path.exists(self.model_directory)
-
-    def load_model(self):
-        logger.debug("Loading model from " + self.model_directory)
-        return tf.keras.models.load_model(self.model_directory)
-
+   
     def create_model(self):
         inputs = tf.keras.Input(shape=self.image_shape, name='input_image')
         if self.is_backbone_mobilenet_v2():
@@ -68,11 +53,8 @@ class ModelTF2UnetSegmentation(ModelBase):
                                         name="probabilities",
                                         kernel_size=3)(hidden)
         upsampled = hidden
-        predictions = tf.keras.layers.Lambda(lambda x: tf.keras.backend.greater(x, 0.5),
-                                             name="predictions")(upsampled)
-
         model = tf.keras.Model(inputs=inputs,
-                               outputs=[upsampled, predictions],
+                               outputs=[upsampled],
                                name="segmentation_model")
         logging.info(model.summary())
         return model
@@ -104,20 +86,6 @@ class ModelTF2UnetSegmentation(ModelBase):
         prime_factors = [2, 4, 4]
         return prime_factors
 
-    def fit_model(self, training_data_source, validation_data_source, callbacks, **kwargs):
-        self.set_runtime_parameters(**kwargs)
-        self.model.fit(x=training_data_source,
-                       epochs=self.epochs,
-                       callbacks=callbacks,
-                       steps_per_epoch=self.train_steps_per_epoch,
-                       validation_steps=self.valid_steps_per_epoch,
-                       validation_data=validation_data_source,
-                       verbose=2)
-
-        self.model.save(self.checkpoint_directory)
-
-    def predict(self, *, x, steps):
-        return self.model.predict(x=x, steps=steps)
-
     def is_backbone_mobilenet_v2(self):
         return self.backbone == "mobilenet-v2"
+

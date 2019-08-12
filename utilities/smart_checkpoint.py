@@ -42,7 +42,7 @@ class SmartCheckpoint(Callback):
                         os.path.join(self.destination_path, file_or_dir))
                     # subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL)
                     with open(os.devnull, 'w') as devnull:
-                        subprocess.check_call(command.split(' '),
+                        subprocess.Popen(command.split(' '),
                                               shell=True,
                                               stdout=devnull,
                                               stderr=devnull)
