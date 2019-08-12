@@ -6,6 +6,8 @@ EPOCHS: 300
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
+LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL_DIRECTORY:
 DIR_OUT: /workspace/output/  #directory on the ec2 host, to save output files from code
 DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-lodging/segmentation/data-v0.2/
 
