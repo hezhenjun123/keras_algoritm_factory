@@ -43,6 +43,6 @@ class SmartCheckpoint(Callback):
                     # subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL)
                     with open(os.devnull, 'w') as devnull:
                         subprocess.Popen(command.split(' '),
-                                              shell=True,
-                                              stdout=devnull,
-                                              stderr=devnull)
+                                         shell=True,
+                                         stdout=devnull,
+                                         stderr=devnull)

@@ -8,6 +8,7 @@ import tensorflow as tf
 logging.getLogger().setLevel(logging.INFO)
 
 
+#FIXME: May want to combine Inference Base with Experiment base. Experiment can handle both training and inference
 class InferenceBase:
 
     def __init__(self, config):

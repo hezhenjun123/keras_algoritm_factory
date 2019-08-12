@@ -21,7 +21,6 @@ class ModelTF2UnetSegmentation(ModelBase):
         self.image_shape = (output_shape[0], output_shape[1], output_image_channels)
         self.model = self.get_or_load_model()
 
-   
     def create_model(self):
         inputs = tf.keras.Input(shape=self.image_shape, name='input_image')
         if self.is_backbone_mobilenet_v2():
@@ -53,9 +52,7 @@ class ModelTF2UnetSegmentation(ModelBase):
                                         name="probabilities",
                                         kernel_size=3)(hidden)
         upsampled = hidden
-        model = tf.keras.Model(inputs=inputs,
-                               outputs=[upsampled],
-                               name="segmentation_model")
+        model = tf.keras.Model(inputs=inputs, outputs=[upsampled], name="segmentation_model")
         logging.info(model.summary())
         return model
 
@@ -88,4 +85,3 @@ class ModelTF2UnetSegmentation(ModelBase):
 
     def is_backbone_mobilenet_v2(self):
         return self.backbone == "mobilenet-v2"
-

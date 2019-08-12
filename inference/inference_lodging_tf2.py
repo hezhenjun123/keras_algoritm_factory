@@ -10,6 +10,8 @@ import numpy as np
 logging.getLogger().setLevel(logging.INFO)
 
 
+#FIXME: I recommend not going through matplotlib interface and doing the numpy concatenations directly. Matplotlib is very slow
+#FIXME: Instead we should make a utility function that we can use here and in ImageSummary
 class InferenceLodgingTF2(InferenceBase):
 
     def __init__(self, config):

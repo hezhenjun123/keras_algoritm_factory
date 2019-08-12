@@ -58,6 +58,7 @@ EXPERIMENT:
 
 INFERENCE:
   INFERENCE_NAME: InferenceLodgingTF2
+  #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE: inference-data/data-v0.2/train.csv
   INFERENCE_DATA_DIR: inference-data/data-v0.2/
   LOAD_MODEL_PATH: wheat_lodging_segmentation_run/run_004/checkpoints/epoch_0138/cp.hdf5
