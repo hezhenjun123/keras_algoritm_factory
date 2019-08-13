@@ -1,7 +1,6 @@
 from model.model_resnet_classification import ModelResnetClassification
 from model.model_resnet_classification_yield import ModelResnetClassificationYield
-from model.model_tf1unet_segmentation import ModelTF1UnetSegmentation
-from model.model_tf2unet_segmentation import ModelTF2UnetSegmentation
+from model.model_unet_segmentation import ModelUnetSegmentation
 
 
 class ModelFactory:
@@ -9,8 +8,7 @@ class ModelFactory:
     model_registry = {
         "ModelResnetClassification": ModelResnetClassification,
         "ModelResnetClassificationYield": ModelResnetClassificationYield,
-        "ModelTF1UnetSegmentation": ModelTF1UnetSegmentation,
-        "ModelTF2UnetSegmentation": ModelTF2UnetSegmentation
+        "ModelUnetSegmentation": ModelUnetSegmentation
     }
 
     def __init__(self, config):

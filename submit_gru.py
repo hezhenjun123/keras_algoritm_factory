@@ -1,6 +1,6 @@
 from landingzone import gru
 
-CONFIG_FILE = ["model_config_segmentation_lodging_tf2.yaml"]
+CONFIG_FILE = ["model_config_segmentation_lodging.yaml"]
 
 
 def run_gru_job():
