@@ -1,14 +1,12 @@
 import tensorflow as tf
-import os
 import logging
-import math
 
 from model.model_base import ModelBase
 
 logger = logging.getLogger(__name__)
 
 
-class ModelTF2UnetSegmentation(ModelBase):
+class ModelUnetSegmentation(ModelBase):
 
     def __init__(self, config):
         super().__init__(config)

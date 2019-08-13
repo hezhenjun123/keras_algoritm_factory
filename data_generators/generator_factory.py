@@ -1,6 +1,5 @@
 from data_generators.generator_classification import GeneratorClassification
 from data_generators.generator_segmentation import GeneratorSegmentation
-from data_generators.generator_segmentation_tf2unet import GeneratorSegmentationTF2Unet
 
 
 class DataGeneratorFactory:
@@ -8,7 +7,6 @@ class DataGeneratorFactory:
     generator_registry = {
         "GeneratorClassification": GeneratorClassification,
         "GeneratorSegmentation": GeneratorSegmentation,
-        "GeneratorSegmentationTF2Unet": GeneratorSegmentationTF2Unet
     }
 
     def __init__(self, config):
