@@ -34,7 +34,6 @@ class GeneratorSegmentation(DataGeneratorBase):
         dataset = dataset.batch(self.batch_size, drop_remainder=self.drop_remainder)
         return dataset
 
-
     def create_dataset(self, df, transforms=None):
         dataset = self.create_dataset_dict(df, transforms)
         # FIXME: change the style to use one segmenatation labels
