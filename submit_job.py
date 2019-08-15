@@ -2,7 +2,7 @@ from landingzone import gru
 from utilities.config import read_config
 import subprocess
 
-CONFIG_FILE = ["model_config_segmentation_chaff.yaml"]
+CONFIG_FILE = ["model_config_segmentation_lodging.yaml"]
 
 
 def run_gru_job(config_path):
@@ -10,7 +10,7 @@ def run_gru_job(config_path):
                    project_name='wheat_yield',
                    job_decription=f'GRU RUN {config_path}',
                    cmd=f'run.sh {config_path}',
-                   instance_type='p3.2xlarge',
+                   instance_type='p2.xlarge',
                    timeout_hour=48)  # p2.xlarge, p3.2xlarge
 
 
