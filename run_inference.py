@@ -19,7 +19,7 @@ def run_inference(config):
 
 
 def main(args):
-    module_config = read_config(args)
+    module_config = read_config(args.config)
     run_inference(module_config)
 
 

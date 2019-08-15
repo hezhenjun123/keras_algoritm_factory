@@ -10,7 +10,7 @@ from utilities.smart_checkpoint import SmartCheckpoint
 logging.getLogger().setLevel(logging.INFO)
 
 
-class ExperimentSegmentationTF2Unet(ExperimentBase):
+class ExperimentSegmentationUnet(ExperimentBase):
 
     def __init__(self, config):
         super().__init__(config)

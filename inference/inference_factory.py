@@ -1,9 +1,15 @@
-from inference.inference_lodging_tf2 import InferenceLodgingTF2
+from inference.inference_lodging import InferenceLodging
+from inference.inference_chaff import InferenceChaff
+from inference.inference_chaff_video import InferenceChaffVideo
+
+
 
 
 class InferenceFactory:
 
-    inference_registry = {"InferenceLodgingTF2": InferenceLodgingTF2}
+    inference_registry = {"InferenceLodging": InferenceLodging,
+                          "InferenceChaffVideo":InferenceChaffVideo,
+                          "InferenceChaff":InferenceChaff}
 
     def __init__(self, config):
         self.config = config

@@ -1,6 +1,7 @@
 import logging
 from math import ceil
 import tensorflow as tf
+import os
 from utilities import file_system_manipulation as fsm
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -30,10 +31,10 @@ class ModelBase:
     def load_model(self):
         logger.debug(f"Loading model from {self.model_directory}")
         if fsm.is_s3_path(self.model_directory):
-            load_path = fsm.s3_to_local(self.model_directory, './model.hdf5')[0]
-        else:
-            load_path = self.model_directory
-        return tf.keras.models.load_model(load_path, compile=False)
+            self.model_directory = fsm.s3_to_local(self.model_directory, './model.hdf5')[0]
+        if not os.path.exists(self.model_directory):
+            raise ValueError("Incorrect model path")
+        return tf.keras.models.load_model(self.model_directory, compile=False)
 
     def create_model(self):
         raise NotImplementedError

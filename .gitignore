@@ -6,4 +6,4 @@ out/
 inference-data/*
 output/*
 wheat_lodging_segmentation_run/*
-
+.DS_STORE

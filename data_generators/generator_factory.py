@@ -1,5 +1,6 @@
 from data_generators.generator_classification import GeneratorClassification
 from data_generators.generator_segmentation import GeneratorSegmentation
+from data_generators.generator_video import GeneratorVideo
 
 
 class DataGeneratorFactory:
@@ -7,6 +8,7 @@ class DataGeneratorFactory:
     generator_registry = {
         "GeneratorClassification": GeneratorClassification,
         "GeneratorSegmentation": GeneratorSegmentation,
+        "GeneratorVideo":GeneratorVideo
     }
 
     def __init__(self, config):

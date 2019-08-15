@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 from transforms.transform_factory import TransformFactory
 from data_generators.generator_factory import DataGeneratorFactory
+from model.model_factory import ModelFactory
 import tensorflow as tf
 
 logging.getLogger().setLevel(logging.INFO)
@@ -21,7 +22,7 @@ class InferenceBase:
         self.inference_generator_name = self.config["EXPERIMENT"]["VALID_GENERATOR"]
         self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
         self.save_dir = config["DIR_OUT"]
-        self.load_model_path = self.config["INFERENCE"]["LOAD_MODEL_PATH"]
+        self.load_model_path = self.config["LOAD_MODEL_DIRECTORY"]
         if config["RUN_ENV"] == "local":
             self.__local_override_config(config)
 
@@ -49,10 +50,10 @@ class InferenceBase:
         return inference_dataset
 
     def load_model(self):
-        model = tf.keras.models.load_model(self.load_model_path,
-                                           custom_objects={"tf": tf},
-                                           compile=False)
-        model.summary()
+        if not self.config["LOAD_MODEL"]:
+            raise ValueError('LOAD_MODEL config must be set to true for inference')
+        model_factory = ModelFactory(self.config)
+        model = model_factory.create_model(self.model_name)
         return model
 
     def run_inference(self):
