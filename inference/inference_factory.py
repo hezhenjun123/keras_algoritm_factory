@@ -5,13 +5,13 @@ from inference.inference_lodging_video import InferenceLodgingVideo
 
 
 
-
 class InferenceFactory:
 
     inference_registry = {"InferenceLodgingVideo":InferenceLodgingVideo,
                           "InferenceLodging": InferenceLodging,
                           "InferenceChaffVideo":InferenceChaffVideo,
                           "InferenceChaff":InferenceChaff}
+
 
     def __init__(self, config):
         self.config = config

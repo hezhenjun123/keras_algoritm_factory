@@ -3,6 +3,7 @@ import cv2
 import os
 from inference.inference_base import InferenceBase
 import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -15,8 +16,6 @@ class InferenceLodging(InferenceBase):
 
     def __init__(self, config):
         super().__init__(config)
-        if config["RUN_ENV"]=='local':
-            matplotlib.use('TkAgg')
         self.pred_image_dir = config["INFERENCE"]["PRED_IMAGE_DIR"]
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
         if self.num_process_image >= 99999:
@@ -38,38 +37,40 @@ class InferenceLodging(InferenceBase):
         count = 0
         for elem in inference_dataset:
             pred_res = model.predict(elem)
+            transformed_image = np.squeeze(elem[0], axis=0)
             original_image = np.squeeze(elem[2], axis=0)
-            resize_shape = (original_image.shape[1], original_image.shape[0])
-
-            transformed_seg  = np.squeeze(elem[1], axis=0)
-            original_seg = cv2.resize(np.float32(transformed_seg),
-                                          resize_shape,
-                                          interpolation=cv2.INTER_NEAREST)
-                                          
-            pred_seg = np.round(np.squeeze(pred_res, axis=(0, 3)))
-            resized_pred_seg = cv2.resize(np.float32(pred_seg),
-                                          resize_shape,
-                                          interpolation=cv2.INTER_NEAREST)
+            pred_p = np.squeeze(pred_res, axis=(0, 3))
+            pred_seg = pred_p
+            threshold = 0.5
+            pred_seg[pred_seg > threshold] = 1
+            pred_seg[pred_seg <= threshold] = 0
 
             fig1 = plt.figure()
             fig1.add_subplot(2, 2, 1)
-            plt.imshow(original_image)
+            plt.imshow(transformed_image)
 
             fig1.add_subplot(2, 2, 2)
-            plt.imshow(original_seg, cmap='gray', vmin=0, vmax=1)
+            plt.imshow(pred_p, cmap='gray', vmin=0, vmax=1)
 
             fig1.add_subplot(2, 2, 3)
             plt.imshow(pred_seg, cmap='gray')
 
             fig1.add_subplot(2, 2, 4)
-            plt.imshow(original_image)
-            plt.contour(resized_pred_seg)
+            plt.imshow(transformed_image)
+            plt.contour(pred_seg)
             plt.savefig(os.path.join(save_dir, f"image{count:05d}_model.png"))
+            plt.clf()
 
             fig2 = plt.figure()
             plt.imshow(original_image)
+            resize_shape = (original_image.shape[1], original_image.shape[0])
+            resized_pred_seg = cv2.resize(np.float32(pred_seg),
+                                          resize_shape,
+                                          interpolation=cv2.INTER_NEAREST)
             plt.contour(resized_pred_seg)
             plt.savefig(os.path.join(save_dir, f"image{count:05d}_original.png"))
 
             count += 1
+            logging.info(f"processed image: {count:05d}")
+            plt.clf()
             if count >= self.num_process_image: break

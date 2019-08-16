@@ -1,7 +1,7 @@
 .idea/*
 model/__pycache__/*
 *cache*
-out/
+out/*
 inference-data/*
 output/*
 wheat_lodging_segmentation_run/*

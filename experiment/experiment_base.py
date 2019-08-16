@@ -43,6 +43,7 @@ class ExperimentBase:
         logging.info("#" * 15 + "Reading training data" + "#" * 15)
         train_data_filter = data_from_train_csv[self.split_col] == self.split_train_val
         data_train_split = data_from_train_csv[train_data_filter].sample(frac=1)
+        data_train_split = data_from_train_csv[train_data_filter].sample(frac=1)
 
         data_from_valid_csv = pd.read_csv(self.valid_csv, sep=self.csv_separator).fillna("")
         logging.info("#" * 15 + "Reading valid data" + "#" * 15)
