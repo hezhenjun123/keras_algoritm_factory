@@ -1,9 +1,10 @@
 import glob
 absolute_path = "/Users/Bo/Desktop/Data/harvester/lodging/lodgingwheat/lodgingwheat/lodgingwheat/"
-output_path = "/Users/Bo/Desktop/Data/harvester/lodging/lodgingwheat/lodgingwheat/lodgingwheat/train_raw.csv"
+folder_str = "111APPLE"
+output_path = f"/Users/Bo/Desktop/Data/harvester/lodging/lodgingwheat/lodgingwheat/lodgingwheat/train_raw_{folder_str}.csv"
 schema = "image_path,seg_label_path,split,label_name,image_level_label"
 
-file_list = sorted(glob.glob(absolute_path + "*/*.JPG"))
+file_list = sorted(glob.glob(absolute_path + f"{folder_str}/*.JPG"))
 # print(len(file_list))
 # print(file_list[2000:2100])
 # print(file_list[2000].replace(absolute_path, ""))

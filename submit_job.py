@@ -2,7 +2,8 @@ from landingzone import gru
 from utilities.config import read_config
 import subprocess
 
-CONFIG_FILE = ["model_config_segmentation_lodging.yaml"]
+
+CONFIG_FILE = ["model_config_segmentation_lodging_inference.yaml"]
 
 
 def run_gru_job(config_path):

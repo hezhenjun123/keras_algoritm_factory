@@ -1,8 +1,14 @@
 .idea/*
 model/__pycache__/*
 *cache*
+cacha
 out/*
+out
 inference-data/*
+output
 output/*
 wheat_lodging_segmentation_run/*
 .DS_STORE
+.git/*
+data/*
+model.hdf5
