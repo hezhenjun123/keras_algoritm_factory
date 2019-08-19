@@ -32,7 +32,8 @@ class InferenceLodging(InferenceBase):
     def __produce_segmentation_image(self, model, dataset):
         inference_dataset = dataset.unbatch().batch(1)
         save_dir_model = os.path.join(self.save_dir, self.pred_image_dir, "model")
-        save_dir_original_contour = os.path.join(self.save_dir, self.pred_image_dir, "original-contour")
+        save_dir_original_contour = os.path.join(self.save_dir, self.pred_image_dir,
+                                                 "original-contour")
         save_dir_original = os.path.join(self.save_dir, self.pred_image_dir, "original")
         save_dir_segmap = os.path.join(self.save_dir, self.pred_image_dir, "original-segmap")
 
@@ -78,18 +79,16 @@ class InferenceLodging(InferenceBase):
                                           resize_shape,
                                           interpolation=cv2.INTER_NEAREST)
             plt.contour(resized_pred_seg)
-            plt.savefig(os.path.join(save_dir_original_contour, f"image{count:05d}_original_contour.png"))
-
+            plt.savefig(
+                os.path.join(save_dir_original_contour, f"image{count:05d}_original_contour.png"))
 
             logging.info(f"processed image: {count:05d}")
             plt.clf()
-
 
             fig3 = plt.figure()
             plt.imshow(original_image)
             plt.savefig(os.path.join(save_dir_original, f"image{count:05d}_original.png"))
             plt.clf()
-
 
             fig4 = plt.figure()
             plt.imshow(resized_pred_seg)

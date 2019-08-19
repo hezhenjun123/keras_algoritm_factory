@@ -1,4 +1,4 @@
-RUN_ENV: local #{aws, local}
+RUN_ENV: aws #{aws, local}
 RUN_MODE: inference #{train, inference}
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
@@ -51,7 +51,7 @@ EXPERIMENT:
   EXPERIMENT_NAME: ExperimentSegmentationUnet
   MODEL_NAME: ModelUnetSegmentation
   TRAIN_TRANSFORM: TransformSegmentation
-  TRAIN_GENERATOR: GeneratorSegmentation
+  TRAIN_GENERATOR: GeneratorVideo
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
 
@@ -61,7 +61,7 @@ INFERENCE:
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE: s3://zoomlion-sample/wheat-lodging/lodgingwheat/train_raw_100APPLE.csv
   INFERENCE_DATA_DIR: s3://zoomlion-sample/wheat-lodging/lodgingwheat/
-  VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingwheat/106APPLE/IMG_6989.MOV
+  VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingvideo/
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: raw
   SEPARATOR: ','

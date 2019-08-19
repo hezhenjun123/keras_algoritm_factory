@@ -12,3 +12,4 @@ wheat_lodging_segmentation_run/*
 .git/*
 data/*
 model.hdf5
+video.avi

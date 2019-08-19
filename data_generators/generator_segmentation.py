@@ -47,7 +47,7 @@ class GeneratorSegmentation(DataGeneratorBase):
     def create_inference_dataset(self, df, transforms=None):
         dataset = self.create_dataset_dict(df, transforms)
         # dataset = dataset.map(lambda row: (row["image"], row["segmentation_labels"], row[
-            # "original_image"], row["original_segmentation_labels"]))
+        # "original_image"], row["original_segmentation_labels"]))
         dataset = dataset.map(lambda row: (row["image"], row["original_image"]))
         dataset = dataset.prefetch(4)
         logging.info("====================inference dataset=====================")
