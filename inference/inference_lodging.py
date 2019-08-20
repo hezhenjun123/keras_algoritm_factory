@@ -3,7 +3,6 @@ import cv2
 import os
 from inference.inference_base import InferenceBase
 import matplotlib
-matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -20,6 +19,8 @@ class InferenceLodging(InferenceBase):
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
         if self.num_process_image >= 99999:
             raise Exception("cannot process more than 99999 images ")
+        if config["RUN_ENV"] == 'local':
+            matplotlib.use('TkAgg')
 
     def run_inference(self):
         inference_transform = self.generate_transform()

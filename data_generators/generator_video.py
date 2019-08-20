@@ -53,8 +53,6 @@ class GeneratorVideo(DataGeneratorBase):
             image = augmented[0]
             image.set_shape(output_shape + (output_image_channels,))
             logging.info(image)
-            image = image[:, :, ::-1]
-            original_image = original_image[:, :, ::-1]
             row["image"] = image
             row["original_image"] = original_image
             return row
@@ -68,6 +66,7 @@ class GeneratorVideo(DataGeneratorBase):
 
         def load_data(row):
             image = tf.compat.v1.py_func(lambda: self.video_buffer.read()[1], [], [np.uint8])[0]
+            image = image[:, :, ::-1]
             new_row = dict(
                 image=image,
                 label=tf.zeros_like(image),

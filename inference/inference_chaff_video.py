@@ -5,7 +5,6 @@ from inference.inference_base import InferenceBase
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('Agg')
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -19,6 +18,8 @@ class InferenceChaffVideo(InferenceBase):
         self.pred_image_dir = config["INFERENCE"]["PRED_IMAGE_DIR"]
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
         self.video_path = config["INFERENCE"]["VIDEO_PATH"]
+        if config["RUN_ENV"] == 'local':
+            matplotlib.use('TkAgg')
 
     def run_inference(self):
         inference_transform = self.generate_transform()
@@ -28,6 +29,7 @@ class InferenceChaffVideo(InferenceBase):
         logging.info("================Inference Complete=============")
 
     def make_triplot(self, img, preds, log):
+        img = img[:, :, ::-1]
         mask = preds == 1
         preds = preds[:, :, None].repeat(3, 2)
         preds[mask] = [255, 0, 0]

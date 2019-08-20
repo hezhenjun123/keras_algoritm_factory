@@ -5,7 +5,6 @@ from inference.inference_base import InferenceBase
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('Agg')
 from utilities.file_system_manipulation import directory_to_file_list
 
 logging.getLogger().setLevel(logging.INFO)
@@ -20,6 +19,8 @@ class InferenceLodgingVideo(InferenceBase):
         self.pred_image_dir = config["INFERENCE"]["PRED_IMAGE_DIR"]
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
         self.video_path = config["INFERENCE"]["VIDEO_PATH"]
+        if config["RUN_ENV"] == 'local':
+            matplotlib.use('TkAgg')
 
     def run_inference(self):
         model = self.load_model()
@@ -38,20 +39,14 @@ class InferenceLodgingVideo(InferenceBase):
             file_count += 1
         logging.info("================Inference Complete=============")
 
-    def make_triplot(self, img, preds, log):
+    def make_plot_for_video(self, img, preds, log):
         img = img[:, :, ::-1]
-        # mask = preds == 1
-        # preds = preds[:, :, None].repeat(3, 2)
-        # preds[mask] = [255, 0, 0]
 
         contours, _ = cv2.findContours(preds, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         newimg = np.copy(img)
         for contour in contours:
-            # logging.info(contour)
             cv2.drawContours(newimg, contour, -1, (0, 255, 0), 3)
         out = np.concatenate((newimg, log), axis=1)
-        # out = np.concatenate((img, newimg, log), axis=1)
-        # out = np.concatenate((img, cv2.addWeighted(img, .7, preds, .3, 0), log), axis=1)
         return out
 
     def resize(self, img, shape):
@@ -99,8 +94,8 @@ class InferenceLodgingVideo(InferenceBase):
                 pred = np.max(np.array([x[1] for x in buffer]), axis=0).astype(np.uint8)
                 self.update_line(hl, (count, np.log(1 + resized_pred_seg.sum() / 255)))
                 if (count - buffer_length) % 15 == 0: log = self.create_log_array(hl, log_shape)
-                out = self.make_triplot(image.astype(np.uint8), pred.astype(np.uint8),
-                                        log.astype(np.uint8))
+                out = self.make_plot_for_video(image.astype(np.uint8), pred.astype(np.uint8),
+                                               log.astype(np.uint8))
                 if writer is None:
                     fourcc = cv2.VideoWriter_fourcc(*'XVID')
                     video_shape = (out.shape[1], out.shape[0])
