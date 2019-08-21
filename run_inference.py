@@ -4,6 +4,8 @@ import logging
 from inference.inference_factory import InferenceFactory
 from utilities.config import read_config
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--config", type=str, required=True)
 logging.getLogger().setLevel(logging.INFO)

@@ -8,7 +8,7 @@ class DataGeneratorFactory:
     generator_registry = {
         "GeneratorClassification": GeneratorClassification,
         "GeneratorSegmentation": GeneratorSegmentation,
-        "GeneratorVideo":GeneratorVideo
+        "GeneratorVideo": GeneratorVideo
     }
 
     def __init__(self, config):

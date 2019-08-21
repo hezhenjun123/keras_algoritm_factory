@@ -15,7 +15,7 @@ class InferenceChaff(InferenceBase):
 
     def __init__(self, config):
         super().__init__(config)
-        if config["RUN_ENV"]=='local':
+        if config["RUN_ENV"] == 'local':
             matplotlib.use('TkAgg')
         self.pred_image_dir = config["INFERENCE"]["PRED_IMAGE_DIR"]
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
@@ -41,11 +41,11 @@ class InferenceChaff(InferenceBase):
             original_image = np.squeeze(elem[2], axis=0)
             resize_shape = (original_image.shape[1], original_image.shape[0])
 
-            transformed_seg  = np.squeeze(elem[1], axis=0)
+            transformed_seg = np.squeeze(elem[1], axis=0)
             original_seg = cv2.resize(np.float32(transformed_seg),
-                                          resize_shape,
-                                          interpolation=cv2.INTER_NEAREST)
-                                          
+                                      resize_shape,
+                                      interpolation=cv2.INTER_NEAREST)
+
             pred_seg = np.round(np.squeeze(pred_res, axis=(0, 3)))
             resized_pred_seg = cv2.resize(np.float32(pred_seg),
                                           resize_shape,

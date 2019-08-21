@@ -15,12 +15,12 @@ class InferenceLodging(InferenceBase):
 
     def __init__(self, config):
         super().__init__(config)
-        if config["RUN_ENV"]=='local':
-            matplotlib.use('TkAgg')
         self.pred_image_dir = config["INFERENCE"]["PRED_IMAGE_DIR"]
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
         if self.num_process_image >= 99999:
             raise Exception("cannot process more than 99999 images ")
+        if config["RUN_ENV"] == 'local':
+            matplotlib.use('TkAgg')
 
     def run_inference(self):
         inference_transform = self.generate_transform()
@@ -32,44 +32,66 @@ class InferenceLodging(InferenceBase):
 
     def __produce_segmentation_image(self, model, dataset):
         inference_dataset = dataset.unbatch().batch(1)
-        save_dir = os.path.join(self.save_dir, self.pred_image_dir)
-        if os.path.exists(save_dir) is False:
-            os.makedirs(save_dir)
+        save_dir_model = os.path.join(self.save_dir, self.pred_image_dir, "model")
+        save_dir_original_contour = os.path.join(self.save_dir, self.pred_image_dir,
+                                                 "original-contour")
+        save_dir_original = os.path.join(self.save_dir, self.pred_image_dir, "original")
+        save_dir_segmap = os.path.join(self.save_dir, self.pred_image_dir, "original-segmap")
+
+        os.makedirs(save_dir_model, exist_ok=True)
+        os.makedirs(save_dir_original_contour, exist_ok=True)
+        os.makedirs(save_dir_original, exist_ok=True)
+        os.makedirs(save_dir_segmap, exist_ok=True)
+
         count = 0
         for elem in inference_dataset:
             pred_res = model.predict(elem)
+            transformed_image = np.squeeze(elem[0], axis=0)
             original_image = np.squeeze(elem[2], axis=0)
-            resize_shape = (original_image.shape[1], original_image.shape[0])
-
-            transformed_seg  = np.squeeze(elem[1], axis=0)
-            original_seg = cv2.resize(np.float32(transformed_seg),
-                                          resize_shape,
-                                          interpolation=cv2.INTER_NEAREST)
-                                          
-            pred_seg = np.round(np.squeeze(pred_res, axis=(0, 3)))
-            resized_pred_seg = cv2.resize(np.float32(pred_seg),
-                                          resize_shape,
-                                          interpolation=cv2.INTER_NEAREST)
+            pred_p = np.squeeze(pred_res, axis=(0, 3))
+            pred_seg = pred_p
+            threshold = 0.5
+            pred_seg[pred_seg > threshold] = 1
+            pred_seg[pred_seg <= threshold] = 0
 
             fig1 = plt.figure()
             fig1.add_subplot(2, 2, 1)
-            plt.imshow(original_image)
+            plt.imshow(transformed_image)
 
             fig1.add_subplot(2, 2, 2)
-            plt.imshow(original_seg, cmap='gray', vmin=0, vmax=1)
+            plt.imshow(pred_p, cmap='gray', vmin=0, vmax=1)
 
             fig1.add_subplot(2, 2, 3)
             plt.imshow(pred_seg, cmap='gray')
 
             fig1.add_subplot(2, 2, 4)
-            plt.imshow(original_image)
-            plt.contour(resized_pred_seg)
-            plt.savefig(os.path.join(save_dir, f"image{count:05d}_model.png"))
+            plt.imshow(transformed_image)
+            plt.contour(pred_seg)
+            plt.savefig(os.path.join(save_dir_model, f"image{count:05d}_model.png"))
+            plt.clf()
 
             fig2 = plt.figure()
             plt.imshow(original_image)
+            resize_shape = (original_image.shape[1], original_image.shape[0])
+            resized_pred_seg = cv2.resize(np.float32(pred_seg),
+                                          resize_shape,
+                                          interpolation=cv2.INTER_NEAREST)
             plt.contour(resized_pred_seg)
-            plt.savefig(os.path.join(save_dir, f"image{count:05d}_original.png"))
+            plt.savefig(
+                os.path.join(save_dir_original_contour, f"image{count:05d}_original_contour.png"))
+
+            logging.info(f"processed image: {count:05d}")
+            plt.clf()
+
+            fig3 = plt.figure()
+            plt.imshow(original_image)
+            plt.savefig(os.path.join(save_dir_original, f"image{count:05d}_original.png"))
+            plt.clf()
+
+            fig4 = plt.figure()
+            plt.imshow(resized_pred_seg)
+            plt.savefig(os.path.join(save_dir_segmap, f"image{count:05d}_segmap.png"))
+            plt.clf()
 
             count += 1
             if count >= self.num_process_image: break

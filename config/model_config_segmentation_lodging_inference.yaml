@@ -1,4 +1,4 @@
-RUN_ENV: aws #{aws, local}
+RUN_ENV: local #{aws, local}
 RUN_MODE: inference #{train, inference}
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
@@ -59,15 +59,10 @@ EXPERIMENT:
 INFERENCE:
   INFERENCE_NAME: InferenceLodgingVideo
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
-  #INFERENCE_CSV_FILE: s3://zoomlion-prod-data/harvester/wheat-lodging/segmentation/data-v0.3/train.csv
-  #INFERENCE_DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-lodging/segmentation/data-v0.3/
-  INFERENCE_CSV_FILE: s3://zoomlion-sample/wheat-lodging/lodgingwheat/train_raw_sort.csv
+  INFERENCE_CSV_FILE: s3://zoomlion-sample/wheat-lodging/lodgingwheat/train_raw_100APPLE.csv
   INFERENCE_DATA_DIR: s3://zoomlion-sample/wheat-lodging/lodgingwheat/
-  #LOAD_MODEL_PATH: wheat_lodging_segmentation_run/run_006/checkpoints/epoch_0221/cp.hdf5
-  VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingwheat/106APPLE/IMG_6989.MOV
+  VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingvideo/
   SPLIT: split #Column name in the csv file
-  #SPLIT_VAL: valid #Column content in the csv file
-  #SPLIT_VAL: train #Column content in the csv file
   SPLIT_VAL: raw
   SEPARATOR: ','
   IMAGE_PATH: image_path
