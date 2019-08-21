@@ -38,14 +38,11 @@ class InferenceLodging(InferenceBase):
         save_dir_original = os.path.join(self.save_dir, self.pred_image_dir, "original")
         save_dir_segmap = os.path.join(self.save_dir, self.pred_image_dir, "original-segmap")
 
-        if os.path.exists(save_dir_model) is False:
-            os.makedirs(save_dir_model)
-        if os.path.exists(save_dir_original_contour) is False:
-            os.makedirs(save_dir_original_contour)
-        if os.path.exists(save_dir_original) is False:
-            os.makedirs(save_dir_original)
-        if os.path.exists(save_dir_segmap) is False:
-            os.makedirs(save_dir_segmap)
+        os.makedirs(save_dir_model, exist_ok=True)
+        os.makedirs(save_dir_original_contour, exist_ok=True)
+        os.makedirs(save_dir_original, exist_ok=True)
+        os.makedirs(save_dir_segmap, exist_ok=True)
+
         count = 0
         for elem in inference_dataset:
             pred_res = model.predict(elem)
