@@ -1,24 +1,31 @@
 class TransformBase:
+
     class Image:
+
         def __init__(self, transform):
             self.transform = transform
+
         def __call__(self, image, mask):
             augmented = self.transform(image=image)
-            return {"image":augmented["image"], "mask":mask}
+            return {"image": augmented["image"], "mask": mask}
 
     class ImageLabel:
+
         def __init__(self, transform):
             self.transform = transform
+
         def __call__(self, image, mask):
             augmented = self.transform(image=image, mask=mask)
-            return {"image":augmented["image"], "mask":augmented["mask"]}
+            return {"image": augmented["image"], "mask": augmented["mask"]}
 
     class Label:
+
         def __init__(self, transform):
             self.transform = transform
+
         def __call__(self, image, mask):
             augmented = self.transform(mask=mask)
-            return {"image":image, "mask":augmented["mask"]}
+            return {"image": image, "mask": augmented["mask"]}
 
     def __init__(self, config):
         self.config = config
