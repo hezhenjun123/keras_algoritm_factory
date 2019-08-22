@@ -6,7 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 from utilities.file_system_manipulation import directory_to_file_list
-
 logging.getLogger().setLevel(logging.INFO)
 
 

@@ -2,11 +2,11 @@ from landingzone import gru
 from utilities.config import read_config
 import subprocess
 
-CONFIG_FILE = ["model_config_segmentation_lodging_inference.yaml"]
+CONFIG_FILE = ["model_config_segmentation_breakage.yaml"]
 
 
 def run_gru_job(config_path):
-    gru.submit(job_name='wheat_lodging_segmentation',
+    gru.submit(job_name='wheat_breakage_segmentation',
                project_name='wheat_yield',
                job_decription=f'GRU RUN {config_path}',
                cmd=f'run.sh {config_path}',
