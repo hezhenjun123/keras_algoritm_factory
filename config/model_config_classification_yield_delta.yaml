@@ -10,16 +10,16 @@ DROPOUT: 0.5
 NUM_CLASSES: 3
 CHANNEL_LIST: [256,128]
 DENSE_LIST: [256, 128]  #ignored for ModelResnetClassification
+ACTIVATION: relu
 LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
 LOAD_MODEL_DIRECTORY: null #can be s3 path, hdf5 file format
-ACTIVATION: relu
 DIR_OUT: /workspace/output/
 DATA_DIR: s3://landing-client-zoomlion/yield_classification/yield_hopper/
 
 
 DATA_GENERATOR:
   OUTPUT_SHAPE: [null, null]
-  OUTPUT_IMAGE_CHANNELS: 3  #Set to 3 if USE_SPLICER: false
+  OUTPUT_IMAGE_CHANNELS: 3  #Set to 3 if USE_SPLICER: false, set to 6 if true
   OUTPUT_IMAGE_TYPE: float32
   DROP_REMAINDER: false
   CACHE_DIR: cache
@@ -56,3 +56,10 @@ EXPERIMENT:
 LOCAL_OVERRIDE:
   DIR_OUT: ./out
   DATA_DIR:
+
+
+GRU:
+  JOB_NAME: wheat_yield_delta_classification
+  PROJECT_NAME: wheat_yield_delta
+  INSTANCE_TYPE: p3.2xlarge
+  TIMEOUT: 8

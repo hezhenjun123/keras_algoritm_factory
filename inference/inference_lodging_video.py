@@ -32,8 +32,8 @@ class InferenceLodgingVideo(InferenceBase):
             logging.info(f"process video num: {file_count}/{total_count}")
             logging.info(f"file name: {file_path}")
             inference_dataset = self.generate_dataset(file_path, inference_transform)
-            input_video_name = file_path.split('/')[-1]
-            self.output_video_name = f"{input_video_name}.avi"
+            input_video_name = os.path.splitext(os.path.basename(file_path))[0]
+            self.output_video_name = f"inference_{input_video_name}.avi"
             self.__produce_segmentation_image(model, inference_dataset)
             file_count += 1
         logging.info("================Inference Complete=============")
@@ -41,10 +41,10 @@ class InferenceLodgingVideo(InferenceBase):
     def make_plot_for_video(self, img, preds, log):
         img = img[:, :, ::-1]
 
-        contours, _ = cv2.findContours(preds, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(preds, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
         newimg = np.copy(img)
         for contour in contours:
-            cv2.drawContours(newimg, contour, -1, (0, 255, 0), 3)
+            cv2.drawContours(newimg, contour, -1, (0, 0, 255), 2)
         out = np.concatenate((newimg, log), axis=1)
         return out
 
@@ -57,6 +57,10 @@ class InferenceLodgingVideo(InferenceBase):
 
     def create_log_array(self, hl, shape):
         plt.plot(hl.get_xdata(), hl.get_ydata(), color='steelblue')
+        plt.ylabel('Lodging Percent')
+        plt.title('Amount of Lodging',{"fontsize":18})
+        locs = plt.yticks()[0]
+        plt.yticks(*(zip(*[[x,f'{x:.1%}'] for x in locs])))
         log_file = os.path.join(self.save_dir, 'log.png')
         if os.path.isfile(log_file):
             os.remove(log_file)
@@ -91,7 +95,7 @@ class InferenceLodgingVideo(InferenceBase):
                 buffer.append((original_image, resized_pred_seg))
                 image = buffer[buffer_length // 2][0]
                 pred = np.max(np.array([x[1] for x in buffer]), axis=0).astype(np.uint8)
-                self.update_line(hl, (count, np.log(1 + resized_pred_seg.sum() / 255)))
+                self.update_line(hl, (count, resized_pred_seg.sum() / resized_pred_seg.size))
                 if (count - buffer_length) % 15 == 0: log = self.create_log_array(hl, log_shape)
                 out = self.make_plot_for_video(image.astype(np.uint8), pred.astype(np.uint8),
                                                log.astype(np.uint8))

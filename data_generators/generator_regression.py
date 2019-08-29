@@ -7,7 +7,7 @@ from data_generators.generator_base import DataGeneratorBase
 logging.getLogger().setLevel(logging.INFO)
 
 
-class GeneratorClassification(DataGeneratorBase):
+class GeneratorRegression(DataGeneratorBase):
 
     def create_dataset(self, df, transforms):
         if isinstance(df, pd.DataFrame) == False:
@@ -15,8 +15,6 @@ class GeneratorClassification(DataGeneratorBase):
         df = df.copy()
         df[self.image_path] = df[self.image_path].apply(self.get_join_root_dir_map(self.data_dir))
         # df[self.label_name] = df[self.label_name].apply(str)
-        df[self.image_level_label] = df[self.image_level_label].apply(self.__multi_hot_encode,
-                                                                      args=(self.n_classes,))
         dataset = tf.data.Dataset.from_tensor_slices(
             dict(image_path=df.image_path.values,
                  label=np.array(list(df[self.image_level_label].values))))
@@ -45,7 +43,7 @@ class GeneratorClassification(DataGeneratorBase):
             original_image = row["image"]
             original_labels = row["label"]
             augmented = tf.compat.v1.py_func(transforms.apply_transforms, [row["image"], row["label"]],
-                                       [output_image_type, row["label"].dtype])
+                                       [output_image_type, tf.float64])
             logging.info(augmented)
             image = augmented[0]
             image.set_shape(output_shape + (output_image_channels,))
@@ -66,8 +64,3 @@ class GeneratorClassification(DataGeneratorBase):
         label = row["label"]
         new_row = dict(image=image, label=label)
         return new_row
-
-    def __multi_hot_encode(self, label_indicies, n_classes):
-        encoded = np.zeros((n_classes,))
-        encoded[label_indicies] = 1
-        return encoded

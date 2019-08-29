@@ -28,7 +28,7 @@ class GeneratorVideo(DataGeneratorBase):
         n_frames = int(self.video_buffer.get(cv2.CAP_PROP_FRAME_COUNT))
         dataset = tf.data.Dataset.from_tensor_slices(dict(img=np.arange(n_frames)))
         dataset = dataset.map(self.__load_data(), num_parallel_calls=1)
-        if transforms.has_image_transform():
+        if transforms.has_transform():
             transforms_map = self.__get_transform_map(transforms, self.output_shape,
                                                       self.output_image_channels,
                                                       self.output_image_type)
@@ -48,7 +48,7 @@ class GeneratorVideo(DataGeneratorBase):
             original_image = row["image"]
             augmented = tf.compat.v1.py_func(transforms.apply_transforms,
                                              [row["image"], row["label"]],
-                                             [output_image_type, tf.uint8])
+                                             [output_image_type, tf.float64])
             logging.info(augmented)
             image = augmented[0]
             image.set_shape(output_shape + (output_image_channels,))
@@ -69,7 +69,7 @@ class GeneratorVideo(DataGeneratorBase):
             image = image[:, :, ::-1]
             new_row = dict(
                 image=image,
-                label=tf.zeros_like(image),
+                label=tf.zeros_like(image,dtype=tf.float64),
             )
             return new_row
 

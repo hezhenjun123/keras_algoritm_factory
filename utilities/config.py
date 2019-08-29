@@ -15,4 +15,13 @@ def read_config(config_path):
     if module_config["EXPERIMENT"]["VALID_GENERATOR"] is None:
         module_config["EXPERIMENT"]["VALID_GENERATOR"] = module_config["EXPERIMENT"][
             "TRAIN_GENERATOR"]
+    if module_config["INFERENCE"].get("TRANSFORM",None) is None:
+        module_config["INFERENCE"]["TRANSFORM"] = module_config["EXPERIMENT"][
+            "VALID_TRANSFORM"]
+    if module_config["INFERENCE"].get("GENERATOR",None) is None:
+        module_config["INFERENCE"]["GENERATOR"] = module_config["EXPERIMENT"][
+            "VALID_GENERATOR"]
+    if module_config["INFERENCE"].get("MODEL_NAME",None)  is None:
+        module_config["INFERENCE"]["MODEL_NAME"] = module_config["EXPERIMENT"][
+            "MODEL_NAME"]
     return module_config

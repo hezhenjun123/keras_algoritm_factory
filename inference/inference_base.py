@@ -18,9 +18,9 @@ class InferenceBase:
         self.split_val = config["INFERENCE"]["SPLIT_VAL"]
         self.inference_csv = config["INFERENCE"]["INFERENCE_CSV_FILE"]
         self.csv_separator = config["INFERENCE"]["SEPARATOR"]
-        self.inference_transform_name = self.config["EXPERIMENT"]["VALID_TRANSFORM"]
-        self.inference_generator_name = self.config["EXPERIMENT"]["VALID_GENERATOR"]
-        self.model_name = self.config["EXPERIMENT"]["MODEL_NAME"]
+        self.inference_transform_name = self.config["INFERENCE"]["TRANSFORM"]
+        self.inference_generator_name = self.config["INFERENCE"]["GENERATOR"]
+        self.model_name = self.config["INFERENCE"]["MODEL_NAME"]
         self.save_dir = config["DIR_OUT"]
         self.load_model_path = self.config["LOAD_MODEL_DIRECTORY"]
         if config["RUN_ENV"] == "local":

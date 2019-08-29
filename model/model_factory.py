@@ -1,4 +1,5 @@
 from model.model_resnet_classification import ModelResnetClassification
+from model.model_resnet_regression import ModelResnetRegression
 from model.model_resnet_classification_yield import ModelResnetClassificationYield
 from model.model_unet_segmentation import ModelUnetSegmentation
 
@@ -7,6 +8,7 @@ class ModelFactory:
 
     model_registry = {
         "ModelResnetClassification": ModelResnetClassification,
+        "ModelResnetRegression": ModelResnetRegression,
         "ModelResnetClassificationYield": ModelResnetClassificationYield,
         "ModelUnetSegmentation": ModelUnetSegmentation
     }

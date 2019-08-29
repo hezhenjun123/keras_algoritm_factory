@@ -77,3 +77,9 @@ INFERENCE:
 LOCAL_OVERRIDE:
   DIR_OUT: ./out
   DATA_DIR:
+
+GRU:
+  JOB_NAME: wheat_breakage_segmentation
+  PROJECT_NAME: wheat_yield_breakage
+  INSTANCE_TYPE: p3.2xlarge
+  TIMEOUT: 96

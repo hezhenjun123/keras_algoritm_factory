@@ -11,7 +11,8 @@ def ResNet(input_shape,
            dropout_prob=0,
            name='resnet',
            input_name='images',
-           output_name='probs'):
+           output_name='probs',
+           output_activation='softmax'):
     inp = Input(input_shape, name=input_name)
     resnet = resnet_pretrained(include_top=False,
                                weights='imagenet' if pretrained else None,
@@ -22,5 +23,5 @@ def ResNet(input_shape,
         if dropout_prob != 0.0:
             resnet = Dropout(dropout_prob)(resnet)
 
-    preds = Dense(num_classes, activation='softmax', name=output_name)(resnet)
+    preds = Dense(num_classes, activation=output_activation, name=output_name)(resnet)
     return Model([inp], [preds], name=name)

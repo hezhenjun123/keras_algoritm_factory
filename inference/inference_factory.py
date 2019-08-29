@@ -2,7 +2,7 @@ from inference.inference_lodging import InferenceLodging
 from inference.inference_chaff import InferenceChaff
 from inference.inference_chaff_video import InferenceChaffVideo
 from inference.inference_lodging_video import InferenceLodgingVideo
-
+from inference.inference_yield_absolute_video import InferenceYieldAbsoluteVideo
 
 class InferenceFactory:
 
@@ -10,7 +10,8 @@ class InferenceFactory:
         "InferenceLodging": InferenceLodging,
         "InferenceChaffVideo": InferenceChaffVideo,
         "InferenceChaff": InferenceChaff,
-        "InferenceLodgingVideo": InferenceLodgingVideo
+        "InferenceLodgingVideo": InferenceLodgingVideo,
+        "InferenceYieldAbsoluteVideo": InferenceYieldAbsoluteVideo
     }
 
     def __init__(self, config):

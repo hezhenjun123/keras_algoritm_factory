@@ -26,7 +26,7 @@ class GeneratorSegmentation(DataGeneratorBase):
         dataset = dataset.cache(self.cache_file_location(self.cache_dir))
         if self.repeat:
             dataset = dataset.repeat()
-        if transforms is not None and transforms.has_transform():
+        if transforms.has_transform():
             transform_map = self.__get_transform_map(transforms, self.output_shape,
                                                      self.output_image_channels,
                                                      self.output_image_type)
@@ -36,7 +36,6 @@ class GeneratorSegmentation(DataGeneratorBase):
 
     def create_dataset(self, df, transforms=None):
         dataset = self.create_dataset_dict(df, transforms)
-        # FIXME: change the style to use one segmenatation labels
         # FIXME: Also may wantn ot have a final transform to make the schema of data generator flexible
         dataset = dataset.map(lambda row: (row["image"], (row["segmentation_labels"])))
         dataset = dataset.prefetch(4)

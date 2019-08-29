@@ -47,16 +47,17 @@ EXPERIMENT:
   EXPERIMENT_NAME: ExperimentSegmentationUnet
   MODEL_NAME: ModelUnetSegmentation
   TRAIN_TRANSFORM: TransformSegmentation
-  TRAIN_GENERATOR: GeneratorVideo
+  TRAIN_GENERATOR: GeneratorSegmentation
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
 
 INFERENCE:
   INFERENCE_NAME: InferenceChaffVideo
+  GENERATOR: GeneratorVideo
   INFERENCE_CSV_FILE: 
   INFERENCE_DATA_DIR:
-  VIDEO_PATH: s3://zoomlion-sample/zoomlion-hopper-1/barn_video1.avi
-  # VIDEO_PATH: video.avi
+  VIDEO_PATH: s3://zoomlion-sample/data-2019-08-24-3acreage-highland_barley/picked/chaff_20190824.avi
+  # VIDEO_PATH: /Users/timothyrosenflanz/Downloads/chaff_new.avi
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: valid #Column content in the csv file
   SEPARATOR: ','
@@ -70,3 +71,9 @@ INFERENCE:
 LOCAL_OVERRIDE:
   DIR_OUT: ./out
   DATA_DIR: null
+
+GRU:
+  JOB_NAME: wheat_chaff_segmentation
+  PROJECT_NAME: wheat_yield_chaff
+  INSTANCE_TYPE: p3.2xlarge
+  TIMEOUT: 96

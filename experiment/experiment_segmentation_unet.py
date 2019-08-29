@@ -66,6 +66,6 @@ class ExperimentSegmentationUnet(ExperimentBase):
                             verbose=1,
                             monitor='val_mean_iou',
                             mode='max',
-                            save_best_only=False),
+                            save_best_only=True),
         ]
         return callbacks

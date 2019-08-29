@@ -3,7 +3,7 @@ from transforms.transform_base import TransformBase
 import numpy as np
 
 
-class TransformClassificationYield(TransformBase):
+class TransformClassificationYieldDelta(TransformBase):
 
     def __init__(self, config):
         super().__init__(config)

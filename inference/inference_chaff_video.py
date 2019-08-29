@@ -32,7 +32,7 @@ class InferenceChaffVideo(InferenceBase):
         img = img[:, :, ::-1]
         mask = preds == 1
         preds = preds[:, :, None].repeat(3, 2)
-        preds[mask] = [255, 0, 0]
+        preds[mask] = [0, 0, 255]
         out = np.concatenate((img, cv2.addWeighted(img, .7, preds, .3, 0), log), axis=1)
         return out
 
@@ -45,10 +45,15 @@ class InferenceChaffVideo(InferenceBase):
 
     def create_log_array(self, hl, shape):
         plt.plot(hl.get_xdata(), hl.get_ydata(), color='steelblue')
+        plt.ylabel('Chaff Percent')
+        locs = plt.yticks()[0]
+        plt.yticks(*(zip(*[[x,f'{x:.1%}'] for x in locs])))
+        plt.title('Chaff Content',{"fontsize":18})
         log_file = os.path.join(self.save_dir, 'log.png')
         if os.path.isfile(log_file):
             os.remove(log_file)
         plt.savefig(log_file)
+        plt.clf()
         log = cv2.imread(log_file)
         log = self.resize(log, shape).astype(np.uint8)
         return log
@@ -75,11 +80,12 @@ class InferenceChaffVideo(InferenceBase):
                 buffer.append((original_image, resized_pred_seg))
                 image = buffer[buffer_length // 2][0]
                 pred = np.max(np.array([x[1] for x in buffer]), axis=0).astype(np.uint8)
-                self.update_line(hl, (count, np.log(1 + resized_pred_seg.sum() / 255)))
+                self.update_line(hl, (count, resized_pred_seg.sum() / resized_pred_seg.size))
                 if (count - buffer_length) % 15 == 0: log = self.create_log_array(hl, resize_shape)
                 out = self.make_triplot(image, pred, log)
                 if writer is None:
                     fourcc = cv2.VideoWriter_fourcc(*'XVID')
+                    # fourcc=0
                     video_shape = (out.shape[1], out.shape[0])
                     writer = cv2.VideoWriter(os.path.join(self.save_dir, 'inference.avi'), fourcc,
                                              5, video_shape, True)
