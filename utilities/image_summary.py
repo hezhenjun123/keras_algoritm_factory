@@ -19,7 +19,7 @@ class ImageSummary(tf.keras.callbacks.Callback):
             tensorboard_callback,
             data,
             update_freq=10,
-            transforms=[None, None, None],
+            transforms = None,
             from_logits=False,
             cmap="viridis",
             **kwargs,
@@ -98,23 +98,6 @@ class ImageSummary(tf.keras.callbacks.Callback):
             tr_image = np.expand_dims(tr_image, axis=0)
             self.data.append((image, tr_image, label, name))
 
-    def _make_image(self, array):
-        """Converts an image array to the protobuf representation neeeded for image
-        summaries."""
-        height, width, channels = array.shape
-        image = Image.fromarray(array)
-
-        output = io.BytesIO()
-        image.save(output, format="PNG")
-        image_string = output.getvalue()
-        output.close()
-        return tf.Summary.Image(
-            height=height,
-            width=width,
-            colorspace=channels,
-            encoded_image_string=image_string,
-        )
-
     def _colorize(self, indices):
         """Converts an matrix consisting of numbers in the range [0...1] to a color
         image for easier visualiations."""
@@ -137,7 +120,7 @@ class ImageSummary(tf.keras.callbacks.Callback):
         if epoch % self.update_freq != 0:
             return
         summary_values = []
-        for i, (image, tr_image, label, name) in enumerate(self.data):
+        for image, tr_image, label, _ in self.data:
             height, width, _ = image.shape
             separator = np.full(fill_value=255, shape=(height, 5, 3), dtype=np.uint8)
             pred = self.model.predict(tr_image)[0, ...]
@@ -147,7 +130,7 @@ class ImageSummary(tf.keras.callbacks.Callback):
                     pred = np.expand_dims(pred, axis=-1)
             if pred.shape[-1] == 1:
                 label = 255 * label
-            to_show = np.concatenate(
+            summary_values.append(np.concatenate(
                 [
                     image,
                     separator,
@@ -156,11 +139,9 @@ class ImageSummary(tf.keras.callbacks.Callback):
                     self._colorize(label),
                 ],
                 axis=1,  # concat side by side
-            )
-            summary_values.append(
-                tf.Summary.Value(
-                    tag=f"Image_Pred_Label/{i}_{name}",
-                    image=self._make_image(to_show),
-                ))
-        summary = tf.Summary(value=summary_values)
-        self.tensorboard_callback.writer.add_summary(summary, epoch)
+            ))
+        images = np.stack(summary_values)
+
+        with self.tensorboard_callback._writers['validation'].as_default():
+            tf.summary.image('Prediction Visualization',images,max_outputs=len(images),step=epoch)
+

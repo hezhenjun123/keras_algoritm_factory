@@ -42,8 +42,8 @@ def get_plot_data(df, config):
         try:
             image, segmentation_labels = iterator.get_next()
             plot_data.append((
-                image,
-                segmentation_labels,
+                image.numpy(),
+                segmentation_labels.numpy(),
                 "",
             ))
         except tf.errors.OutOfRangeError:

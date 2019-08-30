@@ -26,7 +26,7 @@ class GeneratorSegmentation(DataGeneratorBase):
         dataset = dataset.cache(self.cache_file_location(self.cache_dir))
         if self.repeat:
             dataset = dataset.repeat()
-        if transforms.has_transform():
+        if transforms is not None and transforms.has_transform():
             transform_map = self.__get_transform_map(transforms, self.output_shape,
                                                      self.output_image_channels,
                                                      self.output_image_type)

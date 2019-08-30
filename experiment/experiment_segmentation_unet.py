@@ -6,6 +6,9 @@ from metric.mean_iou import MeanIOU
 from loss.dice import Dice
 from utilities.cos_anneal import CosineAnnealingScheduler
 from utilities.smart_checkpoint import SmartCheckpoint
+from utilities.helper import get_plot_data
+from utilities.color import generate_colormap
+from utilities.image_summary import ImageSummary
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -16,6 +19,7 @@ class ExperimentSegmentationUnet(ExperimentBase):
         super().__init__(config)
         self.learning_rate = config["LEARNING_RATE"]
         self.num_classes = config["NUM_CLASSES"]
+        self.num_plots = config['EXPERIMENT']["NUM_PLOTS"]
 
     def run_experiment(self):
         train_transform, valid_transform = self.generate_transform()
@@ -41,25 +45,25 @@ class ExperimentSegmentationUnet(ExperimentBase):
         return compile_para
 
     def __compile_callbacks(self, valid_data_dataframe, valid_transforms):
-        # plot_df = valid_data_dataframe.sample(n=self.num_plots, random_state=69)
-        # data_to_plot = get_plot_data(plot_df, self.config)
+        plot_df = valid_data_dataframe.sample(n=self.num_plots, random_state=69)
+        data_to_plot = get_plot_data(plot_df, self.config)
         summaries_dir = os.path.join(self.save_dir, "summaries")
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=summaries_dir)
         checkpoints_dir = os.path.join(self.save_dir, "checkpoints/")
-        # if self.num_classes == 2:
-        #     cmap = "viridis"
-        # else:
-        #     cmap = generate_colormap(self.num_classes, "ADE20K")
+        if self.num_classes == 2:
+            cmap = "viridis"
+        else:
+            cmap = generate_colormap(self.num_classes, "ADE20K")
         callbacks = [
             tensorboard_callback,
             CosineAnnealingScheduler(20, self.learning_rate),
-            # ImageSummary(
-            #     tensorboard_callback,
-            #     data_to_plot,
-            #     update_freq=10,
-            #     transforms=valid_transforms,
-            #     cmap=cmap,
-            # ),
+            ImageSummary(
+                tensorboard_callback,
+                data_to_plot,
+                update_freq=10,
+                transforms=valid_transforms,
+                cmap=cmap,
+            ),
             SmartCheckpoint(destination_path=checkpoints_dir,
                             file_format='epoch_{epoch:04d}/cp.hdf5',
                             save_weights_only=False,

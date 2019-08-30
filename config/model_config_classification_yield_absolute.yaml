@@ -1,7 +1,7 @@
 RUN_ENV: aws #{aws, local}
 RUN_MODE: train #{train, inference}
 BATCH_SIZE: 16
-LEARNING_RATE: 0.00005
+LEARNING_RATE: 0.00001
 EPOCHS: 800
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
@@ -81,5 +81,3 @@ GRU:
   PROJECT_NAME: wheat_yield_absolute_classification
   INSTANCE_TYPE: p3.2xlarge
   TIMEOUT: 8
-
-
