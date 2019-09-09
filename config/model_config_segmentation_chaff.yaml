@@ -1,5 +1,6 @@
 RUN_ENV: local #{aws, local}
 RUN_MODE: train #{train, inference}
+
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 1000
@@ -58,8 +59,8 @@ INFERENCE:
   GENERATOR: GeneratorVideo
   INFERENCE_CSV_FILE: 
   INFERENCE_DATA_DIR:
-  VIDEO_PATH: s3://zoomlion-sample/data-2019-08-24-3acreage-highland_barley/picked/chaff_20190824.avi
-  # VIDEO_PATH: /Users/timothyrosenflanz/Downloads/chaff_new.avi
+  #VIDEO_PATH: s3://zoomlion-sample/zoomlion-hopper-1/barn_video1.avi
+  VIDEO_PATH: s3://zoomlion-sample/data-2019-08-24-3acreage-highland_barley/picked/
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: valid #Column content in the csv file
   SEPARATOR: ','

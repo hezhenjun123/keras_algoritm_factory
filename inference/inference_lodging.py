@@ -64,7 +64,7 @@ class InferenceLodging(InferenceBase):
             contours, _ = cv2.findContours(resized_pred_seg, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
             newimg = np.copy(original_image)
             for contour in contours:
-                cv2.drawContours(newimg, contour, -1, (0, 255, 0), 2)
+                cv2.drawContours(newimg, contour, -1, (0, 0, 255), 2)
             original_contour_dir = os.path.join(save_dir_original_contour,
                                                 f"image{count:05d}_original_contour.png")
             cv2.imwrite(original_contour_dir, newimg)

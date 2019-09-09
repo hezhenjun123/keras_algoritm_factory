@@ -3,6 +3,7 @@ import cv2
 import os
 from inference.inference_base import InferenceBase
 import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -15,8 +16,6 @@ class InferenceChaff(InferenceBase):
 
     def __init__(self, config):
         super().__init__(config)
-        if config["RUN_ENV"] == 'local':
-            matplotlib.use('TkAgg')
         self.pred_image_dir = config["INFERENCE"]["PRED_IMAGE_DIR"]
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
         if self.num_process_image >= 99999:

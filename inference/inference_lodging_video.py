@@ -3,8 +3,9 @@ import cv2
 import os
 from inference.inference_base import InferenceBase
 import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib
+import matplotlib.pyplot as plt
+
 from utilities.file_system_manipulation import directory_to_file_list
 logging.getLogger().setLevel(logging.INFO)
 
@@ -18,8 +19,6 @@ class InferenceLodgingVideo(InferenceBase):
         self.pred_image_dir = config["INFERENCE"]["PRED_IMAGE_DIR"]
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
         self.video_path = config["INFERENCE"]["VIDEO_PATH"]
-        if config["RUN_ENV"] == 'local':
-            matplotlib.use('TkAgg')
 
     def run_inference(self):
         model = self.load_model()
@@ -44,7 +43,7 @@ class InferenceLodgingVideo(InferenceBase):
         contours, _ = cv2.findContours(preds, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
         newimg = np.copy(img)
         for contour in contours:
-            cv2.drawContours(newimg, contour, -1, (0, 0, 255), 2)
+            cv2.drawContours(newimg, contour, -1, (0, 0, 255), 4)
         out = np.concatenate((newimg, log), axis=1)
         return out
 
@@ -100,7 +99,7 @@ class InferenceLodgingVideo(InferenceBase):
                 out = self.make_plot_for_video(image.astype(np.uint8), pred.astype(np.uint8),
                                                log.astype(np.uint8))
                 if writer is None:
-                    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+                    fourcc = 0
                     video_shape = (out.shape[1], out.shape[0])
                     writer = cv2.VideoWriter(os.path.join(self.save_dir, self.output_video_name),
                                              fourcc, 5, video_shape, True)
