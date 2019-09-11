@@ -27,16 +27,14 @@ class InferenceChaffVideo(InferenceBase):
         model = self.load_model()
 
         file_list = sorted(directory_to_file_list(self.video_path))
-        file_count = 1
         total_count = len(file_list)
-        for file_path in file_list:
+        for file_count, file_path in enumerate(file_list, start=1):
             logging.info(f"process video num: {file_count}/{total_count}")
             logging.info(f"file name: {file_path}")
             inference_dataset = self.generate_dataset(file_path, inference_transform)
             input_video_name = file_path.split('/')[-1]
             self.output_video_name = f"{input_video_name}.avi"
             self.__produce_segmentation_image(model, inference_dataset)
-            file_count += 1
         logging.info("================Inference Complete=============")
 
     def make_triplot(self, img, preds, log):
@@ -64,7 +62,6 @@ class InferenceChaffVideo(InferenceBase):
         if os.path.isfile(log_file):
             os.remove(log_file)
         plt.savefig(log_file)
-        plt.clf()
         log = cv2.imread(log_file)
         log = self.resize(log, shape).astype(np.uint8)
         plt.clf()
@@ -93,12 +90,11 @@ class InferenceChaffVideo(InferenceBase):
                 image = buffer[buffer_length // 2][0]
                 pred = np.max(np.array([x[1] for x in buffer]), axis=0).astype(np.uint8)
                 # self.update_line(hl, (count, np.log(1 + resized_pred_seg.sum() / 255)))
-                self.update_line(hl, (count, resized_pred_seg.sum()*1.0 / (resized_pred_seg.shape[0]*resized_pred_seg.shape[1])))
+                self.update_line(hl, (count, resized_pred_seg.sum() / (resized_pred_seg.shape[0]*resized_pred_seg.shape[1])))
                 if (count - buffer_length) % 15 == 0: log = self.create_log_array(hl, resize_shape)
                 out = self.make_triplot(image, pred, log)
                 if writer is None:
                     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-                    # fourcc=0
                     video_shape = (out.shape[1], out.shape[0])
                     writer = cv2.VideoWriter(os.path.join(self.save_dir, self.output_video_name), fourcc,
                                              5, video_shape, True)
