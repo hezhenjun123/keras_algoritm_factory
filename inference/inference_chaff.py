@@ -3,7 +3,6 @@ import cv2
 import os
 from inference.inference_base import InferenceBase
 import matplotlib
-matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 
