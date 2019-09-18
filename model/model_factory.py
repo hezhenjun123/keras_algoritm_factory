@@ -2,7 +2,7 @@ from model.model_resnet_classification import ModelResnetClassification
 from model.model_resnet_regression import ModelResnetRegression
 from model.model_resnet_classification_yield import ModelResnetClassificationYield
 from model.model_unet_segmentation import ModelUnetSegmentation
-
+from model.model_skip_unet_segmentation import ModelSkipUnetSegmentation
 
 class ModelFactory:
 
@@ -10,7 +10,8 @@ class ModelFactory:
         "ModelResnetClassification": ModelResnetClassification,
         "ModelResnetRegression": ModelResnetRegression,
         "ModelResnetClassificationYield": ModelResnetClassificationYield,
-        "ModelUnetSegmentation": ModelUnetSegmentation
+        "ModelUnetSegmentation": ModelUnetSegmentation,
+        "ModelSkipUnetSegmentation": ModelSkipUnetSegmentation
     }
 
     def __init__(self, config):

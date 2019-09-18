@@ -17,9 +17,11 @@ tf-estimator-nightly==1.14.0.dev2019060501
 Werkzeug==0.15.4
 wrapt==1.11.2
 
-
 pillow
 pyyaml>=3.13
 pandas>=0.23.1
 albumentations>=0.3.0
 s3fs>=0.2.0
+segmentation-models>=1.0.0b1
+image-classifiers==1.0.0b1
+efficientnet==1.0.0b3
