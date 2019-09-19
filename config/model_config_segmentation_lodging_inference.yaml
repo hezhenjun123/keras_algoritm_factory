@@ -21,8 +21,10 @@ DATA_GENERATOR:
   NUM_PARALLEL_CALLS: 4
   REPEAT: true
 
+
 TRANSFORM:
   RESIZE: [512, 512]
+
 
 TRAINING_DATA_INFO:
   TRAIN_CSV_FILE: s3://zoomlion-prod-data/harvester/wheat-lodging/segmentation/data-v0.3/train.csv
@@ -62,7 +64,8 @@ INFERENCE:
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE: s3://zoomlion-sample/wheat-lodging/lodgingwheat/train_raw_100APPLE.csv
   INFERENCE_DATA_DIR: s3://zoomlion-sample/wheat-lodging/lodgingwheat/
-  VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingvideo/
+  #VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingvideo/
+  VIDEO_PATH: data/video/
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: raw
   SEPARATOR: ','
@@ -77,6 +80,7 @@ INFERENCE:
 LOCAL_OVERRIDE:
   DIR_OUT: ./out
   DATA_DIR:
+
 
 GRU:
   JOB_NAME: wheat_lodging_segmentation

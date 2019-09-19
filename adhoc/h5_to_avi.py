@@ -7,7 +7,7 @@ import multiprocessing as mp
 
 def h5_to_png(file_path):
     base_path, file_name = os.path.split(file_path)
-    save_path = base_path
+    save_path = base_path.replace("/uvc/", "/avi/")
 
     if os.path.exists(save_path) is not True:
         os.makedirs(save_path)
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         dir_path = os.path.abspath(args.directory)
         print('folder :%s' % (dir_path))
 
-        pool = mp.Pool(processes=4)
+        pool = mp.Pool(processes=16)
 
         for root, dirs, files in os.walk(dir_path):
             for file in files:
