@@ -18,4 +18,12 @@ fi
 if [ "$RUN_ENV" == "aws" ]; then
     pip install -r requirements.txt
 fi
+
+if ! [ -f utilities/bbox_overlap.c ]
+then
+    python utilities/bbox_setup.py build_ext --inplace && mv bbox_overlap.c* utilities/
+else
+    echo NO SETUP IS NEEDED
+fi
+
 python $SCRIPT --config $1

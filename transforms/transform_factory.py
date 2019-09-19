@@ -1,5 +1,6 @@
 from transforms.transform_classification import TransformClassification
 from transforms.transform_segmentation import TransformSegmentation
+from transforms.transform_bbox import TransformBbox
 from transforms.transform_classification_yield_delta import TransformClassificationYieldDelta
 from transforms.transform_yield_absolute import TransformYieldAbsolute
 
@@ -9,6 +10,7 @@ class TransformFactory:
     transform_registry = {
         "TransformClassification": TransformClassification,
         "TransformSegmentation": TransformSegmentation,
+        "TransformBbox": TransformBbox,
         "TransformClassificationYieldDelta": TransformClassificationYieldDelta,
         "TransformYieldAbsolute": TransformYieldAbsolute
     }

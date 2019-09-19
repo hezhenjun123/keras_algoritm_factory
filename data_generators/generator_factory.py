@@ -2,7 +2,7 @@ from data_generators.generator_classification import GeneratorClassification
 from data_generators.generator_regression import GeneratorRegression
 from data_generators.generator_segmentation import GeneratorSegmentation
 from data_generators.generator_video import GeneratorVideo
-
+from data_generators.generator_retinanet import GeneratorRetinaNet
 
 class DataGeneratorFactory:
 
@@ -10,7 +10,8 @@ class DataGeneratorFactory:
         "GeneratorClassification": GeneratorClassification,
         "GeneratorRegression": GeneratorRegression,
         "GeneratorSegmentation": GeneratorSegmentation,
-        "GeneratorVideo": GeneratorVideo
+        "GeneratorVideo": GeneratorVideo,
+        "GeneratorRetinaNet":GeneratorRetinaNet
     }
 
     def __init__(self, config):

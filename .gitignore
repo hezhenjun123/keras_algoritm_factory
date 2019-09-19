@@ -9,3 +9,6 @@ wheat_lodging_segmentation_run/*
 .DS_STORE
 model.hdf5
 video.avi
+*.o
+*.c*
+build

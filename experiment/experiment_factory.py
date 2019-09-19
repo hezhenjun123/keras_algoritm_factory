@@ -1,5 +1,6 @@
 from experiment.experiment_classification import ExperimentClassification
 from experiment.experiment_regression import ExperimentRegression
+from experiment.experiment_bbox import ExperimentBbox
 from experiment.experiment_segmentation_unet import ExperimentSegmentationUnet
 
 
@@ -8,7 +9,8 @@ class ExperimentFactory:
     experiment_registry = {
         "ExperimentClassification": ExperimentClassification,
         "ExperimentRegression": ExperimentRegression,
-        "ExperimentSegmentationUnet": ExperimentSegmentationUnet
+        "ExperimentSegmentationUnet": ExperimentSegmentationUnet,
+        "ExperimentBbox":ExperimentBbox
     }
 
     def __init__(self, config):
