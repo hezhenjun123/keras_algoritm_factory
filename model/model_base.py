@@ -61,15 +61,26 @@ class ModelBase:
         self.set_runtime_parameters(**kwargs)
         logging.info('STARTING TRAINING, {} train steps, {} valid steps'.format(
             self.train_steps_per_epoch, self.valid_steps_per_epoch))
-        self.model.fit(train_dataset,
-                       epochs=self.epochs,
-                       steps_per_epoch=self.train_steps_per_epoch,
-                       validation_data=valid_dataset,
-                       validation_steps=self.valid_steps_per_epoch,
-                       verbose=2,
-                       callbacks=callbacks)
+        if valid_dataset is None:
+            self.model.fit(train_dataset,
+                           epochs=self.epochs,
+                           steps_per_epoch=self.train_steps_per_epoch,
+                           validation_data=valid_dataset,
+                           verbose=2,
+                           callbacks=callbacks)
+        else:
+            self.model.fit(train_dataset,
+                           epochs=self.epochs,
+                           steps_per_epoch=self.train_steps_per_epoch,
+                           validation_data=valid_dataset,
+                           validation_steps=self.valid_steps_per_epoch,
+                           verbose=2,
+                           callbacks=callbacks)
 
     def predict(self, predict_data_source, steps=None):
+        steps = 1
+        logging.info("=========================predict_data_source=============")
+        logging.info(predict_data_source)
         return self.model.predict(x=predict_data_source, steps=steps)
 
     def evaluate(self, predict_data_source, steps=None):

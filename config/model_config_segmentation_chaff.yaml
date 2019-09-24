@@ -1,5 +1,6 @@
-RUN_ENV: local #{aws, local}
+RUN_ENV: aws #{aws, local}
 RUN_MODE: train #{train, inference}
+
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 1000
@@ -39,7 +40,7 @@ TRAINING_DATA_INFO:
 
 MODEL:
   LAYER_SIZE: 64 #can be a list
-  LAYER_COUNT: 3 #ignored if LAYER_SIZE  is list
+  LAYER_COUNT: 5 #ignored if LAYER_SIZE  is list
   BACKBONE: efficientnetb0  #{any backbone from https://github.com/qubvel/segmentation_models#models-and-backbones} for Unet
                             # nobackbone or mobilenet-v2
   IS_BACKBONE_TRAINABLE: true
@@ -58,8 +59,8 @@ INFERENCE:
   GENERATOR: GeneratorVideo
   INFERENCE_CSV_FILE: 
   INFERENCE_DATA_DIR:
-  VIDEO_PATH: s3://zoomlion-sample/data-2019-08-24-3acreage-highland_barley/picked/chaff_20190824.avi
-  # VIDEO_PATH: /Users/timothyrosenflanz/Downloads/chaff_new.avi
+  #VIDEO_PATH: s3://zoomlion-sample/zoomlion-hopper-1/barn_video1.avi
+  VIDEO_PATH: s3://zoomlion-sample/data-2019-08-24-3acreage-highland_barley/picked/
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: valid #Column content in the csv file
   SEPARATOR: ','
@@ -75,7 +76,7 @@ LOCAL_OVERRIDE:
   DATA_DIR: null
 
 GRU:
-  JOB_NAME: wheat_chaff_segmentation
+  JOB_NAME: test_chaff_seg
   PROJECT_NAME: wheat_yield_chaff
   INSTANCE_TYPE: p3.2xlarge
   TIMEOUT: 96
