@@ -21,6 +21,7 @@ class ModelBase:
         self.model_directory = self.config["LOAD_MODEL_DIRECTORY"]
         resize_config = config["TRANSFORM"]["RESIZE"]
         self.resize = (resize_config[0], resize_config[1])
+        self.generate_custom_objects()
         logging.info(config)
 
     def get_or_load_model(self):
@@ -34,10 +35,13 @@ class ModelBase:
             self.model_directory = fsm.s3_to_local(self.model_directory, './model.hdf5')[0]
         if not os.path.exists(self.model_directory):
             raise ValueError("Incorrect model path")
-        return tf.keras.models.load_model(self.model_directory, compile=False)
+        return tf.keras.models.load_model(self.model_directory, compile=False,custom_objects=self.custom_objects)
 
     def create_model(self):
         raise NotImplementedError
+
+    def generate_custom_objects(self):
+        self.custom_objects = {}
 
     def compile_model(self, **kwargs):
         self.model.compile(**kwargs)

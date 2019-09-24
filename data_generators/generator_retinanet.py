@@ -66,8 +66,9 @@ class GeneratorRetinaNet(DataGeneratorBase):
     def create_inference_dataset(self, df, transforms=None):
         dataset = self.create_dataset_dict(df, transforms)
         # FIXME: Also may wantn ot have a final transform to make the schema of data generator flexible
-        dataset = dataset.map(lambda row: (row["image"], (row["bbox_labels_bboxes"],row["bbox_labels_labels"])))
-        dataset = dataset.batch(self.batch_size, drop_remainder=self.drop_remainder)
+        dataset = dataset.map(lambda row: (row["image"], (row["bbox_labels_bboxes"],row["bbox_labels_labels"]),
+                                          row['original_image'],(row["original_bbox_labels_bboxes"],row["original_bbox_labels_labels"])))
+        dataset = dataset.batch(1, drop_remainder=self.drop_remainder)
         dataset = dataset.prefetch(4)
         logging.info("==========================dataset=====================")
         logging.info(dataset)
@@ -91,7 +92,7 @@ class GeneratorRetinaNet(DataGeneratorBase):
         load_bboxes_func = self.__get_load_annotations(self.defect_map,self.fs)
         annos = tf.compat.v1.py_func(load_bboxes_func,
                                     [row["bbox_label_path"]],
-                                    [tf.float64])
+                                    [tf.float64])[0]
         new_row = dict(
             image=image,
             bbox_labels=annos,
@@ -131,7 +132,7 @@ class GeneratorRetinaNet(DataGeneratorBase):
                     ymax = int(float(bbox_dict["bndbox"]["ymax"]))
                     bboxes.append([xmin, ymin, xmax, ymax])
             if len(labels) > 0:
-                annotations = np.array(labels).reshape((-1,1)),np.array(bboxes)
+                annotations = [np.array(labels).reshape((-1,1)),np.array(bboxes)]
             annotations = np.concatenate(annotations,axis=1).astype(float)
             return annotations
             
@@ -152,11 +153,14 @@ class GeneratorRetinaNet(DataGeneratorBase):
             logging.info(image)
             label = augmented[1]
             logging.info(label)
+            row = {}
             row["image"] = image
-            row["bbox_labels_bboxes"] = label[0][:,1:]
-            row["bbox_labels_labels"] = label[0][:,0]
+            row["bbox_labels_bboxes"] = label[:,1:]
+            row["bbox_labels_labels"] = label[:,0]
             row["original_image"] = original_image
-            row["original_bbox_labels"] = original_labels
+            row["original_bbox_labels_bboxes"] = original_labels[:,1:]
+            row["original_bbox_labels_labels"] = original_labels[:,0]
+
             return row
 
         return transform_map

@@ -37,7 +37,6 @@ class ModelRetinaNet(ModelBase):
         self.backbone_name = config["MODEL"]["BACKBONE"]
         self.num_anchors=AnchorParameters(**config["MODEL"].get("ANCHORPARAMS",None)).num_anchors()
         self.model =  self.get_or_load_model()
-        self.inference_model = self.RetinaNetBbox()
 
     def create_model(self):
         inputs, outputs = Backbone(self.backbone_name,weights='imagenet').get_pyramid_inputs()
@@ -63,6 +62,14 @@ class ModelRetinaNet(ModelBase):
 
         return tf.keras.models.Model(inputs=inputs, outputs=pyramids, name='retinanet')
 
+    def generate_custom_objects(self):
+        custom_objects = {'UpsampleLike':UpsampleLike,
+                        'Anchors':Anchors,
+                        'RegressBoxes':RegressBoxes,
+                        'FilterDetections':FilterDetections,
+                        'ClipBoxes':ClipBoxes,
+                        'PriorProbability':PriorProbability}
+        self.custom_objects = custom_objects
 
     def RetinaNetBbox(
         self,

@@ -58,7 +58,7 @@ class EvaluateBboxCallback(tf.keras.callbacks.Callback):
         for i,batch in enumerate(self.generator):
             if i>=self.num_steps: break
             detections, ground_truth = [],[]
-            image, annotations = batch
+            image, annotations, _, _ = batch
             annotations = [x.numpy() for x in annotations]
             ground_bboxes, ground_labels = annotations
             # run network

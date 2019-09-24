@@ -27,7 +27,7 @@ class ExperimentBbox(ExperimentBase):
         callbacks = self.__compile_callback(model.num_classes,
                                             len(data_valid_split),
                                             valid_dataset,
-                                            model.inference_model)
+                                            model.RetinaNetBbox())
         kwarg_para = {
             "num_train_data": len(data_train_split),
             "num_valid_data": len(data_valid_split)
@@ -41,13 +41,13 @@ class ExperimentBbox(ExperimentBase):
         summaries_dir = os.path.join(self.save_dir, "summaries")
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=summaries_dir)
         checkpoints_dir = os.path.join(self.save_dir, "checkpoints")
-        checkpoint_callback = SmartCheckpoint(destination_path=checkpoints_dir,
+        checkpoint_callback = RedirectModel(SmartCheckpoint(destination_path=checkpoints_dir,
                                               file_format='epoch_{epoch:04d}/cp.hdf5',
                                               save_weights_only=False,
                                               verbose=1,
-                                              monitor='mean_average_precision',
+                                              monitor='val_mean_average_precision',
                                               mode='max',
-                                              save_best_only=True)
+                                              save_best_only=True),inference_model)
         # create bbox metrics backback
         eval_callback = EvaluateBboxCallback(
             num_classes =  num_classes,
@@ -57,7 +57,7 @@ class ExperimentBbox(ExperimentBase):
         )
         eval_callback = RedirectModel(eval_callback, inference_model)
         callbacks = [
-            CosineAnnealingScheduler(20, self.learning_rate),
+            # CosineAnnealingScheduler(20, self.learning_rate),
             eval_callback,
             checkpoint_callback,
             tensorboard_callback,
@@ -77,7 +77,6 @@ class ExperimentBbox(ExperimentBase):
         generator_factory = DataGeneratorFactory(self.config)
         train_generator = generator_factory.create_generator(self.train_generator_name)
         valid_generator = generator_factory.create_generator(self.valid_generator_name)
-        valid_generator.batch_size = 1
         train_dataset = train_generator.create_dataset(df=data_train_split,
                                                        transforms=train_transform)
         valid_dataset = valid_generator.create_inference_dataset(df=data_valid_split,

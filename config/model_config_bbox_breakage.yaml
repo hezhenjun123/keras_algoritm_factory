@@ -1,13 +1,13 @@
-RUN_ENV: aws #{aws, local}
-RUN_MODE: train #{train, inference}
+RUN_ENV: local #{aws, local}
+RUN_MODE: inference #{train, inference}
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 1000
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
-LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
-LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield/botan/wheat_breakage_segmentation/run_001/checkpoints/epoch_0999/
+LOAD_MODEL: true  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_breakage/trosenflanz/wheat_breakage_segmentation/run_031/checkpoints/epoch_0023/cp.hdf5
 DIR_OUT: /workspace/output/  #directory on the ec2 host, to save output files from code
 DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-breakage/bounding-box/data-v0.1/
 
@@ -39,9 +39,7 @@ TRAINING_DATA_INFO:
   
 
 MODEL:
-  LAYER_SIZE: 64
-  LAYER_COUNT: 3
-  BACKBONE: mobilenet-v2
+  BACKBONE: resnet50
   IS_BACKBONE_TRAINABLE: true
   MODEL_DIRECTORY: out
   CHECKPOINT_DIRECTORY: checkpoint
@@ -50,7 +48,7 @@ MODEL:
     sizes : [16, 32, 64, 128, 256]
     strides : [8, 16, 32, 64, 128] 
     ratios : [0.5, 1, 2]
-    scales :  [1, 1.2599, 1.5874]
+    scales :  [1, 1.2, 1.6]
 
 
 
@@ -63,10 +61,10 @@ EXPERIMENT:
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
 
 INFERENCE:
-  INFERENCE_NAME: InferenceLodging
+  INFERENCE_NAME: InferenceBboxBreakage
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
-  INFERENCE_CSV_FILE: s3://zoomlion-prod-data/harvester/wheat-breakage/bounding-box/seg-data-v0.2/seg_train.csv
-  INFERENCE_DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-breakage/bounding-box/seg-data-v0.2/
+  INFERENCE_CSV_FILE: s3://zoomlion-prod-data/harvester/wheat-breakage/bounding-box/data-v0.1/train.csv
+  INFERENCE_DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-breakage/bounding-box/data-v0.1
   VIDEO_PATH:
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: valid
@@ -75,7 +73,7 @@ INFERENCE:
   SEGMENTATION_PATH: seg_label_path
   LABEL_NAME: label_name
   IMAGE_LEVEL_LABEL: image_level_label
-  NUM_PROCESS_IMAGE: 30000
+  NUM_PROCESS_IMAGE: 10
   PRED_IMAGE_DIR: pred_image
 
 
