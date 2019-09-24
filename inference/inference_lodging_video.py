@@ -108,7 +108,7 @@ class InferenceLodgingVideo(InferenceBase):
                 out = self.make_plot_for_video(image.astype(np.uint8), pred.astype(np.uint8),
                                                log.astype(np.uint8))
                 if writer is None:
-                    fourcc = 0
+                    fourcc = cv2.VideoWriter_fourcc(*'XVID')
                     video_shape = (out.shape[1], out.shape[0])
                     writer = cv2.VideoWriter(os.path.join(self.save_dir, self.output_video_name),
                                              fourcc, 5, video_shape, True)
