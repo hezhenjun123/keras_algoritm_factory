@@ -5,9 +5,8 @@ from inference.inference_base import InferenceBase
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-import tensorflow as tf
-tf.enable_eager_execution()
-from utilities.file_system_manipulation import directory_to_file_list
+import multiprocessing as mp 
+from utilities import file_system_manipulation as fsm
 logging.getLogger().setLevel(logging.INFO)
 
 
@@ -25,13 +24,14 @@ class InferenceLodgingVideo(InferenceBase):
         model = self.load_model()
         inference_transform = self.generate_transform()
 
-        file_list = sorted(directory_to_file_list(self.video_path))
+        file_list = sorted(fsm.directory_to_file_list(self.video_path))
         file_count = 1
         total_count = len(file_list)
         for file_path in file_list:
             logging.info(f"process video num: {file_count}/{total_count}")
             logging.info(f"file name: {file_path}")
-            inference_dataset = self.generate_dataset(file_path, inference_transform)
+            # inference_dataset = self.generate_dataset(file_path, inference_transform)
+            inference_dataset = self.generate_dataset(file_path,inference_transform)
             input_video_name = os.path.splitext(os.path.basename(file_path))[0]
             self.output_video_name = f"inference_{input_video_name}.avi"
             self.__produce_segmentation_image(model, inference_dataset)
@@ -41,7 +41,7 @@ class InferenceLodgingVideo(InferenceBase):
     def make_plot_for_video(self, img, preds, log):
         img = img[:, :, ::-1]
 
-        contours, _ = cv2.findContours(preds, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        _ ,contours, _ = cv2.findContours(preds, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
         newimg = np.copy(img)
         for contour in contours:
             cv2.drawContours(newimg, contour, -1, (0, 0, 255), 4)
@@ -74,7 +74,6 @@ class InferenceLodgingVideo(InferenceBase):
     def __produce_segmentation_image(self, model, dataset):
         buffer_length = 5
         buffer = []
-        # inference_dataset = dataset.unbatch().batch(1)
         inference_dataset = dataset
         count = 0
         writer = None
@@ -95,7 +94,6 @@ class InferenceLodgingVideo(InferenceBase):
             pred_seg = np.round(pred_res[0])
             resized_pred_seg = self.resize(pred_seg, resize_shape)
             log_shape = (int(resize_shape[0] / 2), resize_shape[1])
-
             if len(buffer) < buffer_length:
                 buffer.append((original_image, resized_pred_seg))
             else:
@@ -118,3 +116,36 @@ class InferenceLodgingVideo(InferenceBase):
             if count >= self.num_process_image and self.num_process_image != -1: break
         plt.clf()
         writer.release()
+
+
+    def generate_dataset(self,file_path,transforms):
+        mp.set_start_method('spawn')
+
+        queue = mp.Manager().Queue(maxsize=100) 
+
+        def generator(queue):
+            elem = [0,0]
+            while elem[1] is not None:
+                elem = queue.get()
+                yield elem
+
+        mp.Process(target=read_data,args=(file_path,transforms,queue)).start()
+        return generator(queue)
+
+def read_data(video_path,transforms,queue):
+    if fsm.is_s3_path(video_path):
+        video_path = fsm.s3_to_local(video_path, './video.avi')[0]
+    if not os.path.exists(video_path):
+        raise ValueError("Incorrect video path")
+    video = cv2.VideoCapture(video_path)
+    frame = 0
+    while 1:
+        frame = video.read()[1]
+        if frame is None:  
+            queue.put(None,None)
+            video.release()
+            break
+        else:
+            frame = frame[:,:,::-1]
+            transformed_frame = transforms.apply_transforms(image=frame,label=np.zeros_like(frame))[0]
+            queue.put((transformed_frame[None,:],frame[None,:]))

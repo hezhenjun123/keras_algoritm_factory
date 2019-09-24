@@ -82,7 +82,7 @@ LOCAL_OVERRIDE:
   DATA_DIR:
 
 GRU:
-  JOB_NAME: test_breakage_bbox
+  JOB_NAME: wheat_breakage_segmentation
   PROJECT_NAME: wheat_yield_breakage
   INSTANCE_TYPE: p3.2xlarge
   TIMEOUT: 96

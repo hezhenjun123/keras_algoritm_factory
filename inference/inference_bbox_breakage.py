@@ -76,7 +76,6 @@ class InferenceBboxBreakage(InferenceBase):
             fig2 = plt.figure()
             plt.imshow(self._overlay_boxes(preds_overlayed,original_bboxes,original_labels,color=(0,0,255)))
             plt.title('Combined Bboxes (Blue original, Red predicted)')
-
             plt.savefig(os.path.join(save_dir, f"image{count:05d}_original.png"),dpi=300)
             plt.clf()
             
