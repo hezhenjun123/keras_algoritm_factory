@@ -7,7 +7,6 @@ import logging
 from utilities.bbox_overlap import compute_overlap
 from data_generators.generator_base import DataGeneratorBase
 import ast
-
 logging.getLogger().setLevel(logging.INFO)
 
 class GeneratorRetinaNet(DataGeneratorBase):
@@ -152,6 +151,7 @@ class GeneratorRetinaNet(DataGeneratorBase):
             image.set_shape(output_shape + (output_image_channels,))
             logging.info(image)
             label = augmented[1]
+            logging.info("===============label===============")
             logging.info(label)
             row = {}
             row["image"] = image
@@ -177,6 +177,8 @@ class GeneratorRetinaNet(DataGeneratorBase):
                 [image,bboxes,labels],
                 [tf.float64,tf.float64]
             )
+            regress_target.set_shape((None, 5))
+            class_target.set_shape((None, 1))
             row['bbox_labels_bboxes'] = regress_target
             row['bbox_labels_labels'] = class_target
             return row

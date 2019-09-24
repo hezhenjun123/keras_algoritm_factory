@@ -23,7 +23,7 @@ def h5_to_png(file_path):
             if writer is None:
                 fourcc = cv2.VideoWriter_fourcc(*'XVID')
                 video_shape = (img.shape[1], img.shape[0])
-                writer = cv2.VideoWriter(os.path.join(save_path, f"{file_name}.avi"), fourcc, 10,
+                writer = cv2.VideoWriter(os.path.join(save_path, f"{file_name}.avi"), fourcc, 2,
                                          video_shape, True)
             writer.write(img)
         writer.release()

@@ -57,8 +57,8 @@ class ExperimentBbox(ExperimentBase):
         )
         eval_callback = RedirectModel(eval_callback, inference_model)
         callbacks = [
-            # CosineAnnealingScheduler(20, self.learning_rate),
-            eval_callback,
+            CosineAnnealingScheduler(20, self.learning_rate),
+            # eval_callback,
             checkpoint_callback,
             tensorboard_callback,
             ]

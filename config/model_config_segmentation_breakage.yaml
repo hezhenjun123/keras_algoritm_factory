@@ -1,12 +1,12 @@
-RUN_ENV: local #{aws, local}
-RUN_MODE: inference #{train, inference}
+RUN_ENV: aws #{aws, local}
+RUN_MODE: train #{train, inference}
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
 EPOCHS: 1000
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
-LOAD_MODEL: true  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
 LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield/botan/wheat_breakage_segmentation/run_001/checkpoints/epoch_0999/
 DIR_OUT: /workspace/output/  #directory on the ec2 host, to save output files from code
 DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-breakage/bounding-box/seg-data-v0.2/
@@ -40,8 +40,8 @@ TRAINING_DATA_INFO:
 
 MODEL:
   LAYER_SIZE: 64
-  LAYER_COUNT: 3
-  BACKBONE: mobilenet-v2
+  LAYER_COUNT: 5
+  BACKBONE: efficientnetb0
   IS_BACKBONE_TRAINABLE: true
   MODEL_DIRECTORY: out
   CHECKPOINT_DIRECTORY: checkpoint
@@ -55,6 +55,7 @@ EXPERIMENT:
   TRAIN_GENERATOR: GeneratorSegmentation
   VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
+  NUM_PLOTS: 10
 
 
 INFERENCE:
@@ -79,7 +80,7 @@ LOCAL_OVERRIDE:
   DATA_DIR:
 
 GRU:
-  JOB_NAME: wheat_breakage_segmentation
+  JOB_NAME: test_breakage_seg
   PROJECT_NAME: wheat_yield_breakage
   INSTANCE_TYPE: p3.2xlarge
   TIMEOUT: 96

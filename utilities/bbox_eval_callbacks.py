@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from utilities.bbox_overlap import compute_overlap
 
+
 class EvaluateBboxCallback(tf.keras.callbacks.Callback):
     """A tf.keras callback that shows bounding box evalution on Tensorboard
     during training.

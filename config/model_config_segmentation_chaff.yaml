@@ -1,4 +1,4 @@
-RUN_ENV: local #{aws, local}
+RUN_ENV: aws #{aws, local}
 RUN_MODE: train #{train, inference}
 
 BATCH_SIZE: 4
@@ -40,7 +40,7 @@ TRAINING_DATA_INFO:
 
 MODEL:
   LAYER_SIZE: 64 #can be a list
-  LAYER_COUNT: 3 #ignored if LAYER_SIZE  is list
+  LAYER_COUNT: 5 #ignored if LAYER_SIZE  is list
   BACKBONE: efficientnetb0  #{any backbone from https://github.com/qubvel/segmentation_models#models-and-backbones} for Unet
                             # nobackbone or mobilenet-v2
   IS_BACKBONE_TRAINABLE: true
@@ -76,7 +76,7 @@ LOCAL_OVERRIDE:
   DATA_DIR: null
 
 GRU:
-  JOB_NAME: wheat_chaff_segmentation
+  JOB_NAME: test_chaff_seg
   PROJECT_NAME: wheat_yield_chaff
   INSTANCE_TYPE: p3.2xlarge
   TIMEOUT: 96

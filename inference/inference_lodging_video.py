@@ -5,7 +5,8 @@ from inference.inference_base import InferenceBase
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-
+import tensorflow as tf
+tf.enable_eager_execution()
 from utilities.file_system_manipulation import directory_to_file_list
 logging.getLogger().setLevel(logging.INFO)
 
@@ -73,11 +74,19 @@ class InferenceLodgingVideo(InferenceBase):
     def __produce_segmentation_image(self, model, dataset):
         buffer_length = 5
         buffer = []
-        inference_dataset = dataset.unbatch().batch(1)
+        # inference_dataset = dataset.unbatch().batch(1)
+        inference_dataset = dataset
         count = 0
         writer = None
         hl, = plt.plot([], [])
         for elem in inference_dataset:
+            logging.info("======================print elem=================================")
+            logging.info(elem)
+            logging.info(count)
+            # logging.info(elem[0])
+            # logging.info(elem[1])
+            # elem[0].reshape((512, 512, 3))
+            # elem[1].reshape(((1080, 1920, 3)))
             pred_res = model.predict(elem)
             original_image = np.squeeze(elem[1], axis=0)
             original_image = self.resize(original_image, (960, 640))
