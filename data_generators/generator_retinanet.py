@@ -178,7 +178,7 @@ class GeneratorRetinaNet(DataGeneratorBase):
                 [tf.float64,tf.float64]
             )
             regress_target.set_shape((None, 5))
-            class_target.set_shape((None, 1))
+            class_target.set_shape((None, len(defect_map)+1))
             row['bbox_labels_bboxes'] = regress_target
             row['bbox_labels_labels'] = class_target
             return row
@@ -232,7 +232,6 @@ def anchor_targets_bbox(
     regression_batch = np.zeros((anchors.shape[0], 4 + 1), dtype=float)
     labels_batch = np.zeros((anchors.shape[0], num_classes + 1), dtype=float)
     # compute labels and regression target
-    #for some reason annotations have an extra dimension to them after transforms
     bboxes, labels = annotations
     if bboxes.shape[0]:
         # obtain indices of gt annotations with the greatest overlap
