@@ -12,3 +12,4 @@ video.avi
 *.o
 *.c*
 build
+venv

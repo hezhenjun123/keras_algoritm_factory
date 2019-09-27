@@ -1,16 +1,38 @@
-# Submit job to GRU
+# Running a config
 
-cd zoomlion-model-pipeline 
+The command below is the entry point to the pipeline. 
+If config file has `RUN_ENV: local`, the script will run locally, and if `RUN_ENV: aws`, 
+it will package the current  directory and submit it as a job to GRU.
 
-python submit_gru.py
+```
+$ cd zoomlion-model-pipeline
+$ python submit_job.py 
+```
 
+# Setup
 
+###  fatal error: 'numpy/arrayobject.h' file not found
 
+You may get the error below while running ./run.sh in a venv
 
+```bash
+(venv) ~/zoomlion-model-pipeline (clef-sprayer-weed)$ ./run.sh model_config_segmentation_sprayerweed.yaml 
+Running config/model_config_segmentation_sprayerweed.yaml
+RUN_ENV: local
+RUN_MODE: train
+Compiling utilities/bbox_overlap.pyx because it changed.
+[1/1] Cythonizing utilities/bbox_overlap.pyx
+running build_ext
+building 'bbox_overlap' extension
+clang -DNDEBUG -g -fwrapv -O3 -Wall -I/usr/local/include -I/usr/local/opt/openssl/include -I/usr/local/opt/sqlite/include -I/Users/suhabebugrara/zoomlion-model-pipeline/venv/include -I/usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/include/python3.7m -c utilities/bbox_overlap.c -o build/temp.macosx-10.13-x86_64-3.7/utilities/bbox_overlap.o
+utilities/bbox_overlap.c:611:10: fatal error: 'numpy/arrayobject.h' file not found
+#include "numpy/arrayobject.h"
+         ^~~~~~~~~~~~~~~~~~~~~
+1 error generated.
 
+```
 
-# Run locally: change the first line of config to "local"
-
-run_experiment.sh {config}
-
-Example: "./run_experiment.sh model_config_classification.yaml"
+One workaround is to set the following environment variable:
+```
+export CFLAGS="-I ./venv/lib/python3.7/site-packages/numpy/core/include $CFLAGS"
+```
