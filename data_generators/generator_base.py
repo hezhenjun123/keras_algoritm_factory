@@ -3,6 +3,7 @@ import tensorflow as tf
 from datetime import datetime
 import numpy as np
 import logging
+from utilities.file_system_manipulation import is_s3_path
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -51,10 +52,12 @@ class DataGeneratorBase:
         `root_dir`.
         """
 
-        def join_root_dir_map(relative_path):
-            total_path = ""
-            if relative_path:
-                total_path = os.path.join(root_dir, relative_path)
+        def join_root_dir_map(path):
+            total_path: str
+            if path and not os.path.isabs(path) and not is_s3_path(path):
+                total_path = os.path.join(root_dir, path)
+            else:
+                total_path = path
             return total_path
 
         return join_root_dir_map
