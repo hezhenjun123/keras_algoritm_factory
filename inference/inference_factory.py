@@ -4,6 +4,7 @@ from inference.inference_chaff_video import InferenceChaffVideo
 from inference.inference_lodging_video import InferenceLodgingVideo
 from inference.inference_yield_absolute_video import InferenceYieldAbsoluteVideo
 from inference.inference_bbox_breakage import InferenceBboxBreakage
+from inference.inference_sprayer_video import InferenceSprayerVideo
 
 class InferenceFactory:
 
@@ -13,7 +14,9 @@ class InferenceFactory:
         "InferenceChaff": InferenceChaff,
         "InferenceLodgingVideo": InferenceLodgingVideo,
         "InferenceYieldAbsoluteVideo": InferenceYieldAbsoluteVideo,
-        "InferenceBboxBreakage": InferenceBboxBreakage
+        "InferenceBboxBreakage": InferenceBboxBreakage,
+        "InferenceSprayerVideo": InferenceSprayerVideo
+
     }
 
     def __init__(self, config):
