@@ -2,11 +2,11 @@ import logging
 import cv2
 import os
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 from inference.inference_base import InferenceBase
 from utilities.file_system_manipulation import directory_to_file_list
-
+import tensorflow as tf
+tf.enable_eager_execution()
 
 
 logging.getLogger().setLevel(logging.INFO)
@@ -21,6 +21,8 @@ class InferenceChaffVideo(InferenceBase):
         self.pred_image_dir = config["INFERENCE"]["PRED_IMAGE_DIR"]
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
         self.video_path = config["INFERENCE"]["VIDEO_PATH"]
+        self.maximizing_buffer_length = config["INFERENCE"]["MAXIMIZING_BUFFER_LENGTH"]
+        self.output_fps = config["INFERENCE"]["OUTPUT_FPS"]
 
     def run_inference(self):
         inference_transform = self.generate_transform()
@@ -68,9 +70,9 @@ class InferenceChaffVideo(InferenceBase):
         return log
 
     def __produce_segmentation_image(self, model, dataset):
-        buffer_length = 5
+        buffer_length = self.maximizing_buffer_length
         buffer = []
-        inference_dataset = dataset.unbatch().batch(1)
+        inference_dataset = dataset
         count = 0
         writer = None
         hl, = plt.plot([], [])
@@ -97,7 +99,7 @@ class InferenceChaffVideo(InferenceBase):
                     fourcc = cv2.VideoWriter_fourcc(*'XVID')
                     video_shape = (out.shape[1], out.shape[0])
                     writer = cv2.VideoWriter(os.path.join(self.save_dir, self.output_video_name), fourcc,
-                                             5, video_shape, True)
+                                             self.output_fps, video_shape, True)
                 writer.write(out)
 
             count += 1

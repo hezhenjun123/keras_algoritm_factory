@@ -1,13 +1,13 @@
-RUN_ENV: aws #{aws, local}
-RUN_MODE: train #{train, inference}
+RUN_ENV: local #{aws, local}
+RUN_MODE: inference #{train, inference}
 
-BATCH_SIZE: 4
+BATCH_SIZE: 1
 LEARNING_RATE: 0.0001
 EPOCHS: 1000
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
-LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL: true  #if true, Load_Model_Directory must be specified too
 LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield/trosenflanz/wheat_chaff_segmentation/run_038/checkpoints/epoch_0017/cp.hdf5 #can be s3 path, hdf5 file format
 DIR_OUT: /workspace/output/
 DATA_DIR: s3://zoomlion-prod-data/harvester/chaff-content/segmentation/data-v0.3/
@@ -60,7 +60,7 @@ INFERENCE:
   INFERENCE_CSV_FILE: 
   INFERENCE_DATA_DIR:
   #VIDEO_PATH: s3://zoomlion-sample/zoomlion-hopper-1/barn_video1.avi
-  VIDEO_PATH: s3://zoomlion-sample/data-2019-08-24-3acreage-highland_barley/picked/
+  VIDEO_PATH: /s3/zoomlion-prod-data/zoomlion-s3-china-data/QingHai_Harvest_Data/2019-09-13/avi/elevator_cam/20190913_121955.h5.avi
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: valid #Column content in the csv file
   SEPARATOR: ','
@@ -70,8 +70,8 @@ INFERENCE:
   IMAGE_LEVEL_LABEL: image_level_label
   NUM_PROCESS_IMAGE: -1
   PRED_IMAGE_DIR: pred_image
-  MAXIMIZING_BUFFER_LENGTH: 5
-  OUTPUT_FPS: 5
+  MAXIMIZING_BUFFER_LENGTH: 1
+  OUTPUT_FPS: 2
 
 LOCAL_OVERRIDE:
   DIR_OUT: ./out
