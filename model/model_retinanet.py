@@ -35,7 +35,8 @@ class ModelRetinaNet(ModelBase):
     def __init__(self,config):
         super().__init__(config)
         self.backbone_name = config["MODEL"]["BACKBONE"]
-        self.num_anchors=AnchorParameters(**config["MODEL"].get("ANCHORPARAMS",None)).num_anchors()
+        self.anchor_params = AnchorParameters(**config["MODEL"].get("ANCHORPARAMS",None))
+        self.num_anchors = self.anchor_params.num_anchors()
         self.model =  self.get_or_load_model()
 
     def create_model(self):
@@ -73,12 +74,7 @@ class ModelRetinaNet(ModelBase):
 
     def RetinaNetBbox(
         self,
-        class_specific_filter=False,
-        anchor_params=None,
-        score_threshold=0.05,
-        nms_threshold=0.5,
-        max_detections=100,
-        name="retinanet-bbox",
+        config,
         **kwargs
     ):
         """Construct a RetinaNet Bounding box model for inference on top of
@@ -88,23 +84,8 @@ class ModelRetinaNet(ModelBase):
         regression values to the anchors and performing non_max_suppression.
         Parameters
         ----------
-        model: tf.keras.models.Model
-            Minimum RetinaNet training model created from retinanet().
-        class_specific_filter: bool
-            Whether to use class specific filtering or filter for the best scoring
-            class only.
-        anchor_params: AnchorParameters
-            Anchor parameters including base_size, strides, ratio, scales.
-            If None, default values are used.
-        score_threshold: float
-            Threshold used to prefilter the boxes with.
-        nms_threshold: float
-                Threshold for the IoU value to determine when a box should be
-                suppressed in non_max_suppression for bbox filtering
-        max_detections: int
-            Maximum number of detections to keep.
-        name: str
-            Name of the model.
+        config: dict
+        package config to extract NMS settings
         Returns
         -------
         tf.keras.models.Model
@@ -119,24 +100,25 @@ class ModelRetinaNet(ModelBase):
             In case there are less than max_detections detections, the tensors
             are padded with -1's.
         """
-        # if no anchor parameters are passed, use default values
-        if anchor_params is None:
-            anchor_params = AnchorParameters()
-
         # compute the anchors
+        class_specific_filter = config['MODEL']['NMS_SETTINGS']['class_specific_filter'],
+        score_threshold = config['MODEL']['NMS_SETTINGS']['score_threshold']
+        nms_threshold = config['MODEL']['NMS_SETTINGS']['nms_threshold']
+        max_detections = config['MODEL']['NMS_SETTINGS']['max_detections']
+    
         features = [
             self.model.get_layer(p_name).output for p_name in ["P3", "P4", "P5", "P6", "P7"]
         ]
         anchors = [
             Anchors(
                 # the height/width anchor if it square
-                size=anchor_params.sizes[i],
+                size=self.anchor_params.sizes[i],
                 # if input image is 512x512 with feature map 128x128, then stride=4
-                stride=anchor_params.strides[i],
+                stride=self.anchor_params.strides[i],
                 # height to width aspect ratio for more boxes in one location
-                ratios=anchor_params.ratios,
+                ratios=self.anchor_params.ratios,
                 # scale the anchor size to produce more boxes in one location
-                scales=anchor_params.scales,
+                scales=self.anchor_params.scales,
                 name="anchors_{}".format(i),
             )(f)
             for i, f in enumerate(features)
@@ -163,7 +145,7 @@ class ModelRetinaNet(ModelBase):
         )([boxes, classification])
 
         # construct the model
-        return tf.keras.models.Model(inputs=self.model.inputs, outputs=detections, name=name)
+        return tf.keras.models.Model(inputs=self.model.inputs, outputs=detections, name="retinanet-bbox")
 
 
     def DefaultClassificationModel(

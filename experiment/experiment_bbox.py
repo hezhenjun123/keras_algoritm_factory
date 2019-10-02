@@ -6,6 +6,7 @@ from utilities.smart_checkpoint import SmartCheckpoint
 from utilities.bbox_eval_callbacks import EvaluateBboxCallback,RedirectModel
 from utilities.cos_anneal import CosineAnnealingScheduler
 import tensorflow as tf
+tf.enable_eager_execution()
 from loss.focal_loss import FocalLoss
 from loss.l1_loss import SmoothL1Loss
 logging.getLogger().setLevel(logging.INFO)
@@ -27,7 +28,7 @@ class ExperimentBbox(ExperimentBase):
         callbacks = self.__compile_callback(model.num_classes,
                                             len(data_valid_split),
                                             valid_dataset,
-                                            model.RetinaNetBbox())
+                                            model.RetinaNetBbox(self.config))
         kwarg_para = {
             "num_train_data": len(data_train_split),
             "num_valid_data": len(data_valid_split)
@@ -51,6 +52,7 @@ class ExperimentBbox(ExperimentBase):
         # create bbox metrics backback
         eval_callback = EvaluateBboxCallback(
             num_classes =  num_classes,
+            iou_threshold =  .5,
             num_steps = num_steps,
             generator=valid_dataset,
             eval_interval=1,
@@ -58,7 +60,7 @@ class ExperimentBbox(ExperimentBase):
         eval_callback = RedirectModel(eval_callback, inference_model)
         callbacks = [
             CosineAnnealingScheduler(20, self.learning_rate),
-            # eval_callback,
+            eval_callback,
             checkpoint_callback,
             tensorboard_callback,
             ]

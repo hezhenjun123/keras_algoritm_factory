@@ -9,19 +9,23 @@ class EvaluateBboxCallback(tf.keras.callbacks.Callback):
     during training.
     """
 
-    def __init__(self, num_classes, num_steps, generator, eval_interval=1):
+    def __init__(self, num_classes, iou_threshold, num_steps, generator, eval_interval=1):
         """
         Parameters
         ----------
-        generator: tf.keras.utils.Sequence
+        num_classes: int
+            number of classes 
+        iou_threshold: float
+            iou of detection must exceed this threshold to be considered a positive detection
+        num_steps: int
+            number of images to use for validation
+        generator: tf.dataset
             the data generator that feed model inputs, e.g.
-            e.g. avi.models.retinanet.preprocess.Generator
-        tensorboard: tf.keras.callbacks.TensorBoard
-            the tensorboord callback used to send the evaluation metrics
         eval_interval: int
             the interval of epochs to perform evaluation
         """
         self.num_classes = num_classes
+        self.iou_threshold =  iou_threshold 
         self.num_steps = num_steps
         self.generator = generator
         self.eval_interval = eval_interval
@@ -101,7 +105,8 @@ class EvaluateBboxCallback(tf.keras.callbacks.Callback):
                         continue
                     overlaps            = compute_overlap(np.expand_dims(d, axis=0), annotations)
                     assigned_annotation = np.argmax(overlaps, axis=1)
-                    if assigned_annotation not in detected_annotations:
+                    max_overlap = overlaps[0,assigned_annotation]
+                    if max_overlap > self.iou_threshold and assigned_annotation not in detected_annotations:
                         false_positives = np.append(false_positives, 0)
                         true_positives  = np.append(true_positives, 1)
                         detected_annotations.append(assigned_annotation)
