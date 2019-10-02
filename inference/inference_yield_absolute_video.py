@@ -6,6 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 from utilities.file_system_manipulation import directory_to_file_list
+import tensorflow as tf
+tf.enable_eager_execution()
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -20,16 +22,15 @@ class InferenceYieldAbsoluteVideo(InferenceBase):
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
         self.video_path = config["INFERENCE"]["VIDEO_PATH"]
         self.warmup = 300
-        self.buffer_length = 300
+        self.buffer_length = config["INFERENCE"]["MAXIMIZING_BUFFER_LENGTH"]
         self.buffer = [0]*self.buffer_length
         self.hl_absolute, = plt.plot([], []) 
         self.hl, = plt.plot([], []) 
-        self.offset=3800
+        self.offset = config["INFERENCE"]["OUTPUT_FRAME_OFFSET"]
+        self.output_fps = config["INFERENCE"]["OUTPUT_FPS"]
+        self.output_frame_keep = config["INFERENCE"]["OUTPUT_FRAME_KEEP"]
         self.image_size = (960,640)
         self.log_size = (self.image_size[0]//2,self.image_size[1])
-
-        if config["RUN_ENV"] == 'local':
-            matplotlib.use('TkAgg')
 
     def run_inference(self):
         model = self.load_model()
@@ -52,7 +53,7 @@ class InferenceYieldAbsoluteVideo(InferenceBase):
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
         video_shape = (self.image_size[0]+log_shape[1],log_shape[0])
         self.writer = cv2.VideoWriter(os.path.join(self.save_dir, self.output_video_name),
-                                    fourcc, 5, video_shape, True)
+                                    fourcc, self.output_fps, video_shape, True)
 
     def resize(self, img, shape):
         return cv2.resize(img, shape, interpolation=cv2.INTER_NEAREST)
@@ -144,7 +145,7 @@ class InferenceYieldAbsoluteVideo(InferenceBase):
         #modify parameters of class and update_log methods to change 
         # how visualizations are created
         count = 0
-        inference_dataset = dataset.unbatch().batch(1)
+        inference_dataset = dataset
         log = np.zeros((self.log_size[1],self.log_size[0]*2,3))+255
         self.setup_writer(log.shape)
         for elem in inference_dataset:
@@ -156,7 +157,7 @@ class InferenceYieldAbsoluteVideo(InferenceBase):
                     self.buffer.pop(0)
                     self.buffer.append(pred)
                     log,out = self.create_video_image(image,count,log)
-                    if (count - self.buffer_length-self.offset) % 3 == 0:
+                    if (count - self.buffer_length-self.offset) % self.output_frame_keep == 0:
                         self.writer.write(out)
 
             count += 1
