@@ -1,0 +1,86 @@
+RUN_ENV: local #{aws, local}
+RUN_MODE: inference #{train, inference}
+BATCH_SIZE: 1 # WARNING: Set to 8 during training, and set to 1 during inference.
+LEARNING_RATE: 0.0001
+EPOCHS: 800
+TRAIN_STEPS_PER_EPOCH: -1
+VALID_STEPS_PER_EPOCH: -1
+PRETRAINED: true  #ignored forModelResnetClassificationYield
+DROPOUT: 0.0
+NUM_CLASSES: 1
+CHANNEL_LIST: [256,128]
+DENSE_LIST: [256, 128]  #ignored for ModelResnetClassification
+ACTIVATION: relu
+LOAD_MODEL: true  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_absolute_regression/suhabe/wheat_yield_regression/run_002/checkpoints/epoch_0725/cp.hdf5
+DIR_OUT: /workspace/output/
+DATA_DIR: s3://landing-client-zoomlion/yield/yield_hopper_absolute_new_view_2/
+
+
+DATA_GENERATOR:
+  OUTPUT_SHAPE: [null, null]
+  OUTPUT_IMAGE_CHANNELS: 3  
+  OUTPUT_IMAGE_TYPE: float32
+  DROP_REMAINDER: false
+  CACHE_DIR: cache
+  NUM_PARALLEL_CALLS: 4
+  REPEAT: true
+
+TRANSFORM:
+  RESIZE: [300, 300]
+  LABEL_NORMALIZE: 25 #set to 0 to disable
+
+
+TRAINING_DATA_INFO:
+  TRAIN_CSV_FILE: s3://landing-client-zoomlion/yield/yield_hopper_absolute_new_view_2/train.csv
+  VALID_CSV_FILE: s3://landing-client-zoomlion/yield/yield_hopper_absolute_new_view_2/train.csv
+  SPLIT: split
+  SPLIT_TRAIN_VAL: train
+  SPLIT_VALID_VAL: valid
+  SEPARATOR: ','
+  IMAGE_PATH: image_path
+  SEGMENTATION_PATH: seg_label_path
+  LABEL_NAME: label_name
+  IMAGE_LEVEL_LABEL: image_level_label
+
+EXPERIMENT:
+  EXPERIMENT_NAME: ExperimentRegression
+  MODEL_NAME: ModelResnetRegression
+  TRAIN_TRANSFORM: TransformYieldAbsolute
+  TRAIN_GENERATOR: GeneratorRegression
+  VALID_TRANSFORM: # If empty, use TRAIN_TRANSFORM
+  VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
+
+
+INFERENCE:
+  INFERENCE_NAME: InferenceYieldAbsoluteNewViewVideo
+  GENERATOR: GeneratorVideo
+  #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
+  INFERENCE_CSV_FILE:
+  INFERENCE_DATA_DIR:
+  VIDEO_PATH: s3://transformers-sample/zoomlion-sample/tim-random/basket_cam_0913.avi
+  SPLIT: split #Column name in the csv file
+  SPLIT_VAL: raw
+  SEPARATOR: ','
+  IMAGE_PATH: image_path
+  SEGMENTATION_PATH: seg_label_path
+  LABEL_NAME: label_name
+  IMAGE_LEVEL_LABEL: image_level_label
+  NUM_PROCESS_IMAGE: -1
+  PRED_IMAGE_DIR: pred_image
+  MAXIMIZING_BUFFER_LENGTH: 20
+  OUTPUT_FPS: 20
+  OUTPUT_FRAME_OFFSET: 0
+  OUTPUT_FRAME_KEEP: 5
+  PREDICTION_CALIBRATION: .08
+
+
+LOCAL_OVERRIDE:
+  DIR_OUT: ./out
+  DATA_DIR: s3://landing-client-zoomlion/yield/yield_hopper_absolute_new_view_2/
+
+GRU:
+  JOB_NAME: wheat_yield_regression
+  PROJECT_NAME: wheat_yield_absolute_regression
+  INSTANCE_TYPE: p3.2xlarge
+  TIMEOUT: 8
