@@ -23,6 +23,7 @@ class InferenceChaffVideo(InferenceBase):
         self.video_path = config["INFERENCE"]["VIDEO_PATH"]
         self.maximizing_buffer_length = config["INFERENCE"]["MAXIMIZING_BUFFER_LENGTH"]
         self.output_fps = config["INFERENCE"]["OUTPUT_FPS"]
+        self.make_plots  = config["INFERENCE"]["MAKE_PLOTS"]
 
     def run_inference(self):
         inference_transform = self.generate_transform()
@@ -39,13 +40,27 @@ class InferenceChaffVideo(InferenceBase):
             self.__produce_segmentation_image(model, inference_dataset)
         logging.info("================Inference Complete=============")
 
-    def make_triplot(self, img, preds, log):
+
+
+    def overlay_preds(self,img,preds):
         img = img[:, :, ::-1]
         mask = preds == 1
         preds = preds[:, :, None].repeat(3, 2)
         preds[mask] = [0, 0, 255]
-        out = np.concatenate((img, cv2.addWeighted(img, .7, preds, .3, 0), log), axis=1)
+        overlayed_preds =  cv2.addWeighted(img, .7, preds, .3, 0)
+        return overlayed_preds
+
+    def make_dualplot(self, img, preds):
+        overlayed_preds = self.overlay_preds(img,preds)
+        img = img[:, :, ::-1]
+        out = np.concatenate((img,overlayed_preds), axis=1)
         return out
+
+    def make_triplot(self, img, preds, log):
+        dual_plot = self.make_dualplot(img,preds)
+        out = np.concatenate((dual_plot, log), axis=1)
+        return out
+
 
     def resize(self, img, shape):
         return cv2.resize(img, shape, interpolation=cv2.INTER_NEAREST)
@@ -75,7 +90,7 @@ class InferenceChaffVideo(InferenceBase):
         inference_dataset = dataset
         count = 0
         writer = None
-        hl, = plt.plot([], [])
+        if self.make_plots: hl, = plt.plot([], [])
         for elem in inference_dataset:
             pred_res = model.predict(elem)
             original_image = np.squeeze(elem[1], axis=0)
@@ -92,9 +107,14 @@ class InferenceChaffVideo(InferenceBase):
                 image = buffer[buffer_length // 2][0]
                 pred = np.max(np.array([x[1] for x in buffer]), axis=0).astype(np.uint8)
                 # self.update_line(hl, (count, np.log(1 + resized_pred_seg.sum() / 255)))
-                self.update_line(hl, (count, resized_pred_seg.sum() / (resized_pred_seg.shape[0]*resized_pred_seg.shape[1])))
-                if (count - buffer_length) % 15 == 0: log = self.create_log_array(hl, resize_shape)
-                out = self.make_triplot(image, pred, log)
+                if self.make_plots:
+                    self.update_line(hl, (count, resized_pred_seg.sum() / (resized_pred_seg.shape[0]*resized_pred_seg.shape[1])))
+                    if (count - buffer_length) % (self.output_fps*2) == 0:
+                        log = self.create_log_array(hl, resize_shape)
+                    out = self.make_triplot(image, pred, log)
+                else:
+                    # out = self.make_dualplot(image,pred)
+                    out = self.overlay_preds(image,pred)
                 if writer is None:
                     fourcc = cv2.VideoWriter_fourcc(*'XVID')
                     video_shape = (out.shape[1], out.shape[0])
@@ -104,5 +124,5 @@ class InferenceChaffVideo(InferenceBase):
 
             count += 1
             if count >= self.num_process_image and self.num_process_image != -1: break
-        plt.clf()
+        if self.make_plots: plt.clf()
         writer.release()

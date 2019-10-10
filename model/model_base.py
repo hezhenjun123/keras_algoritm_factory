@@ -78,9 +78,10 @@ class ModelBase:
                            callbacks=callbacks)
 
     def predict(self, predict_data_source, steps=None):
-        steps = 1
-        logging.info("=========================predict_data_source=============")
-        logging.info(predict_data_source)
+        if not tf.executing_eagerly():
+            steps = 1
+            logging.info("=========================predict_data_source=============")
+            logging.info(predict_data_source)
         return self.model.predict(x=predict_data_source, steps=steps)
 
     def evaluate(self, predict_data_source, steps=None):

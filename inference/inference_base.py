@@ -43,6 +43,7 @@ class InferenceBase:
         return data_inference_split
 
     def generate_dataset(self, data_inference_split, inference_transform):
+        self.config['BATCH_SIZE'] = 1
         generator_factory = DataGeneratorFactory(self.config)
         inference_generator = generator_factory.create_generator(self.inference_generator_name)
         inference_dataset = inference_generator.create_inference_dataset(
