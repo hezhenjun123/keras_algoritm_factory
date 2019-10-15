@@ -1,18 +1,21 @@
-from inference.inference_lodging import InferenceLodging
-from inference.inference_chaff import InferenceChaff
-from inference.inference_chaff_video import InferenceChaffVideo
-from inference.inference_lodging_video import InferenceLodgingVideo
-from inference.inference_yield_absolute_video import InferenceYieldAbsoluteVideo
-from inference.inference_bbox_breakage import InferenceBboxBreakage
-from inference.inference_sprayer_video import InferenceSprayerVideo
-from inference.inference_yield_absolute_newview_video import InferenceYieldAbsoluteNewViewVideo
+from inference.chaff.inference_chaff import InferenceChaff
+from inference.chaff.inference_chaff_video import InferenceChaffVideo
+from inference.chaff.inference_chaff_raw_video import InferenceChaffRawVideo
+from inference.lodging.inference_lodging_video import InferenceLodgingVideo
+from inference.lodging.inference_lodging import InferenceLodging
+from inference.yield_estimate.inference_yield_absolute_newview_video import InferenceYieldAbsoluteNewViewVideo
+from inference.yield_estimate.inference_yield_absolute_video import InferenceYieldAbsoluteVideo
+from inference.breakage.inference_bbox_breakage import InferenceBboxBreakage
+from inference.sprayer.inference_sprayer_video import InferenceSprayerVideo
+
 
 class InferenceFactory:
 
     inference_registry = {
-        "InferenceLodging": InferenceLodging,
-        "InferenceChaffVideo": InferenceChaffVideo,
         "InferenceChaff": InferenceChaff,
+        "InferenceChaffVideo": InferenceChaffVideo,
+        "InferenceChaffRawVideo": InferenceChaffRawVideo,
+        "InferenceLodging": InferenceLodging,
         "InferenceLodgingVideo": InferenceLodgingVideo,
         "InferenceYieldAbsoluteVideo": InferenceYieldAbsoluteVideo,
         "InferenceYieldAbsoluteNewViewVideo": InferenceYieldAbsoluteNewViewVideo,

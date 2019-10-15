@@ -1,5 +1,5 @@
 RUN_ENV: aws #{aws, local}
-RUN_MODE: inference #{train, inference}
+RUN_MODE: train #{train, inference}
 
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
@@ -8,8 +8,8 @@ TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
 LOAD_MODEL: true  #if true, Load_Model_Directory must be specified too
-LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_chaff/trosenflanz/elevator_chaff/run_010/checkpoints/epoch_0024/cp.hdf5 #inference
-# LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_chaff/trosenflanz/wheat_chaff_segmentation/run_014/checkpoints/epoch_0007/cp.hdf5 #for training, pretrained on older data
+# LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_chaff/trosenflanz/elevator_chaff/run_013/checkpoints/epoch_0005/cp.hdf5 #inference
+LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_chaff/trosenflanz/wheat_chaff_segmentation/run_014/checkpoints/epoch_0007/cp.hdf5 #for training, pretrained on older data
 DIR_OUT: /workspace/output/
 DATA_DIR: s3://landing-client-zoomlion/chaff_segmentation/chaff_elevator
 # DATA_DIR: model.hdf5
@@ -56,12 +56,12 @@ EXPERIMENT:
   NUM_PLOTS: 10
 
 INFERENCE:
-  INFERENCE_NAME: InferenceChaffVideo
+  INFERENCE_NAME: InferenceChaffRawVideo
   GENERATOR: GeneratorVideo
   INFERENCE_CSV_FILE: 
   INFERENCE_DATA_DIR:
   #VIDEO_PATH: s3://zoomlion-sample/zoomlion-hopper-1/barn_video1.avi
-  VIDEO_PATH: s3://transformers-sample/zoomlion-sample/tim-random/elevator_cam_0913.avi
+  VIDEO_PATH: s3://zoomlion-prod-data/zoomlion-s3-china-data/QingHai_Harvest_Data/2019-09-08/avi/elevator_cam/
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: valid #Column content in the csv file
   SEPARATOR: ','
