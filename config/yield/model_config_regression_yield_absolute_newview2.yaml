@@ -1,7 +1,7 @@
-RUN_ENV: local #{aws, local}
-RUN_MODE: inference #{train, inference}
-BATCH_SIZE: 1 # WARNING: Set to 8 during training, and set to 1 during inference.
-LEARNING_RATE: 0.0001
+RUN_ENV: aws #{aws, local}
+RUN_MODE: train #{train, inference}
+BATCH_SIZE: 8 # WARNING: Set to 8 during training, and set to 1 during inference.
+LEARNING_RATE: 0.00001
 EPOCHS: 800
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
@@ -11,7 +11,7 @@ NUM_CLASSES: 1
 CHANNEL_LIST: [256,128]
 DENSE_LIST: [256, 128]  #ignored for ModelResnetClassification
 ACTIVATION: relu
-LOAD_MODEL: true  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL: false  #if true, Load_Model_Directory must be specified too
 LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_absolute_regression/suhabe/wheat_yield_regression/run_002/checkpoints/epoch_0725/cp.hdf5
 DIR_OUT: /workspace/output/
 DATA_DIR: s3://landing-client-zoomlion/yield/yield_hopper_absolute_new_view_2/
