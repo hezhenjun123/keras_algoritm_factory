@@ -19,7 +19,7 @@ class ModelResnetRegression(ModelBase):
                        num_classes=1,
                        activation=self.activation,
                        dropout_prob=self.dropout,
-                       name='unet',
+                       name='resnet',
                        input_name='images',
                        output_name='logits',
                        output_activation='sigmoid')

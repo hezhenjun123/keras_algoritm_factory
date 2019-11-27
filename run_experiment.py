@@ -3,6 +3,7 @@ import argparse
 import logging
 
 from utilities.config import read_config
+from utilities.helper import allow_memory_growth
 from experiment.experiment_factory import ExperimentFactory
 
 parser = argparse.ArgumentParser()
@@ -20,6 +21,7 @@ def run_experiments(config):
 
 
 def main(args):
+    allow_memory_growth()
     module_config = read_config(args.config)
     run_experiments(module_config)
 

@@ -50,3 +50,19 @@ def get_plot_data(df, config):
             break
 
     return plot_data
+
+def get_tf_version():
+    return int(tf.__version__.split('.')[0])
+
+def allow_memory_growth():
+    physical_devices = tf.config.experimental.list_physical_devices('GPU')
+    if len(physical_devices):
+        tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
+def fix_randomness(seed=0):
+    random.seed(seed)
+    np.random.seed(seed)
+    if get_tf_version() <= 1:
+        tf.set_random_seed(seed)
+    else:
+        tf.random.set_seed(seed)
