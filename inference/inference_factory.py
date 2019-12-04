@@ -1,28 +1,34 @@
-from inference.chaff.inference_chaff import InferenceChaff
-from inference.chaff.inference_chaff_video import InferenceChaffVideo
-from inference.chaff.inference_chaff_raw_video import InferenceChaffRawVideo
-from inference.lodging.inference_lodging_video import InferenceLodgingVideo
-from inference.lodging.inference_lodging import InferenceLodging
+import platform
 from inference.yield_estimate.inference_yield_absolute_newview_video import InferenceYieldAbsoluteNewViewVideo
-from inference.yield_estimate.inference_yield_absolute_video import InferenceYieldAbsoluteVideo
-from inference.breakage.inference_bbox_breakage import InferenceBboxBreakage
-from inference.sprayer.inference_sprayer_video import InferenceSprayerVideo
 
+if platform.machine() != 'aarch64':
+    from inference.chaff.inference_chaff import InferenceChaff
+    from inference.chaff.inference_chaff_video import InferenceChaffVideo
+    from inference.chaff.inference_chaff_raw_video import InferenceChaffRawVideo
+    from inference.lodging.inference_lodging_video import InferenceLodgingVideo
+    from inference.lodging.inference_lodging import InferenceLodging
+    from inference.yield_estimate.inference_yield_absolute_video import InferenceYieldAbsoluteVideo
+    from inference.breakage.inference_bbox_breakage import InferenceBboxBreakage
+    from inference.sprayer.inference_sprayer_video import InferenceSprayerVideo
 
 class InferenceFactory:
+    if platform.machine() != 'aarch64':
+        inference_registry = {
+            "InferenceChaff": InferenceChaff,
+            "InferenceChaffVideo": InferenceChaffVideo,
+            "InferenceChaffRawVideo": InferenceChaffRawVideo,
+            "InferenceLodging": InferenceLodging,
+            "InferenceLodgingVideo": InferenceLodgingVideo,
+            "InferenceYieldAbsoluteVideo": InferenceYieldAbsoluteVideo,
+            "InferenceYieldAbsoluteNewViewVideo": InferenceYieldAbsoluteNewViewVideo,
+            "InferenceBboxBreakage": InferenceBboxBreakage,
+            "InferenceSprayerVideo": InferenceSprayerVideo
 
-    inference_registry = {
-        "InferenceChaff": InferenceChaff,
-        "InferenceChaffVideo": InferenceChaffVideo,
-        "InferenceChaffRawVideo": InferenceChaffRawVideo,
-        "InferenceLodging": InferenceLodging,
-        "InferenceLodgingVideo": InferenceLodgingVideo,
-        "InferenceYieldAbsoluteVideo": InferenceYieldAbsoluteVideo,
-        "InferenceYieldAbsoluteNewViewVideo": InferenceYieldAbsoluteNewViewVideo,
-        "InferenceBboxBreakage": InferenceBboxBreakage,
-        "InferenceSprayerVideo": InferenceSprayerVideo
-
-    }
+        }
+    else:
+        inference_registry = {
+            "InferenceYieldAbsoluteNewViewVideo": InferenceYieldAbsoluteNewViewVideo,
+        }
 
     def __init__(self, config):
         self.config = config

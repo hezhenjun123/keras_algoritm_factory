@@ -1,18 +1,27 @@
-from data_generators.generator_classification import GeneratorClassification
+import platform
+
+if platform.machine() != 'aarch64':
+    from data_generators.generator_classification import GeneratorClassification
+    from data_generators.generator_segmentation import GeneratorSegmentation
+    from data_generators.generator_retinanet import GeneratorRetinaNet
+
 from data_generators.generator_regression import GeneratorRegression
-from data_generators.generator_segmentation import GeneratorSegmentation
 from data_generators.generator_video import GeneratorVideo
-from data_generators.generator_retinanet import GeneratorRetinaNet
 
 class DataGeneratorFactory:
-
-    generator_registry = {
-        "GeneratorClassification": GeneratorClassification,
-        "GeneratorRegression": GeneratorRegression,
-        "GeneratorSegmentation": GeneratorSegmentation,
-        "GeneratorVideo": GeneratorVideo,
-        "GeneratorRetinaNet":GeneratorRetinaNet
-    }
+    if platform.machine() != 'aarch64':
+        generator_registry = {
+            "GeneratorClassification": GeneratorClassification,
+            "GeneratorRegression": GeneratorRegression,
+            "GeneratorSegmentation": GeneratorSegmentation,
+            "GeneratorVideo": GeneratorVideo,
+            "GeneratorRetinaNet":GeneratorRetinaNet
+        }
+    else:
+        generator_registry = {
+            "GeneratorRegression": GeneratorRegression,
+            "GeneratorVideo": GeneratorVideo,
+        }
 
     def __init__(self, config):
         self.config = config
