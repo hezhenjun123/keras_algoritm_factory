@@ -57,6 +57,8 @@ class InferenceYieldAbsoluteNewViewVideo(InferenceBase):
         return cv2.resize(img, shape, interpolation=cv2.INTER_NEAREST)
         
     def get_image_pred(self,model,elem):
+        import pdb
+        pdb.set_trace()
         pred = model.predict(elem)
         if pred.shape[1]!=1:
             pred = (np.argmax(pred[0])+1)/pred.shape[1]

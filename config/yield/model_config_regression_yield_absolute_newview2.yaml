@@ -58,8 +58,8 @@ INFERENCE:
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE:
   INFERENCE_DATA_DIR:
-  #VIDEO_PATH: s3://transformers-sample/zoomlion-sample/tim-random/basket_cam_0913.avi
-  VIDEO_PATH: /home/nvidia/zoomlion-model-pipeline/basket_cam_0913.avi
+  VIDEO_PATH: s3://transformers-sample/zoomlion-sample/tim-random/basket_cam_0913.avi
+  #VIDEO_PATH: /home/nvidia/zoomlion-model-pipeline/basket_cam_0913.avi
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: raw
   SEPARATOR: ','

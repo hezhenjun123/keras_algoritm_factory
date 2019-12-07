@@ -36,3 +36,18 @@ One workaround is to set the following environment variable:
 ```
 export CFLAGS="-I ./venv/lib/python3.7/site-packages/numpy/core/include $CFLAGS"
 ```
+
+# Run inference on xavier
+
+* Follow landing-eye repo to flash the miivii box
+
+* Install dependencies
+```
+sudo python3 -m pip install -r requirements-xavier.txt
+```
+
+* Run inference
+
+```
+
+```
