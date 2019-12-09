@@ -1,11 +1,13 @@
+import platform
 import os
 import logging
-import pandas as pd
 from transforms.transform_factory import TransformFactory
-from data_generators.generator_factory import DataGeneratorFactory
 from model.model_factory import ModelFactory
 import tensorflow as tf
+from data_generators.generator_factory import DataGeneratorFactory
 
+if platform.machine() != 'aarch64':
+    import pandas as pd
 logging.getLogger().setLevel(logging.INFO)
 
 

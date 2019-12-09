@@ -3,6 +3,7 @@ import cv2
 import os
 from inference.inference_base import InferenceBase
 import numpy as np
+# TODO(yuanzhedong): No need to import matplotlib during inference on xavier
 import matplotlib.pyplot as plt
 import matplotlib
 from utilities.file_system_manipulation import directory_to_file_list

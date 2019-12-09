@@ -1,20 +1,28 @@
-from model.model_resnet_classification import ModelResnetClassification
+import platform
 from model.model_resnet_regression import ModelResnetRegression
-from model.model_resnet_classification_yield import ModelResnetClassificationYield
-from model.model_unet_segmentation import ModelUnetSegmentation
-from model.model_skip_unet_segmentation import ModelSkipUnetSegmentation
-from model.model_retinanet import ModelRetinaNet
+
+if platform.machine() != 'aarch64':
+    from model.model_resnet_classification import ModelResnetClassification
+    from model.model_resnet_classification_yield import ModelResnetClassificationYield
+    from model.model_unet_segmentation import ModelUnetSegmentation
+    from model.model_skip_unet_segmentation import ModelSkipUnetSegmentation
+    from model.model_retinanet import ModelRetinaNet
 
 class ModelFactory:
 
-    model_registry = {
-        "ModelResnetClassification": ModelResnetClassification,
-        "ModelResnetRegression": ModelResnetRegression,
-        "ModelResnetClassificationYield": ModelResnetClassificationYield,
-        "ModelUnetSegmentation": ModelUnetSegmentation,
-        "ModelSkipUnetSegmentation": ModelSkipUnetSegmentation,
-        "ModelRetinaNet":ModelRetinaNet
-    }
+    if platform.machine() != 'aarch64':
+        model_registry = {
+            "ModelResnetClassification": ModelResnetClassification,
+            "ModelResnetRegression": ModelResnetRegression,
+            "ModelResnetClassificationYield": ModelResnetClassificationYield,
+            "ModelUnetSegmentation": ModelUnetSegmentation,
+            "ModelSkipUnetSegmentation": ModelSkipUnetSegmentation,
+            "ModelRetinaNet":ModelRetinaNet
+        }
+    else:
+        model_registry = {
+            "ModelResnetRegression": ModelResnetRegression,
+        }
 
     def __init__(self, config):
         self.config = config
