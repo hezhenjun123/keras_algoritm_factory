@@ -1,10 +1,10 @@
 import platform
 from model.model_resnet_regression import ModelResnetRegression
+from model.model_unet_segmentation import ModelUnetSegmentation
 
 if platform.machine() != 'aarch64':
     from model.model_resnet_classification import ModelResnetClassification
     from model.model_resnet_classification_yield import ModelResnetClassificationYield
-    from model.model_unet_segmentation import ModelUnetSegmentation
     from model.model_skip_unet_segmentation import ModelSkipUnetSegmentation
     from model.model_retinanet import ModelRetinaNet
 
@@ -22,6 +22,7 @@ class ModelFactory:
     else:
         model_registry = {
             "ModelResnetRegression": ModelResnetRegression,
+            "ModelUnetSegmentation": ModelUnetSegmentation,
         }
 
     def __init__(self, config):
