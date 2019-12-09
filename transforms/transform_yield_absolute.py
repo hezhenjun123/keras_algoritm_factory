@@ -21,7 +21,7 @@ class TransformYieldAbsolute(TransformBase):
         else:
             # TODO: check whether cv2 output is consistant with albumentations
             self.transforms = [TransformBase.Image(lambda image: {'image' : cv2.resize(image, (resize[0], resize[1]))}),
-                               TransformBase.Image(lambda image: {'image': cv2.normalize(image, image).astype(np.float32)})]
+                               TransformBase.Image(lambda image: {'image': cv2.normalize(image, None).astype(np.float32)})]
 
             # self.transforms = [TransformBase.Image(lambda image: {'image' : cv2.resize(image, (resize[0], resize[1])).astype(np.float32)}),
             #                    TransformBase.Label(lambda mask: {'mask' : cv2.resize(mask, (resize[0], resize[1])).astype(np.float32)})]

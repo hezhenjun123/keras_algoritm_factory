@@ -60,7 +60,7 @@ INFERENCE:
   INFERENCE_CSV_FILE: 
   INFERENCE_DATA_DIR:
   #VIDEO_PATH: s3://zoomlion-sample/zoomlion-hopper-1/barn_video1.avi
-  VIDEO_PATH: /s3/zoomlion-prod-data/zoomlion-s3-china-data/QingHai_Harvest_Data/2019-09-13/avi/elevator_cam/20190913_121955.h5.avi
+  VIDEO_PATH: s3://zoomlion-prod-data/zoomlion-s3-china-data/QingHai_Harvest_Data/2019-09-13/avi/elevator_cam/20190913_121955.h5.avi
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: valid #Column content in the csv file
   SEPARATOR: ','
@@ -72,7 +72,7 @@ INFERENCE:
   PRED_IMAGE_DIR: pred_image
   MAXIMIZING_BUFFER_LENGTH: 1
   OUTPUT_FPS: 2
-
+  MAKE_PLOTS: false
 LOCAL_OVERRIDE:
   DIR_OUT: ./out
   DATA_DIR: null
