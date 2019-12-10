@@ -1,3 +1,4 @@
+import platform
 import logging
 import cv2
 import os
@@ -120,8 +121,8 @@ class InferenceLodgingVideo(InferenceBase):
 
     def generate_dataset(self,file_path,transforms):
 
-        # FIXME: Why use spawn instead of fork here?
-        #mp.set_start_method('spawn')
+        if platform.machine() != 'aarch64':
+            mp.set_start_method('spawn')
 
         queue = mp.Manager().Queue(maxsize=100) 
 
