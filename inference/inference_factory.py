@@ -1,10 +1,11 @@
 import platform
 from inference.yield_estimate.inference_yield_absolute_newview_video import InferenceYieldAbsoluteNewViewVideo
 from inference.chaff.inference_chaff_video import InferenceChaffVideo
+from inference.lodging.inference_lodging_video import InferenceLodgingVideo
+
 if platform.machine() != 'aarch64':
     from inference.chaff.inference_chaff import InferenceChaff
     from inference.chaff.inference_chaff_raw_video import InferenceChaffRawVideo
-    from inference.lodging.inference_lodging_video import InferenceLodgingVideo
     from inference.lodging.inference_lodging import InferenceLodging
     from inference.yield_estimate.inference_yield_absolute_video import InferenceYieldAbsoluteVideo
     from inference.breakage.inference_bbox_breakage import InferenceBboxBreakage
@@ -28,6 +29,7 @@ class InferenceFactory:
         inference_registry = {
             "InferenceYieldAbsoluteNewViewVideo": InferenceYieldAbsoluteNewViewVideo,
             "InferenceChaffVideo": InferenceChaffVideo,
+            "InferenceLodgingVideo": InferenceLodgingVideo,
         }
 
     def __init__(self, config):

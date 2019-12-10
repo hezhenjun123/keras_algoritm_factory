@@ -8,9 +8,9 @@ VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
 LOAD_MODEL: true  #if true, Load_Model_Directory must be specified too
 #LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield/botan/wheat_lodging_segmentation/run_006/checkpoints/epoch_0221
-LOAD_MODEL_DIRECTORY: model.hdf5/cp.hdf5
 #LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_lodging/botan/test_lodging_seg/run_002/checkpoints/epoch_0055
 #LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_lodging/botan/test_lodging_seg/run_004/checkpoints/epoch_0001
+LOAD_MODEL_DIRECTORY: s3://transformers-sample/zoomlion-sample/test_miivii/lodging_model/model.hdf5/cp.hdf5
 DIR_OUT: /workspace/output/  #directory on the ec2 host, to save output files from code
 DATA_DIR: s3://zoomlion-prod-data/harvester/wheat-lodging/segmentation/data-v0.3/
 
@@ -69,7 +69,8 @@ INFERENCE:
   INFERENCE_CSV_FILE: s3://zoomlion-sample/wheat-lodging/lodgingwheat/train_raw_100APPLE.csv
   INFERENCE_DATA_DIR: s3://zoomlion-sample/wheat-lodging/lodgingwheat/
   #VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingvideo/
-  VIDEO_PATH: data/video/
+  #VIDEO_PATH: data/video/
+  VIDEO_PATH: s3://transformers-sample/zoomlion-sample/test_miivii/lodging_video/video.avi
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: raw
   SEPARATOR: ','

@@ -1,3 +1,7 @@
+import platform
+#if platform.machine() == 'aarch64':
+import dill
+import pickle
 import logging
 import cv2
 import os
@@ -5,7 +9,8 @@ from inference.inference_base import InferenceBase
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-import multiprocessing as mp 
+import multiprocessing as mp
+#import pathos.multiprocessing as mp
 from utilities import file_system_manipulation as fsm
 logging.getLogger().setLevel(logging.INFO)
 
@@ -119,7 +124,9 @@ class InferenceLodgingVideo(InferenceBase):
 
 
     def generate_dataset(self,file_path,transforms):
-        mp.set_start_method('spawn')
+
+        # FIXME: Why use spawn instead of fork here?
+        #mp.set_start_method('spawn')
 
         queue = mp.Manager().Queue(maxsize=100) 
 
@@ -130,6 +137,7 @@ class InferenceLodgingVideo(InferenceBase):
                 yield elem
 
         mp.Process(target=read_data,args=(file_path,transforms,queue)).start()
+
         return generator(queue)
 
 def read_data(video_path,transforms,queue):
