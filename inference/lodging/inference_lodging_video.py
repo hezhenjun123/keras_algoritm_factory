@@ -1,7 +1,3 @@
-import platform
-#if platform.machine() == 'aarch64':
-import dill
-import pickle
 import logging
 import cv2
 import os
@@ -10,7 +6,6 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import multiprocessing as mp
-#import pathos.multiprocessing as mp
 from utilities import file_system_manipulation as fsm
 logging.getLogger().setLevel(logging.INFO)
 
