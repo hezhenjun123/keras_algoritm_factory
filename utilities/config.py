@@ -3,7 +3,8 @@ import os
 
 
 def read_config(config_path):
-    MODULE_CONFIG_FILE = 'config/{}'.format(config_path)
+    # MODULE_CONFIG_FILE = 'config/{}'.format(config_path)
+    MODULE_CONFIG_FILE = config_path
     if os.path.exists(MODULE_CONFIG_FILE) is False:
         raise Exception("config file does not exist: {}".format(MODULE_CONFIG_FILE))
     with open(MODULE_CONFIG_FILE) as f:

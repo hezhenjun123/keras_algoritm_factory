@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 export AWS_REGION="us-east-2"
 
-RUN_ENV="$(sed -n '1p' config/$1 | cut -d' ' -f2)"
+RUN_ENV="$(sed -n '1p' $1 | cut -d' ' -f2)"
 echo "RUN_ENV: $RUN_ENV"
-RUN_MODE="$(sed -n '2p' config/$1 | cut -d' ' -f2)"
+RUN_MODE="$(sed -n '2p' $1 | cut -d' ' -f2)"
 echo "RUN_MODE: $RUN_MODE"
 
 if [ "$RUN_MODE" == "train" ] 
