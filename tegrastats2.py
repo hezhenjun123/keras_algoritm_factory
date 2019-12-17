@@ -7,7 +7,6 @@ import time
 LOG_FILE = None
 
 
-# 捕获Ctrl C退出
 def exit_pro(signum, frame):
     if LOG_FILE:
         LOG_FILE.close()
@@ -22,8 +21,6 @@ LOG_FILE_PATH = './freq.log'
 
 
 def work(write_to_log=False, your_args=''):
-    """将tegrastats加上时间戳
-    @:arg write_to_log 是否写入log文件"""
     global LOG_FILE
     cmds = [BIN_PATH]
     cmds += your_args.split()
@@ -42,7 +39,7 @@ def work(write_to_log=False, your_args=''):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='调用tegrastats，并记录输出到log文件里')
+    parser = argparse.ArgumentParser(description='call tegrastats binary')
     parser.add_argument('-b', '--bin', metavar='where tegrastats is', required=False, dest='bin_path', action='store')
     # the script will not write to log file unless you define the output log file path
     parser.add_argument('-o', '--output', metavar='write the log file to here', required=False, dest='log_file_path',

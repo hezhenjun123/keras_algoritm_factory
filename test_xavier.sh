@@ -1,9 +1,9 @@
 #!/bin/bash
 
 
-sudo python3 tegrastats2.py --bin=/usr/bin/tegrastats --output=./a.log --params "--interval 500"
+sudo python3 tegrastats2.py --bin=/usr/bin/tegrastats --output=./a.log --params "--interval 500" &
 
-sleep 1m
+sleep 5s
 
 python3 run_inference.py --config config/yield/model_config_regression_yield_absolute_newview2.yaml &
 
