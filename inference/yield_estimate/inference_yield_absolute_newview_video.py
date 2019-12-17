@@ -9,6 +9,10 @@ from utilities.file_system_manipulation import directory_to_file_list
 import tensorflow as tf
 tf.enable_eager_execution()
 
+# FIXME: assign 2G to yield model, should be configurable in yaml
+from utilities.helper import config_gpu_memory
+config_gpu_memory(2048)
+
 logging.getLogger().setLevel(logging.INFO)
 
 
