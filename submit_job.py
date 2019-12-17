@@ -5,7 +5,7 @@ import argparse
 from typing import List
 
 
-CONFIG_FILES = ['model_config_segmentation_lodging.yaml']
+CONFIG_FILES = ['./config/lodging/model_config_segmentation_lodging.yaml']
 
 def run_gru_job(config_path,gru_settings):
     gru.submit(job_name=gru_settings["JOB_NAME"],
