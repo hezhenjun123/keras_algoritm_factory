@@ -10,8 +10,9 @@ import multiprocessing as mp
 from utilities import file_system_manipulation as fsm
 logging.getLogger().setLevel(logging.INFO)
 
-from utilities.helper import config_gpu_memory
-config_gpu_memory(2048)
+if platform.machine() == 'aarch64':
+    from utilities.helper import config_gpu_memory
+    config_gpu_memory(2048)
 
 # FIXME: I recommend not going through matplotlib interface and doing the numpy concatenations directly. Matplotlib is very slow
 # FIXME: Instead we should make a utility function that we can use here and in ImageSummary
