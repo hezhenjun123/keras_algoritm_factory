@@ -2,6 +2,9 @@ import tensorflow as tf
 import logging
 import segmentation_models as sm
 sm.set_framework('tf.keras')
+tf.keras.backend.set_image_data_format('channels_last')
+from loss.dice import Dice 
+from metric.mean_iou import MeanIOU 
 
 from model.model_base import ModelBase
 
@@ -34,3 +37,6 @@ class ModelUnetSegmentation(ModelBase):
                         activation = 'sigmoid' if self.num_classes==2 else "softmax")
         logging.info(model.summary())
         return model
+   
+    def generate_custom_objects(self):
+        self.custom_objects={"dice_loss":Dice(), "mean_iou": MeanIOU(num_classes=self.num_classes)}
