@@ -1,5 +1,5 @@
-RUN_ENV: aws #{aws, local}
-RUN_MODE: train #{train, inference}
+RUN_ENV: local #{aws, local}
+RUN_MODE: inference #{train, inference}
 BATCH_SIZE: 8 # WARNING: Set to 8 during training, and set to 1 during inference.
 LEARNING_RATE: 0.00001
 EPOCHS: 800
@@ -11,10 +11,10 @@ NUM_CLASSES: 1
 CHANNEL_LIST: [256,128]
 DENSE_LIST: [256, 128]  #ignored for ModelResnetClassification
 ACTIVATION: relu
-LOAD_MODEL: False #if true, Load_Model_Directory must be specified too
-LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_absolute_regression/suhabe/wheat_yield_regression/run_002/checkpoints/epoch_0725/cp.hdf5
+LOAD_MODEL: True #if true, Load_Model_Directory must be specified too
+LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_absolute_regression/fu/train_valid_yield_new_data_chronological/run_001/checkpoints/epoch_0630/cp.hdf5
 DIR_OUT: /workspace/output/
-DATA_DIR: s3://landing-client-zoomlion/data-for-models/yield/qinghai-0824-1002/data-v0.1_chronological
+DATA_DIR: 
 
 
 DATA_GENERATOR:
@@ -53,15 +53,15 @@ EXPERIMENT:
 
 
 INFERENCE:
-  INFERENCE_NAME: InferenceYieldAbsoluteNewViewVideo
-  GENERATOR: GeneratorVideo
+  INFERENCE_NAME: InferenceYieldAbsoluteNewView
+  GENERATOR: GeneratorRegression
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
-  INFERENCE_CSV_FILE:
-  INFERENCE_DATA_DIR:
+  INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/yield/qinghai-0824-1002/data-v0.1_chronological/train.csv
+  INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/yield/qinghai-0824-1002/data-v0.1_chronological/ 
   VIDEO_PATH: s3://transformers-sample/zoomlion-sample/tim-random/basket_cam_0913.avi
   #VIDEO_PATH: /home/nvidia/zoomlion-model-pipeline/basket_cam_0913.avi
   SPLIT: split #Column name in the csv file
-  SPLIT_VAL: raw
+  SPLIT_VAL: all
   SEPARATOR: ','
   IMAGE_PATH: image_path
   SEGMENTATION_PATH: seg_label_path
@@ -74,10 +74,11 @@ INFERENCE:
   OUTPUT_FRAME_OFFSET: 0
   OUTPUT_FRAME_KEEP: 5
   PREDICTION_CALIBRATION: .08
+  EVALUATE: true
 
 
 LOCAL_OVERRIDE:
-  DIR_OUT: 
+  DIR_OUT: "./out"
   DATA_DIR: 
 
 GRU:

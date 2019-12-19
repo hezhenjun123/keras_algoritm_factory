@@ -8,9 +8,10 @@ if platform.machine() != 'aarch64':
     from inference.chaff.inference_chaff_raw_video import InferenceChaffRawVideo
     from inference.lodging.inference_lodging import InferenceLodging
     from inference.yield_estimate.inference_yield_absolute_video import InferenceYieldAbsoluteVideo
+    from inference.yield_estimate.inference_yield_absolute_newview import InferenceYieldAbsoluteNewView
     from inference.breakage.inference_bbox_breakage import InferenceBboxBreakage
     from inference.sprayer.inference_sprayer_video import InferenceSprayerVideo
-
+ 
 class InferenceFactory:
     if platform.machine() != 'aarch64':
         inference_registry = {
@@ -20,6 +21,7 @@ class InferenceFactory:
             "InferenceLodging": InferenceLodging,
             "InferenceLodgingVideo": InferenceLodgingVideo,
             "InferenceYieldAbsoluteVideo": InferenceYieldAbsoluteVideo,
+            "InferenceYieldAbsoluteNewView": InferenceYieldAbsoluteNewView,
             "InferenceYieldAbsoluteNewViewVideo": InferenceYieldAbsoluteNewViewVideo,
             "InferenceBboxBreakage": InferenceBboxBreakage,
             "InferenceSprayerVideo": InferenceSprayerVideo
