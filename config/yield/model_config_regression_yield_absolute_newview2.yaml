@@ -1,5 +1,5 @@
-RUN_ENV: aws #{aws, local}
-RUN_MODE: train #{train, inference}
+RUN_ENV: local #{aws, local}
+RUN_MODE: inference #{train, inference}
 BATCH_SIZE: 8 # WARNING: Set to 8 during training, and set to 1 during inference.
 LEARNING_RATE: 0.00001
 EPOCHS: 800
@@ -78,11 +78,7 @@ INFERENCE:
 
 
 LOCAL_OVERRIDE:
-<<<<<<< caad84ef0d378656535867a6aeb7f8526355f951
   DIR_OUT: "./out"
-=======
-  DIR_OUT: 
->>>>>>> train yield on new data
   DATA_DIR: 
 
 GRU:
