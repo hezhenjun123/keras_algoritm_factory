@@ -1,4 +1,4 @@
-RUN_ENV: local #{aws, local}
+RUN_ENV: aws #{aws, local}
 RUN_MODE: train #{train, inference}
 BATCH_SIZE: 8 # WARNING: Set to 8 during training, and set to 1 during inference.
 LEARNING_RATE: 0.00001
