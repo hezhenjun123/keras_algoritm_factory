@@ -35,7 +35,7 @@ class ModelBase:
             self.model_directory = fsm.s3_to_local(self.model_directory, './model.hdf5')[0]
         if not os.path.exists(self.model_directory):
             raise ValueError("Incorrect model path")
-        return tf.keras.models.load_model(self.model_directory, compile=False,custom_objects=self.custom_objects)
+        return tf.keras.models.load_model(self.model_directory, compile=True, custom_objects=self.custom_objects)
 
     def create_model(self):
         raise NotImplementedError

@@ -1,3 +1,4 @@
+import platform
 import logging
 import cv2
 import os
@@ -8,8 +9,10 @@ from utilities.file_system_manipulation import directory_to_file_list
 import tensorflow as tf
 tf.enable_eager_execution()
 
-from utilities.helper import config_gpu_memory
-config_gpu_memory(2048)
+
+if platform.machine() == 'aarch64':
+    from utilities.helper import config_gpu_memory
+    config_gpu_memory(2048)
 
 logging.getLogger().setLevel(logging.INFO)
 

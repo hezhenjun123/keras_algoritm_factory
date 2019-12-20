@@ -15,19 +15,28 @@ class InferenceLodging(InferenceBase):
         super().__init__(config)
         self.pred_image_dir = config["INFERENCE"]["PRED_IMAGE_DIR"]
         self.num_process_image = config["INFERENCE"]["NUM_PROCESS_IMAGE"]
+        self.evaluate = config["INFERENCE"]["EVALUATE"]
         if self.num_process_image >= 99999:
             raise Exception("cannot process more than 99999 images ")
 
     def run_inference(self):
         inference_transform = self.generate_transform()
         inference_data_split = self.read_train_csv()
-        inference_dataset = self.generate_dataset(inference_data_split, inference_transform)
+        inference_dataset = self.generate_dataset(inference_data_split, inference_transform, self.evaluate)
         model = self.load_model()
-        self.__produce_segmentation_image(model, inference_dataset)
+        if self.evaluate:
+            self.__produce_evaluation(model, inference_dataset)
+        else:
+            self.__produce_segmentation_image(model, inference_dataset)
         logging.info("================Inference Complete=============")
 
+    def __produce_evaluation(self, model, dataset):
+        logging.info("================Evaluation Starts=============")
+        model.evaluate(dataset)
+        logging.info("================Evaluation Completes=============")
+        
     def __produce_segmentation_image(self, model, dataset):
-        inference_dataset = dataset.unbatch().batch(1)
+        inference_dataset = dataset
         save_dir_model = os.path.join(self.save_dir, self.pred_image_dir, "model")
         save_dir_original_contour = os.path.join(self.save_dir, self.pred_image_dir,
                                                  "original-contour")

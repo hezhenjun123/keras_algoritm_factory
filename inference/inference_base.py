@@ -23,6 +23,7 @@ class InferenceBase:
         self.inference_transform_name = self.config["INFERENCE"]["TRANSFORM"]
         self.inference_generator_name = self.config["INFERENCE"]["GENERATOR"]
         self.model_name = self.config["INFERENCE"]["MODEL_NAME"]
+        self.num_classes = config["NUM_CLASSES"]
         self.save_dir = config["DIR_OUT"]
         self.load_model_path = self.config["LOAD_MODEL_DIRECTORY"]
         if config["RUN_ENV"] == "local":
@@ -40,15 +41,21 @@ class InferenceBase:
         data_from_inference_csv = pd.read_csv(self.inference_csv, sep=self.csv_separator).fillna("")
         logging.info(data_from_inference_csv.head())
         logging.info("#" * 15 + "Reading inference data" + "#" * 15)
+        if self.split_val == "all":
+            return data_from_inference_csv
         inference_data_filter = data_from_inference_csv[self.split_col] == self.split_val
         data_inference_split = data_from_inference_csv[inference_data_filter]
         return data_inference_split
 
-    def generate_dataset(self, data_inference_split, inference_transform):
+    def generate_dataset(self, data_inference_split, inference_transform, evaluate):
         self.config['BATCH_SIZE'] = 1
         generator_factory = DataGeneratorFactory(self.config)
         inference_generator = generator_factory.create_generator(self.inference_generator_name)
-        inference_dataset = inference_generator.create_inference_dataset(
+        if evaluate:
+            inference_dataset = inference_generator.create_dataset(
+            df=data_inference_split, transforms=inference_transform)
+        else:
+            inference_dataset = inference_generator.create_inference_dataset(
             df=data_inference_split, transforms=inference_transform)
         return inference_dataset
 

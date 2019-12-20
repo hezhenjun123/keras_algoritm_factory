@@ -1,3 +1,4 @@
+import platform
 import logging
 import cv2
 import os
@@ -10,8 +11,10 @@ import tensorflow as tf
 tf.enable_eager_execution()
 
 # FIXME: assign 2G to yield model, should be configurable in yaml
-from utilities.helper import config_gpu_memory
-config_gpu_memory(2048)
+# WARNING: set gpu fraction will increase the latency.
+if platform.machine() == 'aarch64':
+    from utilities.helper import config_gpu_memory
+    config_gpu_memory(2048)
 
 logging.getLogger().setLevel(logging.INFO)
 
