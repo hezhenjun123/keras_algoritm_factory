@@ -2,9 +2,9 @@ import platform
 
 if platform.machine() != 'aarch64':
     from data_generators.generator_classification import GeneratorClassification
-    from data_generators.generator_segmentation import GeneratorSegmentation
     from data_generators.generator_retinanet import GeneratorRetinaNet
 
+from data_generators.generator_segmentation import GeneratorSegmentation    
 from data_generators.generator_regression import GeneratorRegression
 from data_generators.generator_video import GeneratorVideo
 
@@ -21,6 +21,7 @@ class DataGeneratorFactory:
         generator_registry = {
             "GeneratorRegression": GeneratorRegression,
             "GeneratorVideo": GeneratorVideo,
+            "GeneratorSegmentation": GeneratorSegmentation,
         }
 
     def __init__(self, config):
