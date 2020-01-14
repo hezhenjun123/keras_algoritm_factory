@@ -7,9 +7,34 @@ it will package the current  directory and submit it as a job to GRU.
 ```
 $ cd zoomlion-model-pipeline
 $ python submit_job.py 
+
+
+$ python run_experiment.py --config breakage/model_config_segmentation_breakage.yaml
+$ python run_experiment.py --config chaff/model_config_segmentation_chaff.yaml
+$ python run_experiment.py --config lodging/model_config_segmentation_lodging.yaml
+$ python run_experiment.py --config yield/model_config_regression_yield_absolute.yaml
 ```
 
 # Setup
+
+
+
+# Run inference on xavier
+
+* Follow landing-eye repo to flash the miivii box
+
+* Install dependencies
+```
+sudo python3 -m pip install -r requirements-xavier.txt
+```
+
+* Run inference
+
+```
+
+```
+
+# Debug
 
 ###  fatal error: 'numpy/arrayobject.h' file not found
 
@@ -35,19 +60,4 @@ utilities/bbox_overlap.c:611:10: fatal error: 'numpy/arrayobject.h' file not fou
 One workaround is to set the following environment variable:
 ```
 export CFLAGS="-I ./venv/lib/python3.7/site-packages/numpy/core/include $CFLAGS"
-```
-
-# Run inference on xavier
-
-* Follow landing-eye repo to flash the miivii box
-
-* Install dependencies
-```
-sudo python3 -m pip install -r requirements-xavier.txt
-```
-
-* Run inference
-
-```
-
 ```
