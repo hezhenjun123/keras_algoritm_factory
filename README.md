@@ -16,6 +16,7 @@ $ python run_experiment.py --config yield/model_config_regression_yield_absolute
 ```
 
 # Setup
+AMI id: ami-0821a34583de81474
 
 
 
