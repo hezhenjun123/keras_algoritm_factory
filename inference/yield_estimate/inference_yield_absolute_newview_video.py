@@ -10,7 +10,7 @@ from utilities.file_system_manipulation import directory_to_file_list
 import tensorflow as tf
 import shutil
 from tensorflow.python.tools import freeze_graph
-#tf.enable_eager_execution()
+tf.enable_eager_execution()
 
 # FIXME: assign 2G to yield model, should be configurable in yaml
 # WARNING: set gpu fraction will increase the latency.

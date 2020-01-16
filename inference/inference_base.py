@@ -41,6 +41,8 @@ class InferenceBase:
         data_from_inference_csv = pd.read_csv(self.inference_csv, sep=self.csv_separator).fillna("")
         logging.info(data_from_inference_csv.head())
         logging.info("#" * 15 + "Reading inference data" + "#" * 15)
+        if self.split_val not in ["all", "train", "valid"]:	
+            raise ValueError(f" spilt_value='{self.split_val}' is not allowed, only ['train', 'valid', 'all'] are supported.")
         if self.split_val == "all":
             return data_from_inference_csv
         inference_data_filter = data_from_inference_csv[self.split_col] == self.split_val
@@ -68,8 +70,8 @@ class InferenceBase:
         model = model_factory.create_model(self.model_name)
         return model
 
-    # def freeze_to_pb(self, save_dir):
-    #     raise NotImplementedError
+    def freeze_to_pb(self, save_dir):
+        raise NotImplementedError
 
     def run_inference(self):
         raise NotImplementedError
