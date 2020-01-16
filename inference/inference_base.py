@@ -5,6 +5,7 @@ from transforms.transform_factory import TransformFactory
 from model.model_factory import ModelFactory
 import tensorflow as tf
 from data_generators.generator_factory import DataGeneratorFactory
+
 if platform.machine() != 'aarch64':
     import pandas as pd
 logging.getLogger().setLevel(logging.INFO)
@@ -40,8 +41,6 @@ class InferenceBase:
         data_from_inference_csv = pd.read_csv(self.inference_csv, sep=self.csv_separator).fillna("")
         logging.info(data_from_inference_csv.head())
         logging.info("#" * 15 + "Reading inference data" + "#" * 15)
-        if self.split_val not in ["all", "train", "valid"]:
-            raise ValueError(f" spilt_value='{self.split_val}' is not allowed, only ['train', 'valid', 'all'] are supported.")
         if self.split_val == "all":
             return data_from_inference_csv
         inference_data_filter = data_from_inference_csv[self.split_col] == self.split_val
@@ -60,12 +59,17 @@ class InferenceBase:
             df=data_inference_split, transforms=inference_transform)
         return inference_dataset
 
-    def load_model(self):
+    def load_model(self, create_raw_model = False):
         if not self.config["LOAD_MODEL"]:
             raise ValueError('LOAD_MODEL config must be set to true for inference')
+        if create_raw_model:
+            self.config["LOAD_MODEL"] = False
         model_factory = ModelFactory(self.config)
         model = model_factory.create_model(self.model_name)
         return model
+
+    # def freeze_to_pb(self, save_dir):
+    #     raise NotImplementedError
 
     def run_inference(self):
         raise NotImplementedError
