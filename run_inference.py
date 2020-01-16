@@ -22,7 +22,7 @@ def run_inference(config, freeze_to_pb_path=None):
     pdb.set_trace()
     if freeze_to_pb_path != None:
         inference.freeze_to_pb(freeze_to_pb_path)
-    inference.run_inference()
+    #inference.run_inference()
 def main(args):
     module_config = read_config(args.config)
     run_inference(module_config, args.freeze_to_pb_path)

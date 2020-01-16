@@ -5,6 +5,8 @@ from transforms.transform_factory import TransformFactory
 from model.model_factory import ModelFactory
 import tensorflow as tf
 from data_generators.generator_factory import DataGeneratorFactory
+import shutil
+from tensorflow.python.tools import freeze_graph
 
 if platform.machine() != 'aarch64':
     import pandas as pd
@@ -71,8 +73,32 @@ class InferenceBase:
         return model
 
     def freeze_to_pb(self, save_dir):
-        raise NotImplementedError
+        tf.compat.v1.disable_eager_execution()
+        shutil.rmtree(save_dir) if os.path.exists(save_dir) else None
+        os.makedirs(save_dir)
+        model = self.load_model()
+        model.model.save_weights(save_dir + "/tmp_model_weights.h5")
+        tf.keras.backend.clear_session()
+        tf.keras.backend.set_learning_phase(0)
+        model = self.load_model(False)
+        model.model.load_weights(save_dir + "/tmp_model_weights.h5")
+        shutil.rmtree(save_dir) if os.path.exists(save_dir) else None
+        tf.saved_model.simple_save(tf.keras.backend.get_session(),
+                                   save_dir,
+                                   inputs={"input": model.model.inputs[0]},
+                                   outputs={"output": model.model.outputs[0]})
 
+        freeze_graph.freeze_graph(None,
+                                  None,
+                                  None,
+                                  None,
+                                  model.model.outputs[0].op.name,
+                                  None,
+                                  None,
+                                  os.path.join(save_dir + "/frozen_model.pb"),
+                                  False,
+                                  "",
+                                  input_saved_model_dir=save_dir)
     def run_inference(self):
         raise NotImplementedError
 

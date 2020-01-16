@@ -8,8 +8,6 @@ import matplotlib.pyplot as plt
 import matplotlib
 from utilities.file_system_manipulation import directory_to_file_list
 import tensorflow as tf
-import shutil
-from tensorflow.python.tools import freeze_graph
 tf.enable_eager_execution()
 
 # FIXME: assign 2G to yield model, should be configurable in yaml
@@ -40,33 +38,6 @@ class InferenceYieldAbsoluteNewViewVideo(InferenceBase):
         self.pred_calib = config["INFERENCE"]["PREDICTION_CALIBRATION"]
         self.image_size = (960,640)
 
-    def freeze_to_pb(self, save_dir):
-        tf.compat.v1.disable_eager_execution()
-        shutil.rmtree(save_dir) if os.path.exists(save_dir) else None
-        os.makedirs(save_dir)
-        model = self.load_model()
-        model.model.save_weights(save_dir + "/tmp_resnet_weights.h5")
-        tf.keras.backend.clear_session()
-        tf.keras.backend.set_learning_phase(0)
-        model = self.load_model(False)
-        model.model.load_weights(save_dir + "/tmp_resnet_weights.h5")
-        shutil.rmtree(save_dir) if os.path.exists(save_dir) else None
-        tf.saved_model.simple_save(tf.keras.backend.get_session(),
-                                   save_dir,
-                                   inputs={"input": model.model.inputs[0]},
-                                   outputs={"output": model.model.outputs[0]})
-
-        freeze_graph.freeze_graph(None,
-                                  None,
-                                  None,
-                                  None,
-                                  model.model.outputs[0].op.name,
-                                  None,
-                                  None,
-                                  os.path.join(save_dir + "/frozen_model.pb"),
-                                  False,
-                                  "",
-                                  input_saved_model_dir=save_dir)
     def run_inference(self):
         model = self.load_model()
         inference_transform = self.generate_transform()
