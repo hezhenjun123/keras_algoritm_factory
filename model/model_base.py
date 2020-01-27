@@ -30,7 +30,7 @@ class ModelBase:
         return self.create_model()
 
     def load_model(self):
-        logger.debug(f"Loading model from {self.model_directory}")
+        logger.debug("Loading model from {}".format(self.model_directory))
         if fsm.is_s3_path(self.model_directory):
             self.model_directory = fsm.s3_to_local(self.model_directory, './model.hdf5')[0]
         if not os.path.exists(self.model_directory):

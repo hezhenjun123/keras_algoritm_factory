@@ -43,8 +43,8 @@ class InferenceBase:
         data_from_inference_csv = pd.read_csv(self.inference_csv, sep=self.csv_separator).fillna("")
         logging.info(data_from_inference_csv.head())
         logging.info("#" * 15 + "Reading inference data" + "#" * 15)
-        if self.split_val not in ["all", "train", "valid"]:	
-            raise ValueError(f" spilt_value='{self.split_val}' is not allowed, only ['train', 'valid', 'all'] are supported.")
+        if self.split_val not in ["all", "train", "valid"]:
+            raise ValueError("spilt_value={} is not allowed, only ['train', 'valid', 'all'] are supported.".format(self.split_val))
         if self.split_val == "all":
             return data_from_inference_csv
         inference_data_filter = data_from_inference_csv[self.split_col] == self.split_val
@@ -119,11 +119,11 @@ class InferenceBase:
         tf.io.gfile.mkdir(save_dir)
         list_of_files = tf.io.gfile.listdir(save_dir)
         i = 1
-        while f"inference{i}" in list_of_files:
+        while "inference{}".format(i) in list_of_files:
             i += 1
-        run_dir = os.path.join(save_dir, f"inference{i}")
+        run_dir = os.path.join(save_dir, "inference{}".format(i))
         tf.io.gfile.mkdir(run_dir)
         logging.info("#" * 40)
-        logging.info(f"Saving inference on {run_dir}")
+        logging.info("Saving inference on {}".format(run_dir))
         logging.info("#" * 40)
         return run_dir

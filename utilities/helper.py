@@ -2,9 +2,34 @@ import copy
 import logging
 from data_generators.generator_factory import DataGeneratorFactory
 import tensorflow as tf
+import os
+import cv2
+import datetime
 
 logging.getLogger().setLevel(logging.INFO)
 
+class FPS:
+    def __init__(self):
+        self._start = None
+        self._end = None
+        self._num_frames = 0
+
+    def start(self):
+        self._start = datetime.datetime.now()
+        return self
+
+    def stop(self):
+        self._end = datetime.datetime.now()
+
+    def update(self):
+        self._num_frames += 1
+
+    def elapsed(self):
+        return (self._end - self._start).total_seconds()
+
+
+    def fps(self):
+        return self._num_frames * 1.0 / (datetime.datetime.now() - self._start).total_seconds()
 
 def get_plot_data(df, config):
     """Reads the images and segmentation labels listed in `dataframe` and
@@ -85,3 +110,55 @@ def config_gpu_memory(gpu_mem_cap):
                         memory_limit=gpu_mem_cap)])
         except RuntimeError as e:
             print('Can not set GPU memory config', e)
+
+def stream_video(vid_name, fps=None, imscale=1):
+    """ Args:
+        video_name (str): local filename or webcam ID
+        fps (int): optionally downsample video by skipping frames.
+            If video is saved at 30 fps, you can choose to load only 3 fps
+        imscale (int): optionally downscale image to a lower dimension
+    """
+
+    logging.info("loading %s ... ", vid_name)
+
+    if vid_name.isnumeric():
+        cap = cv2.VideoCapture(int(vid_name))
+    elif os.path.exists(vid_name):
+        cap = cv2.VideoCapture(vid_name)
+    else:
+        logging.info("cannot find file %s", vid_name)
+        raise FileNotFoundError(vid_name)
+
+    act_fps = cap.get(cv2.CAP_PROP_FPS)
+    act_fps = 30 if act_fps > 100 else act_fps
+    fps = act_fps if fps is None else fps
+
+    ratio = act_fps // fps
+    logging.info("fps: %d, act_fps %d, ratio: %.3f", fps, act_fps, ratio)
+    assert fps <= act_fps and ratio >= 1
+
+    idx = -1
+    r_fps = FPS().start()
+
+    while cap.isOpened():
+        idx += 1
+        ret, frame = cap.read()
+
+        r_fps.update()
+
+        if not ret:
+            break
+
+        if idx % 200 == 0:
+            logging.info("video loading fps: %.3f", r_fps.fps())
+
+        if idx % ratio != 0:
+            continue
+
+        H, W, C = frame.shape
+        Wz, Hz = W // imscale, H // imscale
+        sframe = cv2.resize(frame, (Wz, Hz))
+
+        yield sframe
+
+    cap.release()

@@ -33,5 +33,5 @@ class ModelFactory:
 
     def create_model(self, name):
         if name not in self.model_registry:
-            raise Exception(f"model type is not supported: {name}")
+            raise Exception("model type is not supported: {}".format(name))
         return self.model_registry[name](self.config)

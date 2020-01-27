@@ -53,13 +53,15 @@ EXPERIMENT:
 
 
 INFERENCE:
-  INFERENCE_NAME: InferenceYieldAbsoluteNewView
-  GENERATOR: GeneratorRegression
+  #INFERENCE_NAME: InferenceYieldAbsoluteNewViewVideo
+  INFERENCE_NAME: InferenceYieldAbsoluteNewViewTRT
+  GENERATOR: GeneratorVideo
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/yield/qinghai-0824-1002/data-v0.1_chronological/train.csv
   INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/yield/qinghai-0824-1002/data-v0.1_chronological/ 
   VIDEO_PATH: s3://transformers-sample/zoomlion-sample/tim-random/basket_cam_0913.avi
-  #VIDEO_PATH: /home/nvidia/zoomlion-model-pipeline/basket_cam_0913.avi
+  NUM_FRAMES: 200
+  #VIDEO_PATH: /home/landingai/landing/zoomlion-model-pipeline/basket_cam_0913.avi
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: all
   SEPARATOR: ','
@@ -75,6 +77,13 @@ INFERENCE:
   OUTPUT_FRAME_KEEP: 5
   PREDICTION_CALIBRATION: .08
   EVALUATE: true
+  PB_FILE_PATH: ./tmp_resnet_model/frozen_model.pb
+  TRT_ENGINE_PATH: ./tmp_resnet_model/frozen_model.engine
+  CREATE_ENGINE: False
+  FP16_MODE: False
+  INPUT_NAME: images
+  OUTPUT_NAME: logits/Sigmoid
+  
 
 
 LOCAL_OVERRIDE:

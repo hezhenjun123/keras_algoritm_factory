@@ -803,7 +803,7 @@ class Backbone:
                 "out_relu",
             ]
         else:
-            raise ValueError(f"Unknown Backbone provided: {backbone_name}")
+            raise ValueError("Unknown Backbone provided: {}".format(backbone_name))
         # Load weights for Resent18 and Resnet34
         # if backbone_name in ["resnet18", "resnet34"] and weights:
         #     load_model_weights(

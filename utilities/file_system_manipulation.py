@@ -163,7 +163,7 @@ def local_file_to_s3(local_path, s3_path, client=None):
     bucket_name, key = split_s3_path(s3_path)
     if client is None: client = boto3.client("s3")
     with open(local_path, "rb") as data:
-        print(f"Uploading {local_path} to {s3_path}")
+        print("Uploading {} to {}".format(local_path, s3_path))
         client.put_object(Key=key, Body=data, Bucket=bucket_name)
     return s3_path
 

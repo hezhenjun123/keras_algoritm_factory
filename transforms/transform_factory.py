@@ -27,5 +27,5 @@ class TransformFactory:
 
     def create_transform(self, name):
         if name not in self.transform_registry:
-            raise Exception(f"transform type is not supported: {name}")
+            raise Exception("transform type is not supported: {}".format(name))
         return self.transform_registry[name](self.config)

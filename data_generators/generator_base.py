@@ -37,7 +37,7 @@ class DataGeneratorBase:
         if config["LOCAL_OVERRIDE"]["DATA_DIR"] is not None and \
                 len(config["LOCAL_OVERRIDE"]["DATA_DIR"].strip()) > 0:
             self.data_dir = config["LOCAL_OVERRIDE"]["DATA_DIR"]
-            logging.info(f"=====Override data_dir with {self.data_dir}")
+            logging.info("=====Override data_dir with {}".format(self.data_dir))
 
     def __inference_override(self, config):
         logging.info("=====Override config with inference configs=====")
@@ -53,7 +53,7 @@ class DataGeneratorBase:
         """
 
         def join_root_dir_map(path):
-            total_path: str
+            total_path = ""
             if path and not os.path.isabs(path) and not is_s3_path(path):
                 total_path = os.path.join(root_dir, path)
             else:
@@ -84,9 +84,9 @@ class DataGeneratorBase:
         if os.path.exists(cache_dir) is False:
             os.makedirs(cache_dir)
         curr_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')[:-3]
-        cache_file = os.path.join(cache_dir, f"cache_{curr_time}")
+        cache_file = os.path.join(cache_dir, "cache_{}".format(curr_time))
         num = 1
         while os.path.exists(cache_file):
-            cache_file = f"{cache_file}_{num}"
+            cache_file = "{}_{}".format(cache_file, num)
             num += 1
         return cache_file

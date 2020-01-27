@@ -46,11 +46,11 @@ class InferenceYieldAbsoluteNewViewVideo(InferenceBase):
         file_count = 1
         total_count = len(file_list)
         for file_path in file_list:
-            logging.info(f"process video num: {file_count}/{total_count}")
-            logging.info(f"file name: {file_path}")
+            logging.info("process video num: {}/{}".format(file_count, total_count))
+            logging.info("file name: {}".format(file_path))
             inference_dataset = self.generate_dataset(file_path, inference_transform)
             input_video_name = os.path.splitext(os.path.basename(file_path))[0]
-            self.output_video_name = f"inference_{input_video_name}.avi"
+            self.output_video_name = "inference_{}.avi".format(input_video_name)
             self.__produce_video(model, inference_dataset)
             file_count += 1
         logging.info("================Inference Complete=============")
@@ -80,12 +80,12 @@ class InferenceYieldAbsoluteNewViewVideo(InferenceBase):
         font = cv2.FONT_HERSHEY_SIMPLEX
         fontScale = 3
         fullness_text = f"Wheat Level: {fullness:.0%}"
-        #add outlines 
+        #add outlines
         #img =cv2.putText(img,fullness_text, (int(img.shape[1]*.02),int(img.shape[0]*.1)),
-       #                  font, fontScale,[0]*3,thickness=4)
+        #                  font, fontScale,[0]*3,thickness=4)
 
-       # img =cv2.putText(img,fullness_text, (int(img.shape[1]*.02),int(img.shape[0]*.1)),
-       #                  font, fontScale,[255]*3,thickness=2)
+        #img =cv2.putText(img,fullness_text, (int(img.shape[1]*.02),int(img.shape[0]*.1)),
+        #                  font, fontScale,[255]*3,thickness=2)
 
         img = cv2.putText(img, fullness_text, (int(img.shape[1] * .1), int(img.shape[0] * .45)),
                           font, fontScale, [0] * 3, thickness=8)
