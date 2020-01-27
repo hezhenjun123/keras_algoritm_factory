@@ -1,6 +1,7 @@
 import platform
 import numpy as np
 from transforms.transform_base import TransformBase
+from utilities.helper import imagenet_preprocess
 
 if platform.machine() != 'aarch64':
     import albumentations as A
@@ -21,7 +22,7 @@ class TransformYieldAbsolute(TransformBase):
         else:
             # TODO: check whether cv2 output is consistant with albumentations
             self.transforms = [TransformBase.Image(lambda image: {'image' : cv2.resize(image, (resize[0], resize[1]))}),
-                               TransformBase.Image(lambda image: {'image': cv2.normalize(image, None).astype(np.float32)})]
+                               TransformBase.Image(lambda image: {'image': imagenet_preprocess(image).astype(np.float32)})]
 
             # self.transforms = [TransformBase.Image(lambda image: {'image' : cv2.resize(image, (resize[0], resize[1])).astype(np.float32)}),
             #                    TransformBase.Label(lambda mask: {'mask' : cv2.resize(mask, (resize[0], resize[1])).astype(np.float32)})]

@@ -1,3 +1,14 @@
+import numpy as np
+
+def imagenet_preprocess(image):
+    # from imagenet
+    MEAN_RGB = np.array([0.485, 0.456, 0.406]).reshape((1, 1, 3))
+    STDDEV_RGB = np.array([0.229, 0.224, 0.225]).reshape((1, 1, 3))
+    image = image / 255.0
+    image -= MEAN_RGB
+    image /= STDDEV_RGB
+    return image
+
 class TransformBase:
 
     class Image:

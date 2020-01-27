@@ -1,5 +1,7 @@
-from transforms.transform_base import TransformBase
-
+from transforms.transform_base import TransformBase, imagenet_preprocess
+import albumentations as A
+import cv2
+import numpy as np
 
 #helper functions
 def transform_plus_1():
@@ -82,3 +84,25 @@ def test_backward_compatibilty():
     augmented = transform.apply_transforms(image, label)
     assert augmented[0] == [23, 10, 10]
     assert augmented[1] == [25, 11, 11]
+
+def test_albumentation_cv2_resize():
+    resize = (256, 256)
+    transform_A = TransformBase({})
+    transform_cv2 = TransformBase({})
+    transform_A.transforms = [TransformBase.Image(A.Resize(resize[0], resize[1]))]
+    transform_cv2.transforms = [TransformBase.Image(lambda image: {'image' : cv2.resize(image, (resize[0], resize[1]))})]
+    input = np.random.randint(256, size=(512, 512, 3)).astype('float32')
+    augmented_A = transform_A.apply_transforms(input, input)
+    augmented_cv2 = transform_cv2.apply_transforms(input, input)
+    np.testing.assert_array_almost_equal(augmented_A[0], augmented_cv2[0], decimal=3)
+
+def test_albumentation_cv2_normalize():
+    input = np.random.randint(255, size=(512, 512, 3)).astype('float32')
+    transform_A = TransformBase({})
+    transform_cv2 = TransformBase({})
+    transform_A.transforms = [TransformBase.Image(A.Normalize())]
+    transform_cv2.transforms = [TransformBase.Image(lambda image: {'image': imagenet_preprocess(image).astype(np.float32)})]
+    augmented_A = transform_A.apply_transforms(input, input)
+    augmented_cv2 = transform_cv2.apply_transforms(input, input)
+    np.testing.assert_array_almost_equal(augmented_A[0], augmented_cv2[0], decimal=3)
+
