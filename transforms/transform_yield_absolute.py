@@ -1,7 +1,7 @@
 import platform
 import numpy as np
-from transforms.transform_base import TransformBase
-from utilities.helper import imagenet_preprocess
+from transforms.transform_base import TransformBase, imagenet_preprocess
+
 
 if platform.machine() != 'aarch64':
     import albumentations as A
