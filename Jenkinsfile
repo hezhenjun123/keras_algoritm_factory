@@ -5,7 +5,7 @@ pipeline {
   stage('pytest') {
       steps {
         sh '''#!/bin/bash
-        pytest
+        bash run_docker.sh pytest
         '''
       }
     }
