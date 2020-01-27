@@ -5,7 +5,7 @@ pipeline {
   stage('pytest') {
       steps {
         sh '''#!/bin/bash
-        pip install pytest && pytest
+        pytest
         '''
       }
     }
