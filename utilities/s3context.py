@@ -66,6 +66,8 @@ class S3Cache:
 
     def fetch(self, s3_path, force_download=False):
         s3_path = str(s3_path)
+        import pdb
+        pdb.set_trace()
         if not s3_path.startswith(self.prefix):
             logging.warning(
                 "cache doesnt understand this path %s. Attempting to interpret it as a local file",
@@ -98,3 +100,4 @@ class S3Cache:
 
 
 CACHE = S3Cache("s3://transformers-sample/", "~/transformer-samples/")
+ZL_CACHE = S3Cache("s3://zoomlion-sample/", "~/zoomline-sample/")

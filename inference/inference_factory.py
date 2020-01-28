@@ -1,6 +1,7 @@
 import platform
 from inference.yield_estimate.inference_yield_absolute_newview_trt import InferenceYieldAbsoluteNewViewTRT
 from inference.chaff.inference_chaff_video import InferenceChaffVideo
+from inference.chaff.inference_chaff_video_trt import InferenceChaffVideoTRT
 from inference.yield_estimate.inference_yield_absolute_newview_video import InferenceYieldAbsoluteNewViewVideo
 from inference.lodging.inference_lodging_video import InferenceLodgingVideo
 from inference.yield_estimate.inference_yield_absolute_newview import InferenceYieldAbsoluteNewView
@@ -19,6 +20,7 @@ class InferenceFactory:
         inference_registry = {
             "InferenceChaff": InferenceChaff,
             "InferenceChaffVideo": InferenceChaffVideo,
+            "InferenceChaffVideoTRT": InferenceChaffVideoTRT,
             "InferenceChaffRawVideo": InferenceChaffRawVideo,
             "InferenceLodging": InferenceLodging,
             "InferenceLodgingVideo": InferenceLodgingVideo,
@@ -37,6 +39,7 @@ class InferenceFactory:
             "InferenceYieldAbsoluteNewViewVideo": InferenceYieldAbsoluteNewViewVideo,
             "InferenceChaffVideo": InferenceChaffVideo,
             "InferenceLodgingVideo": InferenceLodgingVideo,
+            "InferenceChaffVideoTRT": InferenceChaffVideoTRT,
         }
 
     def __init__(self, config):

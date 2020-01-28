@@ -6,7 +6,7 @@ $login
 
 docker image prune -f
 
-docker_name="zoomline:local-dev"
+docker_name="zoomlion:local-dev"
 aws_creds="${HOME}/.aws/credentials"
 aws_env=""
 
@@ -49,6 +49,6 @@ fi
 
 
 
-# docker tag local/jetson:v2 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomline:v0.0.1
+# docker tag local/jetson:v2 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:v0.0.1
 # login=$(aws ecr get-login --no-include-email)
-# docker tag local/jetson:v2 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomline:v0.0.1
+# docker tag local/jetson:v2 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:v0.0.1

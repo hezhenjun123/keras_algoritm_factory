@@ -9,7 +9,6 @@ from inference.common import ModelInferTF
 from utilities.file_system_manipulation import directory_to_file_list
 from utilities.helper import stream_video
 from utilities.s3context import CACHE
-#TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
 
 import pycuda.driver as cuda
 import pycuda.autoinit
@@ -48,7 +47,7 @@ class InferenceYieldAbsoluteNewViewTRT(InferenceBase):
         except:
             print("Failed to load engine")
 
-    #TODO(yuanzhedong): move to base
+    #TODO(yuanzhedong): move to base, may need trt deps?
     def build_and_dump_engine(self, model_data):
         with build_engine(model_data) as engine:
             print('Engine:', engine)
