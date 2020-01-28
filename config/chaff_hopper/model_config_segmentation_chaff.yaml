@@ -77,8 +77,8 @@ INFERENCE:
   MAXIMIZING_BUFFER_LENGTH: 1
   OUTPUT_FPS: 5
   MAKE_PLOTS: false
-  PB_FILE_PATH: ./tmp_unet_chaff_hopper_model/frozen_model.pb
-  TRT_ENGINE_PATH: ./tmp_unet_chaff_hopper_model/frozen_model.engine
+  PB_FILE_PATH: s3://zoomlion-sample/tmp_unet_chaff_hopper_model/frozen_model.pb
+  TRT_ENGINE_PATH: ~/zoomlion-sample/tmp_unet_chaff_hopper_model/frozen_model.engine
   CREATE_ENGINE: False
   FP16_MODE: False
   INPUT_NAME: data

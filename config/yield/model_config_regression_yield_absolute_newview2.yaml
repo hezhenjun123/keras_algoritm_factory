@@ -77,7 +77,7 @@ INFERENCE:
   OUTPUT_FRAME_KEEP: 5
   PREDICTION_CALIBRATION: .08
   EVALUATE: true
-  PB_FILE_PATH: ~/zoomlion-sample/tmp_resnet_model/frozen_model.pb
+  PB_FILE_PATH: s3://zoomlion-sample/tmp_resnet_model/frozen_model.pb
   TRT_ENGINE_PATH: ~/zoomlion-sample/tmp_resnet_model/frozen_model.engine
   CREATE_ENGINE: False
   FP16_MODE: False
