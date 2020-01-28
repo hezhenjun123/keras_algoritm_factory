@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'staging' }
+  agent { label 'zl' }
 
   stages {
   stage('pytest') {
