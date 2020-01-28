@@ -55,11 +55,12 @@ class InferenceChaffVideoTRT(InferenceBase):
             )
         except:
             print("Failed to load engine")
-#TODO(yuanzhedong): move to base, may need trt deps?
+    #TODO(yuanzhedong): move to base, may need trt deps?
     def build_and_dump_engine(self, model_data):
         with build_engine(model_data) as engine:
             print('Engine:', engine)
             buf = engine.serialize()
+            print('open is assigned to %r' % open)
             with open(model_data.trt_engine_path, 'wb') as f:
                 f.write(buf)
 
