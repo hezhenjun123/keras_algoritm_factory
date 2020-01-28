@@ -7,11 +7,11 @@ EPOCHS: 1000
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
-LOAD_MODEL: False  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL: true  #if true, Load_Model_Directory must be specified too
 # LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_chaff/trosenflanz/elevator_chaff/run_013/checkpoints/epoch_0005/cp.hdf5 #inference
-LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_chaff/trosenflanz/wheat_chaff_segmentation/run_014/checkpoints/epoch_0007/cp.hdf5 #for training, pretrained on older data
+LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_chaff/yuanzhedong/elevator_chaff/run_007/checkpoints/epoch_0008/cp.hdf5
 DIR_OUT: /workspace/output/
-DATA_DIR: s3://landing-client-zoomlion/data-for-models/chaff_elevator/qinghai-0824-1002/data-v0.1_chronological/
+DATA_DIR: s3://landing-client-zoomlion/chaff_segmentation/chaff_elevator
 # DATA_DIR: model.hdf5
 
 DATA_GENERATOR:
@@ -27,8 +27,8 @@ TRANSFORM:
   RESIZE: [512, 512]
 
 TRAINING_DATA_INFO:
-  TRAIN_CSV_FILE: s3://landing-client-zoomlion/data-for-models/chaff_elevator/qinghai-0824-1002/data-v0.1_chronological/train.csv
-  VALID_CSV_FILE: s3://landing-client-zoomlion/data-for-models/chaff_elevator/qinghai-0824-1002/data-v0.1_chronological/train.csv
+  TRAIN_CSV_FILE: s3://landing-client-zoomlion/chaff_segmentation/chaff_elevator/train.csv
+  VALID_CSV_FILE: s3://landing-client-zoomlion/chaff_segmentation/chaff_elevator/train.csv
   SPLIT: split
   SPLIT_TRAIN_VAL: train
   SPLIT_VALID_VAL: valid
@@ -42,8 +42,7 @@ TRAINING_DATA_INFO:
 MODEL:
   LAYER_SIZE: 64 #can be a list
   LAYER_COUNT: 5 #ignored if LAYER_SIZE  is list
-  BACKBONE: efficientnetb0  #{any backbone from https://github.com/qubvel/segmentation_models#models-and-backbones} for Unet
-                            # nobackbone or mobilenet-v2
+  BACKBONE: resnet18
   IS_BACKBONE_TRAINABLE: true
 
 EXPERIMENT:
@@ -56,12 +55,11 @@ EXPERIMENT:
   NUM_PLOTS: 10
 
 INFERENCE:
-  INFERENCE_NAME: InferenceChaffRawVideo
+  INFERENCE_NAME: InferenceChaffVideoTRT
   GENERATOR: GeneratorVideo
   INFERENCE_CSV_FILE: 
   INFERENCE_DATA_DIR:
-  #VIDEO_PATH: s3://zoomlion-sample/zoomlion-hopper-1/barn_video1.avi
-  VIDEO_PATH: s3://zoomlion-prod-data/zoomlion-s3-china-data/QingHai_Harvest_Data/2019-09-08/avi/elevator_cam/
+  VIDEO_PATH: s3://zoomlion-sample/zoomlion-data-aws-china/harvester/QingHai_Harvest_Data/2019-09-08/avi/elevator_cam/20190908_125526.h5.avi
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: valid #Column content in the csv file
   SEPARATOR: ','
@@ -74,6 +72,13 @@ INFERENCE:
   MAXIMIZING_BUFFER_LENGTH: 1
   OUTPUT_FPS: 5
   MAKE_PLOTS: false
+  PB_FILE_PATH: ./tmp_unet_chaff_elevator_model/frozen_model.pb
+  TRT_ENGINE_PATH: ./tmp_unet_chaff_elevator_model/frozen_model.engine
+  CREATE_ENGINE: False
+  FP16_MODE: False
+  INPUT_NAME: data
+  OUTPUT_NAME: sigmoid/Sigmoid
+  NUM_FRAMES: 200
 
 LOCAL_OVERRIDE:
   DIR_OUT: ./out
@@ -82,5 +87,5 @@ LOCAL_OVERRIDE:
 GRU:
   JOB_NAME: elevator_chaff
   PROJECT_NAME: wheat_yield_chaff
-  INSTANCE_TYPE: p3.2xlarge
+  INSTANCE_TYPE: p2.xlarge
   TIMEOUT: 96

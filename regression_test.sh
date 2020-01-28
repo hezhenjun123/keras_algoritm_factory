@@ -16,3 +16,7 @@ python run_inference.py --config config/chaff_hopper/model_config_segmentation_c
 # lodging
 python run_inference.py --config config/lodging/model_config_segmentation_lodging.yaml --freeze_to_pb_path ./tmp_unet_lodging_model
 python run_inference.py --config config/lodging/model_config_segmentation_lodging.yaml --create_trt_engine --debug
+
+# chaff elevator
+python run_inference.py --config config/chaff_elevator/model_config_segmentation_chaff.yaml --freeze_to_pb_path ./tmp_unet_chaff_elevator_model
+python run_inference.py --config config/chaff_elevator/model_config_segmentation_chaff.yaml --create_trt_engine --debug

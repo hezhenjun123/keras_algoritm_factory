@@ -1,3 +1,4 @@
+
 import tensorflow as tf
 import logging
 import segmentation_models as sm
@@ -36,8 +37,7 @@ class ModelUnetSegmentation(ModelBase):
                         classes = 1 if self.num_classes==2 else self.num_classes,
                         activation = 'sigmoid' if self.num_classes==2 else "softmax",
                         decoder_block_type = "transpose")
-        logging.info(model.summary())
+        print(model.summary())
         return model
-   
     def generate_custom_objects(self):
         self.custom_objects={"dice_loss":Dice(), "mean_iou": MeanIOU(num_classes=self.num_classes)}
