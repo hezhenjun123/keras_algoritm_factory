@@ -34,7 +34,7 @@ def run_inference(config, freeze_to_pb_path=None):
         output = inference.run_inference()
         if FLAGS.debug:
             output_tf = inference.run_inference_tf()
-            np.testing.assert_array_almost_equal(np.array(output).ravel(), np.array(output_tf).ravel(), decimal=3)
+            np.testing.assert_array_almost_equal(np.array(output).ravel(), np.array(output_tf).ravel(), decimal=4)
 
 def main(_):
     module_config = read_config(FLAGS.config)

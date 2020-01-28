@@ -6,9 +6,13 @@ python utilities/bbox_setup.py build_ext --inplace && mv bbox_overlap.c* utiliti
 
 
 # yield model
-python run_inference.py --config=config/yield/model_config_regression_yield_absolute_newview2.yaml --freeze_to_pb_path ./tmp_resnet_model
-python run_inference.py --config=config/yield/model_config_regression_yield_absolute_newview2.yaml --create_trt_engine --debug
+python run_inference.py --config config/yield/model_config_regression_yield_absolute_newview2.yaml --freeze_to_pb_path ./tmp_resnet_model
+python run_inference.py --config config/yield/model_config_regression_yield_absolute_newview2.yaml --create_trt_engine --debug
 
 # chaff hopper
-python run_inference.py --config=config/yield/model_config_regression_yield_absolute_newview2.yaml --freeze_to_pb_path ./tmp_unet_chaff_hopper_model
+python run_inference.py --config config/yield/model_config_regression_yield_absolute_newview2.yaml --freeze_to_pb_path ./tmp_unet_chaff_hopper_model
 python run_inference.py --config config/chaff_hopper/model_config_segmentation_chaff.yaml --create_trt_engine --debug
+
+# lodging
+python run_inference.py --config config/lodging/model_config_segmentation_lodging.yaml --freeze_to_pb_path ./tmp_unet_lodging_model
+python run_inference.py --config config/lodging/model_config_segmentation_lodging.yaml --create_trt_engine --debug

@@ -6,9 +6,9 @@ EPOCHS: 300
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
-LOAD_MODEL: False  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL: True  #if true, Load_Model_Directory must be specified too
 # LOAD_MODEL_DIRECTORY: s3://transformers-sample/zoomlion-sample/test_miivii/lodging_model/model.hdf5/cp.hdf5
-LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_lodging/fu/train_lodging_seg_new_data/run_001/checkpoints/epoch_0171/cp.hdf5
+LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_lodging/yuanzhedong/train_lodging_v0_6_data_chronological/run_025/checkpoints/epoch_0002/cp.hdf5
 DIR_OUT: /workspace/output/  #directory on the ec2 host, to save output files from code
 DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological
 
@@ -41,7 +41,6 @@ TRAINING_DATA_INFO:
 MODEL:
   LAYER_SIZE: 64
   LAYER_COUNT: 5
-  #BACKBONE: efficientnetb0
   BACKBONE: resnet18
   IS_BACKBONE_TRAINABLE: true
   MODEL_DIRECTORY: out
@@ -60,7 +59,7 @@ EXPERIMENT:
 
 
 INFERENCE:
-  INFERENCE_NAME: InferenceLodging
+  INFERENCE_NAME: InferenceLodgingTRT
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6/train.csv
   INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6/
@@ -79,6 +78,13 @@ INFERENCE:
   NUM_PROCESS_IMAGE: 30000
   PRED_IMAGE_DIR: pred_image
   EVALUATE: True # Evaluate model on a dataset with ground truth; won't generate segmentation images.
+  PB_FILE_PATH: ./tmp_unet_lodging_model/frozen_model.pb
+  TRT_ENGINE_PATH: ./tmp_unet_lodging_model/frozen_model.engine
+  CREATE_ENGINE: False
+  FP16_MODE: False
+  INPUT_NAME: data
+  OUTPUT_NAME: sigmoid/Sigmoid
+  NUM_FRAMES: 100
 
 
 LOCAL_OVERRIDE:
@@ -88,5 +94,5 @@ LOCAL_OVERRIDE:
 GRU:
   JOB_NAME: train_lodging_v0_6_data_chronological
   PROJECT_NAME: wheat_yield_lodging
-  INSTANCE_TYPE: p2.xlarge
+  INSTANCE_TYPE: p3.2xlarge
   TIMEOUT: 96

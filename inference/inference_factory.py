@@ -4,6 +4,7 @@ from inference.chaff.inference_chaff_video import InferenceChaffVideo
 from inference.chaff.inference_chaff_video_trt import InferenceChaffVideoTRT
 from inference.yield_estimate.inference_yield_absolute_newview_video import InferenceYieldAbsoluteNewViewVideo
 from inference.lodging.inference_lodging_video import InferenceLodgingVideo
+from inference.lodging.inference_lodging_trt import InferenceLodgingTRT
 from inference.yield_estimate.inference_yield_absolute_newview import InferenceYieldAbsoluteNewView
 
 
@@ -23,6 +24,7 @@ class InferenceFactory:
             "InferenceChaffVideoTRT": InferenceChaffVideoTRT,
             "InferenceChaffRawVideo": InferenceChaffRawVideo,
             "InferenceLodging": InferenceLodging,
+            "InferenceLodgingTRT": InferenceLodgingTRT,
             "InferenceLodgingVideo": InferenceLodgingVideo,
             "InferenceYieldAbsoluteVideo": InferenceYieldAbsoluteVideo,
             "InferenceYieldAbsoluteNewView": InferenceYieldAbsoluteNewView,
@@ -40,6 +42,7 @@ class InferenceFactory:
             "InferenceChaffVideo": InferenceChaffVideo,
             "InferenceLodgingVideo": InferenceLodgingVideo,
             "InferenceChaffVideoTRT": InferenceChaffVideoTRT,
+            "InferenceLodgingTRT": InferenceLodgingTRT,
         }
 
     def __init__(self, config):
