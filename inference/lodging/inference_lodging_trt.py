@@ -75,8 +75,6 @@ class InferenceLodgingTRT(InferenceBase):
         total_count = len(file_list)
         output = []
         for file_path in file_list:
-            import pdb
-            pdb.set_trace()
             for idx, frame in enumerate(stream_video(ZL_CACHE.fetch(file_path))):
                 output.append(self.get_image_pred(frame, True))
                 if idx > self.num_frames:
