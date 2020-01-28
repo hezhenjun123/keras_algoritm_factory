@@ -10,7 +10,7 @@ LOAD_MODEL: False  #if true, Load_Model_Directory must be specified too
 # LOAD_MODEL_DIRECTORY: s3://transformers-sample/zoomlion-sample/test_miivii/lodging_model/model.hdf5/cp.hdf5
 LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_lodging/fu/train_lodging_seg_new_data/run_001/checkpoints/epoch_0171/cp.hdf5
 DIR_OUT: /workspace/output/  #directory on the ec2 host, to save output files from code
-DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.4_chronological
+DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological
 
 
 DATA_GENERATOR:
@@ -26,8 +26,8 @@ TRANSFORM:
   RESIZE: [512, 512]
 
 TRAINING_DATA_INFO:
-  TRAIN_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.4_chronological/train.csv
-  VALID_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.4_chronological/train.csv
+  TRAIN_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological/train.csv
+  VALID_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological/train.csv
   SPLIT: split
   SPLIT_TRAIN_VAL: train
   SPLIT_VALID_VAL: valid
@@ -41,7 +41,8 @@ TRAINING_DATA_INFO:
 MODEL:
   LAYER_SIZE: 64
   LAYER_COUNT: 5
-  BACKBONE: efficientnetb0
+  #BACKBONE: efficientnetb0
+  BACKBONE: resnet18
   IS_BACKBONE_TRAINABLE: true
   MODEL_DIRECTORY: out
   CHECKPOINT_DIRECTORY: checkpoint
@@ -61,8 +62,8 @@ EXPERIMENT:
 INFERENCE:
   INFERENCE_NAME: InferenceLodging
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
-  INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.3/train.csv
-  INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.3/
+  INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6/train.csv
+  INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6/
   # INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.3/train.csv
   # # INFERENCE_CSV_FILE: s3://zoomlion-sample/wheat-lodging/lodgingwheat/train_raw_sort.csv
   # INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.3/
@@ -85,7 +86,7 @@ LOCAL_OVERRIDE:
   DATA_DIR:
 
 GRU:
-  JOB_NAME: train_valid_lodging_new_data_chronological
+  JOB_NAME: train_lodging_v0_6_data_chronological
   PROJECT_NAME: wheat_yield_lodging
-  INSTANCE_TYPE: p3.2xlarge
+  INSTANCE_TYPE: p2.xlarge
   TIMEOUT: 96

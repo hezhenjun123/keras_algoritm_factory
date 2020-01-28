@@ -34,7 +34,8 @@ class ModelUnetSegmentation(ModelBase):
                         decoder_filters = list(reversed(self.layer_sizes)),
                         encoder_freeze = not self.is_backbone_trainable,
                         classes = 1 if self.num_classes==2 else self.num_classes,
-                        activation = 'sigmoid' if self.num_classes==2 else "softmax")
+                        activation = 'sigmoid' if self.num_classes==2 else "softmax",
+                        decoder_block_type = "transpose")
         logging.info(model.summary())
         return model
    
