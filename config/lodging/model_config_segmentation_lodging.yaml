@@ -78,8 +78,8 @@ INFERENCE:
   NUM_PROCESS_IMAGE: 30000
   PRED_IMAGE_DIR: pred_image
   EVALUATE: True # Evaluate model on a dataset with ground truth; won't generate segmentation images.
-  PB_FILE_PATH: ./tmp_unet_lodging_model/frozen_model.pb
-  TRT_ENGINE_PATH: ./tmp_unet_lodging_model/frozen_model.engine
+  PB_FILE_PATH: s3://zoomlion-sample/tmp_unet_lodging_model/frozen_model.pb # freeze model should be done on x86 platform
+  TRT_ENGINE_PATH: ~/zoomlion-sample/tmp_unet_lodging_model/frozen_model.engine # engine should be created on xavier
   CREATE_ENGINE: False
   FP16_MODE: False
   INPUT_NAME: data

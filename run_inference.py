@@ -4,6 +4,7 @@ from absl import flags
 import logging
 from inference.inference_factory import InferenceFactory
 from utilities.config import read_config
+from utilities.s3context import ZL_CACHE
 import numpy as np
 
 logging.getLogger().setLevel(logging.INFO)
@@ -14,7 +15,7 @@ flags.DEFINE_string("freeze_to_pb_path", None, "path to store pb file")
 flags.DEFINE_string("config", None, "model config file")
 flags.DEFINE_boolean("debug", False, "run tf to compare results")
 flags.DEFINE_boolean("create_trt_engine", False, "run tf to compare results")
-
+flags.DEFINE_boolean("upload", False, "upload pb file to s3 bucket")
 flags.mark_flag_as_required('config')
 
 FLAGS = flags.FLAGS
@@ -29,6 +30,8 @@ def run_inference(config, freeze_to_pb_path=None):
 
     if freeze_to_pb_path != None:
         inference.freeze_to_pb(freeze_to_pb_path)
+        if FLAGS.upload:
+            ZL_CACHE.upload("{}/frozen_model.pb".format(freeze_to_pb_path))
 
     else:
         output = inference.run_inference()

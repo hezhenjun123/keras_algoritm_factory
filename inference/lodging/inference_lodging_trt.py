@@ -31,7 +31,7 @@ class InferenceLodgingTRT(InferenceBase):
         self.create_engine = config["INFERENCE"]["CREATE_ENGINE"]
         self.input_size = config["TRANSFORM"]["RESIZE"]
         self.input_channel = config["DATA_GENERATOR"]["OUTPUT_IMAGE_CHANNELS"]
-        self.pb_file_path = config["INFERENCE"]["PB_FILE_PATH"]
+        self.pb_file_path = ZL_CACHE.fetch(config["INFERENCE"]["PB_FILE_PATH"])
         self.input_name = config["INFERENCE"]["INPUT_NAME"]
         self.output_name = config["INFERENCE"]["OUTPUT_NAME"]
         self.num_frames = config["INFERENCE"]["NUM_FRAMES"]

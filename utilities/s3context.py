@@ -96,6 +96,14 @@ class S3Cache:
 
         return dir_path
 
+    def upload(self, local_path):
+        local_path = os.path.expanduser(local_path)
+        assert local_path.startswith(self.cache_dir)
+        key = local_path[len(self.cache_dir):]
+        s3_resource = boto3.resource('s3')
+        bucket = s3_resource.Bucket(self.bucket)
+        bucket.upload_file(local_path, key)
 
 CACHE = S3Cache("s3://transformers-sample/", "~/transformer-samples/")
-ZL_CACHE = S3Cache("s3://zoomlion-sample/", "~/zoomline-sample/")
+ZL_CACHE = S3Cache("s3://zoomlion-sample/", "~/zoomlion-sample/")
+
