@@ -15,8 +15,8 @@ lodging_config: &lodging_config
   model_config: ./config/lodging/model_config_segmentation_lodging.yaml
 
 load_test:
-  load_test_num_rum: 300
-  load_test_input_size: [2048, 1024, 3]
+  num_run: 300
+  input_size: [2048, 1024, 3]
 
 deploy_configs:
   models: [*yield_config, *chaff_elevator_config, *chaff_hopper_config, *lodging_config]

@@ -62,7 +62,7 @@ def run_load_test(load_test_config):
         worker_idx = i % len(workers)
         img = np.random.randint(255, size=input_size).astype('float32')
         start_time = time.time()
-        workers[worker_idx].get_image_pred(img)
+        workers[worker_idx].get_image_pred(img, True)
         timers[worker_idx] += time.time() - start_time
     timers = list(map(lambda x: x / num_run, timers))
     print("Average Latency for {} runs per model: {}".format(num_run, timers))

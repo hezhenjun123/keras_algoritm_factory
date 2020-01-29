@@ -1,7 +1,7 @@
 #!/bin/bash
 
 python --version && \
-#bash /opt/tensorrt/python/python_setup.sh && \
+bash /opt/tensorrt/python/python_setup.sh && \
 python utilities/bbox_setup.py build_ext --inplace && mv bbox_overlap.c* utilities/ && ls -lth && \
 
 
@@ -19,4 +19,8 @@ python run_inference.py --config config/lodging/model_config_segmentation_lodgin
 
 # chaff elevator
 python run_inference.py --config config/chaff_elevator/model_config_segmentation_chaff.yaml --freeze_to_pb_path ~/zoomlion-sample/tmp_unet_chaff_elevator_model --upload && \
-python run_inference.py --config config/chaff_elevator/model_config_segmentation_chaff.yaml --create_trt_engine --debug
+python run_inference.py --config config/chaff_elevator/model_config_segmentation_chaff.yaml --create_trt_engine --debug && \
+
+# load test
+python run_inference.py --load_test_config ./config/deployment/4_trt_models.yaml
+
