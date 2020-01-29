@@ -32,7 +32,6 @@ class InferenceFactory:
             "InferenceBboxBreakage": InferenceBboxBreakage,
             "InferenceSprayerVideo": InferenceSprayerVideo,
             "InferenceYieldAbsoluteNewViewTRT": InferenceYieldAbsoluteNewViewTRT,
-
         }
     else:
         inference_registry = {
