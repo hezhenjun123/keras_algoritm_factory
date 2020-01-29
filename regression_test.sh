@@ -1,7 +1,7 @@
 #!/bin/bash
 
 python --version && \
-bash /opt/tensorrt/python/python_setup.sh && \
+#bash /opt/tensorrt/python/python_setup.sh && \
 python utilities/bbox_setup.py build_ext --inplace && mv bbox_overlap.c* utilities/ && ls -lth && \
 
 
