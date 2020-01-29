@@ -25,7 +25,7 @@ import uff
 class InferenceLodgingTRT(InferenceBase):
     def __init__(self, config):
         super().__init__(config)
-        self.trt_engine_path = config["INFERENCE"]["TRT_ENGINE_PATH"]
+        self.trt_engine_path = os.path.expanduser(config["INFERENCE"]["TRT_ENGINE_PATH"])
         self.video_path = config["INFERENCE"]["VIDEO_PATH"]
         self.inference_transform = self.generate_transform()
         self.create_engine = config["INFERENCE"]["CREATE_ENGINE"]

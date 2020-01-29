@@ -25,7 +25,7 @@ import uff
 class InferenceChaffVideoTRT(InferenceBase):
     def __init__(self, config):
         super().__init__(config)
-        self.trt_engine_path = config["INFERENCE"]["TRT_ENGINE_PATH"]
+        self.trt_engine_path = os.path.expanduser(config["INFERENCE"]["TRT_ENGINE_PATH"])
         self.video_path = config["INFERENCE"]["VIDEO_PATH"]
         self.inference_transform = self.generate_transform()
         self.create_engine = config["INFERENCE"]["CREATE_ENGINE"]
@@ -50,9 +50,8 @@ class InferenceChaffVideoTRT(InferenceBase):
         try:
             self.engine = self.load_engine(self.trt_engine_path)
             self.context = self.engine.create_execution_context()
-            self.inputs, self.outputs, self.bindings, self.stream = allocate_buffers(
-                self.engine
-            )
+            self.inputs, self.outputs, self.bindings, self.stream = allocate_buffers(self.engine)
+
         except:
             print("Failed to load engine")
     #TODO(yuanzhedong): move to base, may need trt deps?
@@ -60,7 +59,6 @@ class InferenceChaffVideoTRT(InferenceBase):
         with build_engine(model_data) as engine:
             print('Engine:', engine)
             buf = engine.serialize()
-            print('open is assigned to %r' % open)
             with open(model_data.trt_engine_path, 'wb') as f:
                 f.write(buf)
 

@@ -73,7 +73,7 @@ INFERENCE:
   OUTPUT_FPS: 5
   MAKE_PLOTS: false
   PB_FILE_PATH: s3://zoomlion-sample/tmp_unet_chaff_elevator_model/frozen_model.pb
-  TRT_ENGINE_PATH: ~/zoomline-sample/tmp_unet_chaff_elevator_model/frozen_model.engine
+  TRT_ENGINE_PATH: ~/zoomlion-sample/tmp_unet_chaff_elevator_model/frozen_model.engine
   CREATE_ENGINE: False
   FP16_MODE: False
   INPUT_NAME: data
