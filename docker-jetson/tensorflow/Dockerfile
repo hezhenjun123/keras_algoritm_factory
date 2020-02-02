@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-base:r32.3.1
+FROM 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-opencv-dev
  
 WORKDIR /
 RUN apt update && apt install -y --fix-missing make g++
