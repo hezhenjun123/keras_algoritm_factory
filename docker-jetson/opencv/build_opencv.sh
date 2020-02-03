@@ -157,7 +157,10 @@ time cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D WITH_OPENGL=ON \
       -D CUDA_NVCC_FLAGS="--expt-relaxed-constexpr" \
       -D WITH_TBB=ON \
+<<<<<<< HEAD
       -D ENABLE_PRECOMPILED_HEADERS=OFF \
+=======
+>>>>>>> origin/jetson-docker
       ../
 
 if [ $? -eq 0 ] ; then

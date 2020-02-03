@@ -6,7 +6,6 @@ ARG OCV_VERSION="4.1.1"
 #ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /opencv
-RUN ls -lth
 ADD ./* /opencv/
 
 RUN bash build_opencv.sh
