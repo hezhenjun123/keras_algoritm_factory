@@ -97,7 +97,8 @@ sudo apt-get install -y \
 
 # https://devtalk.nvidia.com/default/topic/1007290/jetson-tx2/building-opencv-with-opengl-support-/post/5141945/#5141945
 cd /usr/local/cuda/include
-sudo patch -N cuda_gl_interop.h $WHEREAMI'/patches/OpenGLHeader.patch' 
+#sudo patch -N cuda_gl_interop.h $WHEREAMI'/patches/OpenGLHeader.patch'
+sudo patch -N cuda_gl_interop.h $WHEREAMI'/OpenGLHeader.patch' 
 # Clean up the OpenGL tegra libs that usually get crushed
 cd /usr/lib/aarch64-linux-gnu/
 # sudo ln -sf tegra/libGL.so libGL.so
@@ -156,6 +157,7 @@ time cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D WITH_OPENGL=ON \
       -D CUDA_NVCC_FLAGS="--expt-relaxed-constexpr" \
       -D WITH_TBB=ON \
+      -D ENABLE_PRECOMPILED_HEADERS=OFF \
       ../
 
 if [ $? -eq 0 ] ; then

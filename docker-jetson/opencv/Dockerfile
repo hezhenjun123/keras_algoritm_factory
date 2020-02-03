@@ -5,9 +5,10 @@ WORKDIR /app
 ARG OCV_VERSION="4.1.1"
 #ENV DEBIAN_FRONTEND noninteractive
 
-COPY ./* /opencv
-
 WORKDIR /opencv
+RUN ls -lth
+ADD ./* /opencv/
+
 RUN bash build_opencv.sh
 
 
