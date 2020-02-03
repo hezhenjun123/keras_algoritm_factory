@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-base:r32.3.1
+FROM 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-dev
 
 ARG CUDA_TOOLKIT="cuda-repo-l4t-10-0-local-10.0.326"
 ARG CUDA_TOOLKIT_PKG="${CUDA_TOOLKIT}_1.0-1_arm64.deb"

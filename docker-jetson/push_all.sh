@@ -15,25 +15,22 @@ $login
 
 aws s3 sync s3://zoomlion-prod-data/xavier/debs ./debs
 
-cp ./debs/libnvinfer* ./nvinfer/
-cp ./debs/python3-libnvinfer* ./nvinfer/
-cp ./debs/tensorrt* ./tensorrt/
-cp ./debs/graphsurgeon* ./tensorrt/
-cp ./debs/uff-converter* ./tensorrt/
-cp ./debs/libcudnn* ./cudnn/
-cp ./debs/cuda*.zip ./opencv/
-#mv ./debs/cuda*.patch ./opencv/
-cp ./debs/cuda* ./cuda/
+rsync ./debs/libnvinfer* ./nvinfer/
+rsync ./debs/python3-libnvinfer* ./nvinfer/
+rsync ./debs/tensorrt* ./tensorrt/
+rsync ./debs/graphsurgeon* ./tensorrt/
+rsync ./debs/uff-converter* ./tensorrt/
+rsync ./debs/libcudnn* ./cudnn/
+rsync ./debs/cuda*.zip ./opencv/
+rsync ./debs/cuda* ./cuda/
+rsync ./debs/Jetson* ./l4t/
 
 cd cuda
-#podman build -v /usr/bin/qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-dev .
 podman build -v $(pwd)/../qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-dev .
 podman push 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-dev
 cd ..
 
 cd cudnn
-#podman build -v /usr/bin/qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-dev .
-ls -lth 
 podman build -v $(pwd)/../qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-dev .
 podman push 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-dev
 cd ..
