@@ -10,7 +10,6 @@ h5py==2.9.0 \
 Keras-Applications==1.0.8 \
 Keras-Preprocessing==1.1.0 \
 Markdown==3.1.1 \
-numpy==1.16.4 \
 protobuf==3.8.0 \
 six==1.12.0 \
 tb-nightly==1.14.0a20190603 \
