@@ -55,7 +55,7 @@ esac
 
 case $( uname -m ) in
     x86*)
-	nvidia-docker run ${display_str} ${webcam_str} ${aws_env} -it ${docker_name} $*
+	nvidia-docker run ${display_str} ${webcam_str} ${aws_env} ${docker_name} $*
 	;;
     aar*)
 	nvidia-docker run --privileged ${display_str} ${webcam_str} ${aws_env} -it ${docker_name} $*
