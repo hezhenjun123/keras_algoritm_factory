@@ -1,3 +1,6 @@
+#!/bin/bash
+
+uname -m
 set -x
 xhost +
 
@@ -38,7 +41,16 @@ fi
 # change flag to F
 # docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
-nvidia-docker build -t ${docker_name} -f docker-x86/app/Dockerfile .
+case $( uname -m ) in
+    x86*)
+	nvidia-docker build -t ${docker_name} -f docker-x86/app/Dockerfile .
+	;;
+    aar*)
+	nvidia-docker build -t ${docker_name} -f docker-jetson/app/Dockerfile .
+	;;
+    *)
+	echo -n "unknown platform"
+esac
 
 if [ $hostname_prefix == "ip" ]
 then

@@ -17,4 +17,5 @@ RUN pip3 install -U numpy==1.16.1 future==0.17.1 mock==3.0.5
 
 RUN pip3 install keras_preprocessing==1.0.5 keras_applications==1.0.8 gast==0.2.2 enum34 futures protobuf
 RUN python3 -m pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v42 tensorflow-gpu==1.14.0
-CMD [ "bash" ]
+
+ENTRYPOINT ["/bin/bash"]
