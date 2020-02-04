@@ -1,8 +1,7 @@
 #!/bin/bash
 
 bash /opt/tensorrt/python/python_setup.sh
-python3 utilities/bbox_setup.py build_ext --inplace && mv bbox_overlap.c* utilities/ && ls -lth && \
-
+python3 utilities/bbox_setup.py build_ext --inplace && mv bbox_overlap.c* utilities/ && ls -lth
 
 STAGE=0
 
