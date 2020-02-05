@@ -1,3 +1,6 @@
+#!/bin/bash
+
+uname -m
 set -x
 xhost +
 
@@ -38,17 +41,25 @@ fi
 # change flag to F
 # docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
-nvidia-docker build -t ${docker_name} -f docker-x86/app/Dockerfile .
+case $( uname -m ) in
+    x86*)
+	nvidia-docker build -t ${docker_name} -f docker-x86/app/Dockerfile .
+	;;
+    aar*)
+	nvidia-docker build -t ${docker_name} -f docker-jetson/app/Dockerfile .
+	;;
+    *)
+	echo -n "unknown platform"
+esac
 
-if [ $hostname_prefix == "ip" ]
-then
-   nvidia-docker run ${display_str} ${webcam_str} ${aws_env} -v ${HOME}/sandbox/landing-shared-workspace:/root/sandbox/landing-shared-workspace ${docker_name} $*
-else
-   nvidia-docker run ${display_str} ${webcam_str} ${aws_env} -it ${docker_name} $*
-fi
 
-
-
-# docker tag local/jetson:v2 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:v0.0.1
-# login=$(aws ecr get-login --no-include-email)
-# docker tag local/jetson:v2 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:v0.0.1
+case $( uname -m ) in
+    x86*)
+	nvidia-docker run ${display_str} ${webcam_str} ${aws_env} ${docker_name} $*
+	;;
+    aar*)
+	nvidia-docker run --privileged ${display_str} ${webcam_str} ${aws_env} -it ${docker_name} $*
+	;;
+    *)
+	echo -n "unknown platform"
+esac
