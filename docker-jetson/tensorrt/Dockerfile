@@ -13,6 +13,8 @@ RUN dpkg -i graphsurgeon-tf_$TRT_VERSION-1+cuda10.0_arm64.deb && \
     dpkg -i uff-converter-tf_$TRT_VERSION-1+cuda10.0_arm64.deb && \
     rm graphsurgeon-tf_$TRT_VERSION-1+cuda10.0_arm64.deb && \
     rm tensorrt_$TRT_VERSION_EXT-1+cuda10.0_arm64.deb && \
-    rm uff-converter-tf_$TRT_VERSION-1+cuda10.0_arm64.deb
+    rm uff-converter-tf_$TRT_VERSION-1+cuda10.0_arm64.deb && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["/bin/bash"]

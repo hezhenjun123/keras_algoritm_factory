@@ -15,6 +15,7 @@ RUN dpkg -i libcudnn7_${CUDNN_VERSION}-1+cuda10.0_arm64.deb && \
     dpkg -i libcudnn7-doc_$CUDNN_VERSION-1+cuda10.0_arm64.deb && \
     rm libcudnn7_$CUDNN_VERSION-1+cuda10.0_arm64.deb && \
     rm libcudnn7-dev_$CUDNN_VERSION-1+cuda10.0_arm64.deb && \
-    rm libcudnn7-doc_$CUDNN_VERSION-1+cuda10.0_arm64.deb
-
+    rm libcudnn7-doc_$CUDNN_VERSION-1+cuda10.0_arm64.deb && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 ENTRYPOINT ["/bin/bash"]

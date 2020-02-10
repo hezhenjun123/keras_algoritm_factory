@@ -200,6 +200,10 @@ else
    exit 1
 fi
 
+sudo rm -rf /opencv
+sudo rm -rf /root/opencv
+sudo rm -rf /root/opencv_extra
+
 # check installation
 IMPORT_CHECK="$(python -c "import cv2 ; print(cv2.__version__)")"
 if [[ $IMPORT_CHECK != *$OPENCV_VERSION* ]]; then

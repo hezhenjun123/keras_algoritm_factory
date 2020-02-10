@@ -46,4 +46,7 @@ RUN pip3 install s3fs>=0.2.0
 RUN pip3 install segmentation-models>=1.0.0b1
 RUN pip3 install pycuda
 
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 ENTRYPOINT ["/bin/bash"]

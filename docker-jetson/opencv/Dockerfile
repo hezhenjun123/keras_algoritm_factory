@@ -8,7 +8,7 @@ ARG OCV_VERSION="4.1.1"
 WORKDIR /opencv
 ADD ./* /opencv/
 
-RUN bash build_opencv.sh
-
-
+RUN bash build_opencv.sh && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 ENTRYPOINT ["/bin/bash"]
