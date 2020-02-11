@@ -38,7 +38,7 @@ RUN apt-get update
 RUN apt-get install -y libopenblas-dev gfortran
 RUN python3 -m pip uninstall -y enum34
 RUN pip3 install pybind11
-RUN pip3 install scipy
+RUN pip3 install --no-cache-dir scipy
 RUN pip3 install grpcio==1.21.1
 RUN pip3 install pyyaml>=3.13
 RUN pip3 install pandas>=0.23.1

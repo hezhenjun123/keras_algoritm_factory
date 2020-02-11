@@ -62,28 +62,28 @@ if [ $stage -le 1 ]; then
     cd ..
 fi
 
-if [$stage -le 2]; then
+if [ $stage -le 2 ]; then
     cd nvinfer
     podman build -v $(pwd)/../qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-dev .
     podman push 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-dev
     cd ..
 fi
 
-if [$stage -le 3]; then
+if [ $stage -le 3 ]; then
     cd tensorrt
     podman build -v $(pwd)/../qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-dev .
     podman push 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-dev
     cd ..
 fi
 
-if [$stage -le 4]; then
+if [ $stage -le 4 ]; then
     cd opencv
     podman build -v $(pwd)/../qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-opencvdev .
     podman push 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-opencv-dev
     cd ..
 fi
 
-if [$stage -le 5]; then
+if [ $stage -le 5 ]; then
     cd tensorflow
     podman build -v $(pwd)/../qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-opencv-tensorflow-dev .
     podman push 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-opencv-tensorflow-dev
