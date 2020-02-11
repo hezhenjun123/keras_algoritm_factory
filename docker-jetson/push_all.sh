@@ -78,7 +78,7 @@ fi
 
 if [ $stage -le 4 ]; then
     cd opencv
-    podman build -v $(pwd)/../qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-opencvdev .
+    podman build -v $(pwd)/../qemu-aarch64-static:/usr/bin/qemu-aarch64-static -t 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-opencv-dev .
     podman push 286751717145.dkr.ecr.us-east-2.amazonaws.com/zoomlion:jetson-xavier-l4t-cuda-cudnn-nvinfer-tensorrt-opencv-dev
     cd ..
 fi
