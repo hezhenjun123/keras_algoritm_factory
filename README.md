@@ -23,6 +23,7 @@ AMI id: ami-0821a34583de81474
 ## Inference and Deployment
 
 Prerequisite
+
     * Configure AWS id and token with aws configure
     * nvidia-docker
     
@@ -39,7 +40,7 @@ bash run_docker.sh bash regression_test.sh -s 5
 
 #### Run all models together on Jetson
 
-nvidia-docker is installed by default with [JetPack](https://developer.nvidia.com/embedded/jetpack), you should already have it on xavier if you provision the xavier machine correctly.
+*nvidia-docker* is installed by default with [JetPack](https://developer.nvidia.com/embedded/jetpack), you should already have it on xavier if you provision the xavier machine correctly.
 
 ```
 bash run_docker.sh bash regression_test.sh -s 5
