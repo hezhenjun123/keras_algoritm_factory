@@ -22,6 +22,8 @@ RUN dpkg -i libnvinfer5_$INF_VERSION-1+cuda10.0_arm64.deb && \
     rm libnvinfer-dev_$INF_VERSION-1+cuda10.0_arm64.deb && \
     rm libnvinfer-samples_$INF_VERSION-1+cuda10.0_all.deb && \
     rm python3-libnvinfer_$INF_VERSION-1+cuda10.0_arm64.deb && \
-    rm python3-libnvinfer-dev_$INF_VERSION-1+cuda10.0_arm64.deb
+    rm python3-libnvinfer-dev_$INF_VERSION-1+cuda10.0_arm64.deb && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["/bin/bash"]

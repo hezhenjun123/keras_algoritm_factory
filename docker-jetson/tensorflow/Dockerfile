@@ -38,12 +38,15 @@ RUN apt-get update
 RUN apt-get install -y libopenblas-dev gfortran
 RUN python3 -m pip uninstall -y enum34
 RUN pip3 install pybind11
-RUN pip3 install scipy
+RUN pip3 install --no-cache-dir scipy
 RUN pip3 install grpcio==1.21.1
 RUN pip3 install pyyaml>=3.13
 RUN pip3 install pandas>=0.23.1
 RUN pip3 install s3fs>=0.2.0
 RUN pip3 install segmentation-models>=1.0.0b1
 RUN pip3 install pycuda
+
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["/bin/bash"]
