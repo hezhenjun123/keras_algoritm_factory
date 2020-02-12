@@ -24,8 +24,8 @@ AMI id: ami-0821a34583de81474
 
 Prerequisite
 
-    * Configure AWS id and token with aws configure
-    * nvidia-docker
+    - Configure AWS id and token with `aws configure` cmd.
+    - nvidia-docker.
     
 ### Quick Start
 
