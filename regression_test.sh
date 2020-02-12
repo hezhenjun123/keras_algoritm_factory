@@ -16,11 +16,11 @@ function usage
 while [ "$1" != "" ]; do
     case $1 in
         -s | --stage )      shift
-			    STAGE=$1
+			                STAGE=$1
                             ;;
-	-h | --help )       shift
-			    ;;
-	* )                 usage
+	    -h | --help )       shift
+			                ;;
+	    * )                 usage
                             exit 1
     esac
     shift
