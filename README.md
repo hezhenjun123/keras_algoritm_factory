@@ -20,19 +20,52 @@ AMI id: ami-0821a34583de81474
 
 
 
-# Run inference on xavier
+## Inference and Deployment
 
-* Follow landing-eye repo to flash the miivii box
+Prerequisite
 
-* Install dependencies
+    - Configure AWS id and token with `aws configure` cmd.
+    - nvidia-docker.
+    
+### Quick Start
+
+#### Run all models together on x86 
+
+The environment for running inference on x86 is wrapped up using docker. make sure you have [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) installed then run:
 ```
-sudo python3 -m pip install -r requirements-xavier.txt
+# this cmd will run 4 models together
+bash run_docker.sh bash regression_test.sh -s 5
 ```
 
-* Run inference
+
+#### Run all models together on Jetson
+
+*nvidia-docker* is installed by default with [JetPack](https://developer.nvidia.com/embedded/jetpack), you should already have it on xavier if you provision the xavier machine correctly.
 
 ```
+bash run_docker.sh bash regression_test.sh -s 5
+```
 
+
+### Freeze TF model
+
+A frozen model is needed to generate TensorRT engine. Here's an example to freeze yield model:
+
+```
+python3 run_inference.py --config config/yield/model_config_regression_yield_absolute_newview2.yaml --freeze_to_pb_path ~/zoomlion-sample/tmp_resnet_model
+```
+
+### Generate TensorRT engine and compare inference resutls with TF frozen pb file:
+
+```
+python3 run_inference.py --config config/yield/model_config_regression_yield_absolute_newview2.yaml --create_trt_engine --debug
+```
+
+### Regression Tests
+Model convertion, consistency check and load test are in `regression_test.sh`. Which is also used in `Jenkinsfile`. Tests are define by stages(`-s`), here is an example of running chaff lodging:
+
+```
+bash run_docker.sh bash regression_test.sh -s 3
 ```
 
 # Debug
