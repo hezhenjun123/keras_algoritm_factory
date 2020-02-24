@@ -1,4 +1,4 @@
-RUN_ENV: aws #{aws, local}
+RUN_ENV: local #{aws, local}
 RUN_MODE: train #{train, inference}
 
 BATCH_SIZE: 4
