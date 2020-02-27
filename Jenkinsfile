@@ -47,6 +47,13 @@ pipeline {
         '''
       }
     }
+    stage('trt load test fp_16') {
+      steps {
+        sh '''#!/bin/bash
+        bash run_docker.sh bash regression_test.sh -s 6
+        '''
+      }
+    }
   }
   post {
     always {

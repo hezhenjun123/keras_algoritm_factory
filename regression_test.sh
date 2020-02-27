@@ -16,11 +16,11 @@ function usage
 while [ "$1" != "" ]; do
     case $1 in
         -s | --stage )      shift
-			                STAGE=$1
+			    STAGE=$1
                             ;;
-	    -h | --help )       shift
-			                ;;
-	    * )                 usage
+	-h | --help )       shift
+			    ;;
+	* )                 usage
                             exit 1
     esac
     shift
@@ -51,6 +51,10 @@ case $STAGE in
 	python3 run_inference.py --load_test_config ./config/deployment/4_trt_models.yaml --create_trt_engine
 	;;
     *)
-	echo -n "unknow"
 
+    6)# load test fp16
+	python3 run_inference.py --load_test_config ./config/deployment/4_trt_models.yaml --create_trt_engine --fp_16
+	;;
+    *)
+	echo -n "unknow"
 esac

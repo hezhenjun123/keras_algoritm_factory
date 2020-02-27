@@ -18,6 +18,7 @@ flags.DEFINE_string("config", None, "model config file")
 flags.DEFINE_string("load_test_config", None, "config for multiple models")
 flags.DEFINE_boolean("debug", False, "run tf to compare results")
 flags.DEFINE_boolean("create_trt_engine", False, "run tf to compare results")
+flags.DEFINE_boolean("fp_16", False, "run tf in fp_16")
 flags.DEFINE_boolean("upload", False, "upload pb file to s3 bucket")
 
 FLAGS = flags.FLAGS
@@ -52,6 +53,8 @@ def run_load_test(load_test_config):
         model_config = read_config(model_config_path)
         if FLAGS.create_trt_engine:
             model_config["INFERENCE"]["CREATE_ENGINE"] = True
+            if FLAGS.fp_16:
+                model_config["INFERENCE"]["FP16_MODE"] = True
         inference_factory = InferenceFactory(model_config)
         workers.append(inference_factory.create_inference(model_config["INFERENCE"]["INFERENCE_NAME"]))
         timers.append(0)
@@ -76,10 +79,9 @@ def main(_):
         module_config = read_config(FLAGS.config)
         if FLAGS.create_trt_engine:
             module_config["INFERENCE"]["CREATE_ENGINE"] = True
+            if FLAGS.fp_16:
+                module_config["INFERENCE"]["FP16_MODE"] = True
         run_inference(module_config, FLAGS.freeze_to_pb_path)
-
-    
-
 
 if __name__ == "__main__":
     app.run(main)
