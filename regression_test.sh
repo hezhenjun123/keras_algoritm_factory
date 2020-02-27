@@ -50,7 +50,6 @@ case $STAGE in
     5)# load test
 	python3 run_inference.py --load_test_config ./config/deployment/4_trt_models.yaml --create_trt_engine
 	;;
-    *)
 
     6)# load test fp16
 	python3 run_inference.py --load_test_config ./config/deployment/4_trt_models.yaml --create_trt_engine --fp_16
