@@ -52,7 +52,7 @@ case $STAGE in
 	;;
 
     6)# load test fp16
-	python3 run_inference.py --load_test_config ./config/deployment/4_trt_models.yaml --create_trt_engine --fp_16
+	python3 run_inference.py --load_test_config ./config/prod/4_trt_models.yaml --create_trt_engine --fp_16
 	;;
     *)
 	echo -n "unknow"
