@@ -1,14 +1,14 @@
-RUN_ENV: aws #{aws, local}
-RUN_MODE: train #{train, inference}
-BATCH_SIZE: 4
+RUN_ENV: local #{aws, local}
+RUN_MODE: inference #{train, inference}
+BATCH_SIZE: 1
 LEARNING_RATE: 0.0001
 EPOCHS: 300
 TRAIN_STEPS_PER_EPOCH: -1
 VALID_STEPS_PER_EPOCH: -1
 NUM_CLASSES: 2
-LOAD_MODEL: True  #if true, Load_Model_Directory must be specified too
+LOAD_MODEL: true #if true, Load_Model_Directory must be specified too
 # LOAD_MODEL_DIRECTORY: s3://transformers-sample/zoomlion-sample/test_miivii/lodging_model/model.hdf5/cp.hdf5
-LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_lodging/yuanzhedong/train_lodging_v0_6_data_chronological/run_025/checkpoints/epoch_0002/cp.hdf5
+LOAD_MODEL_DIRECTORY: s3://landing-ml-job-runs/wheat_yield_lodging/fu/lodging_v06_resnet18_BZ8_LR1-4/run_001/checkpoints/epoch_0001/cp.hdf5
 DIR_OUT: /workspace/output/  #directory on the ec2 host, to save output files from code
 DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological
 
@@ -59,25 +59,26 @@ EXPERIMENT:
 
 
 INFERENCE:
-  INFERENCE_NAME: InferenceLodgingTRT
+  INFERENCE_NAME: InferenceLodging
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
-  INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6/train.csv
-  INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6/
+  INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological/train.csv
+  INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological
   # INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.3/train.csv
   # # INFERENCE_CSV_FILE: s3://zoomlion-sample/wheat-lodging/lodgingwheat/train_raw_sort.csv
   # INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.3/
   # LOAD_MODEL_PATH: wheat_lodging_segmentation_run/run_006/checkpoints/epoch_0221/cp.hdf5
   VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingwheat/106APPLE/IMG_6989.MOV
   SPLIT: split #Column name in the csv file
-  SPLIT_VAL: all # {valid, train, all}
+  SPLIT_VAL: valid # {valid, train, all}
   SEPARATOR: ','
   IMAGE_PATH: image_path
   SEGMENTATION_PATH: seg_label_path
   LABEL_NAME: label_name
   IMAGE_LEVEL_LABEL: image_level_label
-  NUM_PROCESS_IMAGE: 30000
+  NUM_PROCESS_IMAGE: 30
   PRED_IMAGE_DIR: pred_image
-  EVALUATE: True # Evaluate model on a dataset with ground truth; won't generate segmentation images.
+  EVALUATE: False # Evaluate model on a dataset with ground truth; won't generate segmentation images.
+  VISUALIZE: False
   PB_FILE_PATH: s3://zoomlion-sample/tmp_unet_lodging_model/frozen_model.pb # freeze model should be done on x86 platform
   TRT_ENGINE_PATH: ~/zoomlion-sample/tmp_unet_lodging_model/frozen_model.engine # engine should be created on xavier
   CREATE_ENGINE: False
@@ -85,6 +86,8 @@ INFERENCE:
   INPUT_NAME: data
   OUTPUT_NAME: sigmoid/Sigmoid
   NUM_FRAMES: 100
+  CONTOUR_AREA_THRESHOLD: 1000
+
 
 
 LOCAL_OVERRIDE:
@@ -92,7 +95,7 @@ LOCAL_OVERRIDE:
   DATA_DIR:
 
 GRU:
-  JOB_NAME: train_lodging_v0_6_data_chronological
+  JOB_NAME: lodging_v06_resnet18_BZ8_LR1-4_noload
   PROJECT_NAME: wheat_yield_lodging
   INSTANCE_TYPE: p3.2xlarge
   TIMEOUT: 96
