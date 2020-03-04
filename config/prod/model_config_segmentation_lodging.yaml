@@ -59,14 +59,10 @@ EXPERIMENT:
 
 
 INFERENCE:
-  INFERENCE_NAME: InferenceLodging
+  INFERENCE_NAME: InferenceLodging # or InferenceLodgingTRT
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological/train.csv
   INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological
-  # INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.3/train.csv
-  # # INFERENCE_CSV_FILE: s3://zoomlion-sample/wheat-lodging/lodgingwheat/train_raw_sort.csv
-  # INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.3/
-  # LOAD_MODEL_PATH: wheat_lodging_segmentation_run/run_006/checkpoints/epoch_0221/cp.hdf5
   VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingwheat/106APPLE/IMG_6989.MOV
   SPLIT: split #Column name in the csv file
   SPLIT_VAL: valid # {valid, train, all}
@@ -75,7 +71,7 @@ INFERENCE:
   SEGMENTATION_PATH: seg_label_path
   LABEL_NAME: label_name
   IMAGE_LEVEL_LABEL: image_level_label
-  NUM_PROCESS_IMAGE: 30
+  NUM_PROCESS_IMAGE: 30000
   PRED_IMAGE_DIR: pred_image
   EVALUATE: False # Evaluate model on a dataset with ground truth; won't generate segmentation images.
   VISUALIZE: False
