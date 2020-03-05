@@ -8,11 +8,10 @@ it will package the current  directory and submit it as a job to GRU.
 $ cd zoomlion-model-pipeline
 $ python submit_job.py 
 
-
-$ python run_experiment.py --config breakage/model_config_segmentation_breakage.yaml
-$ python run_experiment.py --config chaff/model_config_segmentation_chaff.yaml
-$ python run_experiment.py --config lodging/model_config_segmentation_lodging.yaml
-$ python run_experiment.py --config yield/model_config_regression_yield_absolute.yaml
+$ ./run.sh prod/model_config_segmentation_chaff_elevator.yaml
+$ ./run.sh prod/model_config_segmentation_chaff_hopper.yaml
+$ ./run.sh prod/model_config_segmentation_lodging.yaml
+$ ./run.sh prod/model_config_regression_yield_absolute_newview2.yaml
 ```
 
 # Setup
