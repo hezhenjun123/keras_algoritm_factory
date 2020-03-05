@@ -59,10 +59,10 @@ EXPERIMENT:
 
 
 
-INFERENCE_ENGINE: INFERENCE_TF # this can be modified by cmd params in run_inference.py
+INFERENCE_ENGINE: TRT # this can be modified by cmd params in run_inference.py
 INFERENCE:
-  INFERENCE_TF: InferenceLodging
-  INFERENCE_TRT: InferenceLodgingTRT
+  TF: InferenceLodging
+  TRT: InferenceLodgingTRT
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological/train.csv
   INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological

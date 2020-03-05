@@ -21,7 +21,7 @@ flags.DEFINE_boolean("debug", False, "run tf to compare results")
 flags.DEFINE_boolean("create_trt_engine", False, "run tf to compare results")
 flags.DEFINE_boolean("fp_16", False, "run tf in fp_16")
 flags.DEFINE_boolean("upload", False, "upload pb file to s3 bucket")
-flags.DEFINE_string("inference_engine","INFERENCE_TF", "set inference engine, either INFERENCE_TRT or INFERENCE_TF")
+flags.DEFINE_string("inference_engine","TF", "set inference engine, either TRT or TF")
 
 FLAGS = flags.FLAGS
 
