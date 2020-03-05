@@ -80,7 +80,8 @@ def main(_):
             run_load_test(config)
     else:
         module_config = read_config(FLAGS.config)
-        module_config["INFERENCE_ENGINE"] = FLAGS.inference_engine
+        module_config["INFERENCE_ENGINE"] = str(FLAGS.inference_engine)
+        print(module_config)
         if FLAGS.create_trt_engine:
             module_config["INFERENCE"]["CREATE_ENGINE"] = True
             if FLAGS.fp_16:
