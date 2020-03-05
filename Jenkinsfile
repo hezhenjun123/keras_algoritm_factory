@@ -6,7 +6,8 @@ pipeline {
       steps {
         sh '''#!/bin/bash
         cd scripts && \
-        bash run_docker.sh python -m pytest
+        bash run_docker.sh python -m pytest && \
+        cd ..
         '''
       }
     }
@@ -14,7 +15,8 @@ pipeline {
       steps {
         sh '''#!/bin/bash
         cd scripts && \
-        bash run_docker.sh bash regression_test.sh -s 1
+        bash run_docker.sh bash regression_test.sh -s 1 && \
+        cd ..
         '''
       }
     }
@@ -22,7 +24,8 @@ pipeline {
       steps {
         sh '''#!/bin/bash
         cd scripts && \
-        bash run_docker.sh bash regression_test.sh -s 2
+        bash run_docker.sh bash regression_test.sh -s 2 && \
+        cd ..
         '''
       }
     }
@@ -31,7 +34,8 @@ pipeline {
       steps {
         sh '''#!/bin/bash
         cd scripts && \
-        bash run_docker.sh bash regression_test.sh -s 3
+        bash run_docker.sh bash regression_test.sh -s 3 && \
+        cd ..
         '''
       }
     }
@@ -40,7 +44,8 @@ pipeline {
       steps {
         sh '''#!/bin/bash
         cd scripts && \
-        bash run_docker.sh bash regression_test.sh -s 4
+        bash run_docker.sh bash regression_test.sh -s 4 && \
+        cd ..
         '''
       }
     }
@@ -49,7 +54,8 @@ pipeline {
       steps {
         sh '''#!/bin/bash
         cd scripts && \
-        bash run_docker.sh bash regression_test.sh -s 5
+        bash run_docker.sh bash regression_test.sh -s 5 && \
+        cd ..
         '''
       }
     }
@@ -57,7 +63,8 @@ pipeline {
       steps {
         sh '''#!/bin/bash
         cd scripts && \
-        bash run_docker.sh bash regression_test.sh -s 6
+        bash run_docker.sh bash regression_test.sh -s 6 && \
+        cd ..
         '''
       }
     }
