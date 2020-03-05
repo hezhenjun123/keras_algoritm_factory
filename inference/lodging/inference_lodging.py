@@ -3,8 +3,9 @@ import cv2
 import os
 from inference.inference_base import InferenceBase
 import numpy as np
-import pdb 
-from sklearn.metrics import confusion_matrix, classification_report
+import platform
+if platform.machine() != 'aarch64':
+    from sklearn.metrics import confusion_matrix, classification_report
 
 logging.getLogger().setLevel(logging.INFO)
 
