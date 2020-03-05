@@ -31,7 +31,7 @@ os.environ['S3_REQUEST_TIMEOUT_MSEC'] = '6000000'
 
 def run_inference(config, freeze_to_pb_path=None):
     inference_factory = InferenceFactory(config)
-    inference = inference_factory.create_inference(config["INFERENCE"][config["INFERENCE_ENGINE"]])
+    inference = inference_factory.create_inference(config["INFERENCE"][str(config["INFERENCE_ENGINE"])])
 
     if freeze_to_pb_path != None:
         inference.freeze_to_pb(freeze_to_pb_path)
