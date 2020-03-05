@@ -11,6 +11,7 @@ import yaml
 
 logging.getLogger().setLevel(logging.INFO)
 os.environ["CUDA_VISIBLE_DEVICES"] = "0" # 0 for GPU; -1 for CPU
+os.environ["AWS_REGION"] = "us-east-2"
 
 flags.DEFINE_string("freeze_to_pb_path", None, "path to store pb file")
 

@@ -2,7 +2,6 @@
 
 bash /opt/tensorrt/python/python_setup.sh
 python3 utilities/bbox_setup.py build_ext --inplace && mv bbox_overlap.c* utilities/ && ls -lth
-export AWS_REGION="us-east-2"
 
 STAGE=0
 
