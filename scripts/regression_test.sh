@@ -28,32 +28,37 @@ done
 
 
 case $STAGE in
-    1) # yield model
-	python3 run_inference.py --config config/prod/model_config_regression_yield_absolute_newview2.yaml --freeze_to_pb_path ~/zoomlion-sample/tmp_resnet_model --upload && \
-	    python3 run_inference.py --config config/prod/model_config_regression_yield_absolute_newview2.yaml --create_trt_engine --debug
+    1)# trt yield model
+	python3 run_inference.py --config config/prod/model_config_regression_yield_absolute_newview2.yaml --inference_engine "INFERENCE_TRT" --freeze_to_pb_path ~/zoomlion-sample/tmp_resnet_model --upload && \
+	    python3 run_inference.py --config config/prod/model_config_regression_yield_absolute_newview2.yaml --inference_engine "INFERENCE_TRT" --create_trt_engine --debug 
 	;;
-    2)# chaff hopper
-	python3 run_inference.py --config config/prod/model_config_segmentation_chaff_hopper.yaml --freeze_to_pb_path ~/zoomlion-sample/tmp_unet_chaff_hopper_model --upload && \
-	    python3 run_inference.py --config config/prod/model_config_segmentation_chaff_hopper.yaml --create_trt_engine --debug
-	;;
-
-    3)# lodging
-	python3 run_inference.py --config config/prod/model_config_segmentation_lodging.yaml --freeze_to_pb_path ~/zoomlion-sample/tmp_unet_lodging_model --upload && \
-	    python3 run_inference.py --config config/prod/model_config_segmentation_lodging.yaml --create_trt_engine --debug
+    2)# trt chaff hopper
+	python3 run_inference.py --config config/prod/model_config_segmentation_chaff_hopper.yaml --inference_engine "INFERENCE_TRT" --freeze_to_pb_path ~/zoomlion-sample/tmp_unet_chaff_hopper_model --upload && \
+	    python3 run_inference.py --config config/prod/model_config_segmentation_chaff_hopper.yaml --inference_engine "INFERENCE_TRT" --create_trt_engine --debug
 	;;
 
-    4)# chaff elevator
-	python3 run_inference.py --config config/prod/model_config_segmentation_chaff_elevator.yaml --freeze_to_pb_path ~/zoomlion-sample/tmp_unet_chaff_elevator_model --upload && \
-	    python3 run_inference.py --config config/prod/model_config_segmentation_chaff_elevator.yaml --create_trt_engine --debug
+    3)# trt lodging
+	python3 run_inference.py --config config/prod/model_config_segmentation_lodging.yaml --inference_engine "INFERENCE_TRT" --freeze_to_pb_path ~/zoomlion-sample/tmp_unet_lodging_model --upload && \
+	    python3 run_inference.py --config config/prod/model_config_segmentation_lodging.yaml --inference_engine "INFERENCE_TRT" --create_trt_engine --debug
 	;;
 
-    5)# load test
-	python3 run_inference.py --load_test_config ./config/prod/4_trt_models.yaml --create_trt_engine
+    4)# trt chaff elevator
+	python3 run_inference.py --config config/prod/model_config_segmentation_chaff_elevator.yaml --inference_engine "INFERENCE_TRT" --freeze_to_pb_path ~/zoomlion-sample/tmp_unet_chaff_elevator_model --upload && \
+	    python3 run_inference.py --config config/prod/model_config_segmentation_chaff_elevator.yaml --inference_engine "INFERENCE_TRT" --create_trt_engine --debug
 	;;
 
-    6)# load test fp16
-	python3 run_inference.py --load_test_config ./config/prod/4_trt_models.yaml --create_trt_engine --fp_16
+    5)# load trt test
+	python3 run_inference.py --load_test_config ./config/prod/4_trt_models.yaml --inference_engine "INFERENCE_TRT" --create_trt_engine
 	;;
+
+    6)# load trtbtest fp16
+	python3 run_inference.py --load_test_config ./config/prod/4_trt_models.yaml --inference_engine "INFERENCE_TRT" --create_trt_engine --fp_16
+	;;
+
+	7)# TF lodging model
+	python3 run_inference.py --config config/prod/model_config_segmentation_lodging.yaml --inference_engine "INFERENCE_TF"
+	;;
+	
     *)
 	echo -n "unknow"
 esac
