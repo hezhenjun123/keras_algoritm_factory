@@ -5,6 +5,7 @@ pipeline {
   stage('pytest') {
       steps {
         sh '''#!/bin/bash
+        cd scripts && \
         bash run_docker.sh python -m pytest
         '''
       }
@@ -12,6 +13,7 @@ pipeline {
     stage('yield') {
       steps {
         sh '''#!/bin/bash
+        cd scripts && \
         bash run_docker.sh bash regression_test.sh -s 1
         '''
       }
@@ -19,6 +21,7 @@ pipeline {
     stage('chaff hopper') {
       steps {
         sh '''#!/bin/bash
+        cd scripts && \
         bash run_docker.sh bash regression_test.sh -s 2
         '''
       }
@@ -27,6 +30,7 @@ pipeline {
     stage('chaff lodging') {
       steps {
         sh '''#!/bin/bash
+        cd scripts && \
         bash run_docker.sh bash regression_test.sh -s 3
         '''
       }
@@ -35,6 +39,7 @@ pipeline {
     stage('chaff elevator') {
       steps {
         sh '''#!/bin/bash
+        cd scripts && \
         bash run_docker.sh bash regression_test.sh -s 4
         '''
       }
@@ -43,6 +48,7 @@ pipeline {
     stage('trt load test') {
       steps {
         sh '''#!/bin/bash
+        cd scripts && \
         bash run_docker.sh bash regression_test.sh -s 5
         '''
       }
@@ -50,6 +56,7 @@ pipeline {
     stage('trt load test fp_16') {
       steps {
         sh '''#!/bin/bash
+        cd scripts && \
         bash run_docker.sh bash regression_test.sh -s 6
         '''
       }
