@@ -59,7 +59,7 @@ EXPERIMENT:
 
 
 INFERENCE:
-  INFERENCE_NAME: InferenceLodging # or InferenceLodgingTRT
+  INFERENCE_NAME: InferenceLodgingTRT # or InferenceLodgingTRT
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological/train.csv
   INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological
