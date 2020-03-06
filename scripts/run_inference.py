@@ -21,7 +21,7 @@ flags.DEFINE_boolean("debug", False, "run tf to compare results")
 flags.DEFINE_boolean("create_trt_engine", False, "run tf to compare results")
 flags.DEFINE_boolean("fp_16", False, "run tf in fp_16")
 flags.DEFINE_boolean("upload", False, "upload pb file to s3 bucket")
-flags.DEFINE_string("inference_engine","TF", "set inference engine, either TRT or TF")
+flags.DEFINE_string("inference_engine","INFERENCE_TF", "set inference engine, either INFERENCE_TRT or INFERENCE_TF")
 
 FLAGS = flags.FLAGS
 
@@ -31,7 +31,7 @@ os.environ['S3_REQUEST_TIMEOUT_MSEC'] = '6000000'
 
 def run_inference(config, freeze_to_pb_path=None):
     inference_factory = InferenceFactory(config)
-    inference = inference_factory.create_inference(config["INFERENCE"][str(config["INFERENCE_ENGINE"])])
+    inference = inference_factory.create_inference(config[config["INFERENCE_ENGINE"]]["INFERENCE_NAME"])
 
     if freeze_to_pb_path != None:
         inference.freeze_to_pb(freeze_to_pb_path)
@@ -58,7 +58,7 @@ def run_load_test(load_test_config):
             if FLAGS.fp_16:
                 model_config["INFERENCE"]["FP16_MODE"] = True
         inference_factory = InferenceFactory(model_config)
-        workers.append(inference_factory.create_inference(model_config["INFERENCE"][config["INFERENCE_ENGINE"]]))
+        workers.append(inference_factory.create_inference(model_config[module_config["INFERENCE_ENGINE"]][config["INFERENCE_NAME"]]))
         timers.append(0)
     num_run = load_test_config["load_test"]["num_run"]
     input_size = load_test_config["load_test"]["input_size"]
