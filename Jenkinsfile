@@ -40,7 +40,7 @@ pipeline {
       }
     }
 
-    stage('chaff elevator') {
+    stage('chaff elevator trt') {
       steps {
         sh '''#!/bin/bash
         cd scripts && \
@@ -56,6 +56,7 @@ pipeline {
         cd scripts && \
         bash run_docker.sh bash regression_test.sh -s 5 && \
         cd ..
+
         '''
       }
     }
@@ -64,6 +65,42 @@ pipeline {
         sh '''#!/bin/bash
         cd scripts && \
         bash run_docker.sh bash regression_test.sh -s 6 && \
+        cd ..
+        '''
+      }
+    }
+    stage('TF lodging model') {
+      steps {
+        sh '''#!/bin/bash
+        cd scripts && \
+        bash run_docker.sh bash regression_test.sh -s 7 && \
+        cd ..
+        '''
+      }
+    }
+    stage(' TF chaff hopper model') {
+      steps {
+        sh '''#!/bin/bash
+        cd scripts && \
+        bash run_docker.sh bash regression_test.sh -s 8 && \
+        cd ..
+        '''
+      }
+    }
+    stage('TF chaff elevator model') {
+      steps {
+        sh '''#!/bin/bash
+        cd scripts && \
+        bash run_docker.sh bash regression_test.sh -s 9 && \
+        cd ..
+        '''
+      }
+    }
+    stage('TF yield model') {
+      steps {
+        sh '''#!/bin/bash
+        cd scripts && \
+        bash run_docker.sh bash regression_test.sh -s 10 && \
         cd ..
         '''
       }
