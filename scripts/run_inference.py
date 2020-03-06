@@ -54,9 +54,9 @@ def run_load_test(load_test_config):
         model_config_path = config["model_config"]
         model_config = read_config(model_config_path)
         if FLAGS.create_trt_engine:
-            model_config["INFERENCE"]["CREATE_ENGINE"] = True
+            model_config[model_config["INFERENCE_ENGINE"]]["CREATE_ENGINE"] = True
             if FLAGS.fp_16:
-                model_config["INFERENCE"]["FP16_MODE"] = True
+                model_config[model_config["INFERENCE_ENGINE"]]["FP16_MODE"] = True
         inference_factory = InferenceFactory(model_config)
         workers.append(inference_factory.create_inference(model_config[module_config["INFERENCE_ENGINE"]][config["INFERENCE_NAME"]]))
         timers.append(0)
@@ -79,13 +79,12 @@ def main(_):
             config["INFERENCE_ENGINE"] = FLAGS.inference_engine
             run_load_test(config)
     else:
-        module_config = read_config(FLAGS.config)
-        module_config["INFERENCE_ENGINE"] = str(FLAGS.inference_engine)
+        module_config = read_config(FLAGS.config, INFERENCE_ENGINE=FLAGS.inference_engine)
         print(module_config)
         if FLAGS.create_trt_engine:
-            module_config["INFERENCE"]["CREATE_ENGINE"] = True
+            module_config[module_config["INFERENCE_ENGINE"]]["CREATE_ENGINE"] = True
             if FLAGS.fp_16:
-                module_config["INFERENCE"]["FP16_MODE"] = True
+                module_config[module_config["INFERENCE_ENGINE"]]["FP16_MODE"] = True
         run_inference(module_config, FLAGS.freeze_to_pb_path)
 
 if __name__ == "__main__":

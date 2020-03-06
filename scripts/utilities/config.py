@@ -2,13 +2,15 @@ import yaml
 import os
 
 
-def read_config(config_path):
+def read_config(config_path, **kwargs):
     # MODULE_CONFIG_FILE = 'config/{}'.format(config_path)
     MODULE_CONFIG_FILE = config_path
     if os.path.exists(MODULE_CONFIG_FILE) is False:
         raise Exception("config file does not exist: {}".format(MODULE_CONFIG_FILE))
     with open(MODULE_CONFIG_FILE) as f:
         module_config = yaml.safe_load(f)
+    for key, val in kwargs.items():
+        module_config[key] = val
 
     if module_config["EXPERIMENT"]["VALID_TRANSFORM"] is None:
         module_config["EXPERIMENT"]["VALID_TRANSFORM"] = module_config["EXPERIMENT"][

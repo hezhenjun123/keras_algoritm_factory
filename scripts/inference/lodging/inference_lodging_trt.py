@@ -25,23 +25,23 @@ import uff
 class InferenceLodgingTRT(InferenceBase):
     def __init__(self, config):
         super().__init__(config)
-        self.trt_engine_path = os.path.expanduser(config["INFERENCE"]["TRT_ENGINE_PATH"])
-        self.video_path = config["INFERENCE"]["VIDEO_PATH"]
+        self.trt_engine_path = os.path.expanduser(config[config["INFERENCE_ENGINE"]]["TRT_ENGINE_PATH"])
+        self.video_path = config[config["INFERENCE_ENGINE"]]["VIDEO_PATH"]
         self.inference_transform = self.generate_transform()
-        self.create_engine = config["INFERENCE"]["CREATE_ENGINE"]
+        self.create_engine = config[config["INFERENCE_ENGINE"]]["CREATE_ENGINE"]
         self.input_size = config["TRANSFORM"]["RESIZE"]
         self.input_channel = config["DATA_GENERATOR"]["OUTPUT_IMAGE_CHANNELS"]
-        self.pb_file_path = ZL_CACHE.fetch(config["INFERENCE"]["PB_FILE_PATH"])
-        self.input_name = config["INFERENCE"]["INPUT_NAME"]
-        self.output_name = config["INFERENCE"]["OUTPUT_NAME"]
-        self.num_frames = config["INFERENCE"]["NUM_FRAMES"]
+        self.pb_file_path = ZL_CACHE.fetch(config[config["INFERENCE_ENGINE"]]["PB_FILE_PATH"])
+        self.input_name = config[config["INFERENCE_ENGINE"]]["INPUT_NAME"]
+        self.output_name = config[config["INFERENCE_ENGINE"]]["OUTPUT_NAME"]
+        self.num_frames = config[config["INFERENCE_ENGINE"]]["NUM_FRAMES"]
         if self.create_engine == True:
             model_data = ModelData(
                 self.pb_file_path,
                 self.input_name,
                 (self.input_channel, self.input_size[0], self.input_size[1]),
                 self.output_name,
-                config["INFERENCE"]["FP16_MODE"],
+                config[config["INFERENCE_ENGINE"]]["FP16_MODE"],
                 self.trt_engine_path,
             )
             self.build_and_dump_engine(model_data)

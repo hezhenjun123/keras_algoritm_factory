@@ -15,6 +15,8 @@ class InferenceYieldAbsoluteNewView(InferenceBase):
 
     def __init__(self, config):
         super().__init__(config)
+        self.evaluate = config[config["INFERENCE_ENGINE"]]["EVALUATE"]
+        self.inference_visualize = config[config["INFERENCE_ENGINE"]]["VISUALIZE"]
         
     def run_inference(self):
         inference_transform = self.generate_transform()

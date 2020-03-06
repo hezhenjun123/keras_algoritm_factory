@@ -16,7 +16,10 @@ class InferenceLodging(InferenceBase):
 
     def __init__(self, config):
         super().__init__(config)
+        self.evaluate = config[config["INFERENCE_ENGINE"]]["EVALUATE"]
+        self.inference_visualize = config[config["INFERENCE_ENGINE"]]["VISUALIZE"]
         self.contour_threshold = config[config["INFERENCE_ENGINE"]]["CONTOUR_AREA_THRESHOLD"]
+        self.num_process_image = config[config["INFERENCE_ENGINE"]]["NUM_PROCESS_IMAGE"]
         if self.num_process_image >= 99999:
             raise Exception("cannot process more than 99999 images ")
 

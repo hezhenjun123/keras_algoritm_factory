@@ -59,6 +59,18 @@ case $STAGE in
 	python3 run_inference.py --config config/prod/model_config_segmentation_lodging.yaml --inference_engine INFERENCE_TF
 	;;
 
+	8)# TF chaff hopper model
+	python3 run_inference.py --config config/prod/model_config_segmentation_chaff_hopper.yaml --inference_engine INFERENCE_TF
+	;;
+
+	9)# TF chaff elevator model
+	python3 run_inference.py --config config/prod/model_config_segmentation_chaff_elevator.yaml --inference_engine INFERENCE_TF
+	;;
+
+	10)# TF yield model
+	python3 run_inference.py --config config/prod/model_config_regression_yield_absolute_newview2.yaml --inference_engine INFERENCE_TF
+	;;
+
     *)
 	echo -n "unknow"
 esac

@@ -31,8 +31,6 @@ class InferenceBase:
         self.num_classes = config["NUM_CLASSES"]
         self.save_dir = config["DIR_OUT"]
         self.load_model_path = self.config["LOAD_MODEL_DIRECTORY"]
-        self.evaluate = config[config["INFERENCE_ENGINE"]]["EVALUATE"]
-        self.inference_visualize = config[config["INFERENCE_ENGINE"]]["VISUALIZE"]
         if config["RUN_ENV"] == "local":
             self.__local_override_config(config)
 
