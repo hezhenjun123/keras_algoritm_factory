@@ -58,7 +58,7 @@ def run_load_test(load_test_config):
             if FLAGS.fp_16:
                 model_config[model_config["INFERENCE_ENGINE"]]["FP16_MODE"] = True
         inference_factory = InferenceFactory(model_config)
-        workers.append(inference_factory.create_inference(model_config[model_config["INFERENCE_ENGINE"]][config["INFERENCE_NAME"]]))
+        workers.append(inference_factory.create_inference(model_config[model_config["INFERENCE_ENGINE"]]["INFERENCE_NAME"]))
         timers.append(0)
     num_run = load_test_config["load_test"]["num_run"]
     input_size = load_test_config["load_test"]["input_size"]
