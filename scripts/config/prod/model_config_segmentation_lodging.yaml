@@ -75,8 +75,8 @@ INFERENCE_TF:
   IMAGE_LEVEL_LABEL: image_level_label
   NUM_PROCESS_IMAGE: 30000
   PRED_IMAGE_DIR: pred_image
-  EVALUATE: True # Evaluate model on a dataset with ground truth; won't generate segmentation images.
-  VISUALIZE: True
+  EVALUATE: False # Evaluate model on a dataset with ground truth; won't generate segmentation images.
+  VISUALIZE: False
   PB_FILE_PATH: s3://zoomlion-sample/tmp_unet_lodging_model/frozen_model.pb # freeze model should be done on x86 platform
   TRT_ENGINE_PATH: ~/zoomlion-sample/tmp_unet_lodging_model/frozen_model.engine # engine should be created on xavier
   CREATE_ENGINE: False

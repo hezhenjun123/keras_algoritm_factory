@@ -52,7 +52,7 @@ def run_load_test(load_test_config):
     configs = load_test_config["deploy_configs"]["models"]
     for config in configs:
         model_config_path = config["model_config"]
-        model_config = read_config(model_config_path)
+        model_config = read_config(model_config_path, INFERENCE_ENGINE=FLAGS.inference_engine)
         if FLAGS.create_trt_engine:
             model_config[model_config["INFERENCE_ENGINE"]]["CREATE_ENGINE"] = True
             if FLAGS.fp_16:

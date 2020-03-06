@@ -73,7 +73,7 @@ INFERENCE_TF:
   NUM_PROCESS_IMAGE: -1
   PRED_IMAGE_DIR: pred_image
   EVALUATE: True # Evaluate model on a dataset with ground truth; won't generate segmentation images.
-  VISUALIZE: True
+  VISUALIZE: False
   MAXIMIZING_BUFFER_LENGTH: 20
   OUTPUT_FPS: 20
   OUTPUT_FRAME_OFFSET: 0

@@ -25,12 +25,12 @@ class InferenceYieldAbsoluteNewView(InferenceBase):
         model = self.load_model()
 
         if self.evaluate:
-            self.__produce_evaluation(model, inference_dataset)
+            self._produce_evaluation(model, inference_dataset)
         else:
             pass
         logging.info("================Inference Complete=============")
     
-    def __produce_evaluation(self, model, dataset):
-        logging.info("================Evaluation Starts=============")
-        model.evaluate(dataset)
-        logging.info("================Evaluation Completes=============")
+    # def __produce_evaluation(self, model, dataset):
+    #     logging.info("================Evaluation Starts=============")
+    #     model.evaluate(dataset)
+    #     logging.info("================Evaluation Completes=============")

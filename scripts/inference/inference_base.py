@@ -30,6 +30,7 @@ class InferenceBase:
         self.model_name = self.config[config["INFERENCE_ENGINE"]]["MODEL_NAME"]
         self.num_classes = config["NUM_CLASSES"]
         self.save_dir = config["DIR_OUT"]
+        self.pred_image_dir = config[config["INFERENCE_ENGINE"]]["PRED_IMAGE_DIR"]
         self.load_model_path = self.config["LOAD_MODEL_DIRECTORY"]
         if config["RUN_ENV"] == "local":
             self.__local_override_config(config)
