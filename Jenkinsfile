@@ -56,7 +56,6 @@ pipeline {
         cd scripts && \
         bash run_docker.sh bash regression_test.sh -s 5 && \
         cd ..
-
         '''
       }
     }
