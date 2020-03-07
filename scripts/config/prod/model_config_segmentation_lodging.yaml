@@ -57,9 +57,38 @@ EXPERIMENT:
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
   NUM_PLOTS: 10
 
+INFERENCE_ENGINE: INFERENCE_TF
 
-INFERENCE:
-  INFERENCE_NAME: InferenceLodgingTRT # or InferenceLodgingTRT
+INFERENCE_TF: 
+  INFERENCE_NAME: InferenceLodging
+  GENERATOR: GeneratorSegmentation
+  #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
+  INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological/train.csv
+  INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological
+  VIDEO_PATH: s3://zoomlion-sample/wheat-lodging/lodgingwheat/106APPLE/IMG_6989.MOV
+  SPLIT: split #Column name in the csv file
+  SPLIT_VAL: valid # {valid, train, all}
+  SEPARATOR: ','
+  IMAGE_PATH: image_path
+  SEGMENTATION_PATH: seg_label_path
+  LABEL_NAME: label_name
+  IMAGE_LEVEL_LABEL: image_level_label
+  NUM_PROCESS_IMAGE: 30000
+  PRED_IMAGE_DIR: pred_image
+  EVALUATE: False # Evaluate model on a dataset with ground truth; won't generate segmentation images.
+  VISUALIZE: False
+  PB_FILE_PATH: s3://zoomlion-sample/tmp_unet_lodging_model/frozen_model.pb # freeze model should be done on x86 platform
+  TRT_ENGINE_PATH: ~/zoomlion-sample/tmp_unet_lodging_model/frozen_model.engine # engine should be created on xavier
+  CREATE_ENGINE: False
+  FP16_MODE: False
+  INPUT_NAME: data
+  OUTPUT_NAME: sigmoid/Sigmoid
+  NUM_FRAMES: 100
+  CONTOUR_AREA_THRESHOLD: 1000
+
+INFERENCE_TRT: 
+  INFERENCE_NAME: InferenceLodgingTRT
+  GENERATOR: GeneratorVideo
   #FIXME: May want to consider move INFERENCE_CSV_FILE and INFERENCE_DATA_DIR out of INFERENCE. We may load model for continuous training.
   INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological/train.csv
   INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/lodging/qinghai-0824-1002/data-v0.6_chronological

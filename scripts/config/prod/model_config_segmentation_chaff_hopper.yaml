@@ -1,5 +1,5 @@
-RUN_ENV: aws #{aws, local}
-RUN_MODE: train #{train, inference}
+RUN_ENV: local #{aws, local}
+RUN_MODE: inference #{train, inference}
 
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
@@ -45,6 +45,8 @@ MODEL:
   LAYER_COUNT: 5 #ignored if LAYER_SIZE  is list
   #BACKBONE: efficientnetb0  #{any backbone from https://github.com/qubvel/segmentation_models#models-and-backbones} for Unet
                             # nobackbone or mobilenet-v2
+  MODEL_DIRECTORY: out
+  CHECKPOINT_DIRECTORY: checkpoint
   BACKBONE: resnet18
   IS_BACKBONE_TRAINABLE: true
 
@@ -57,7 +59,39 @@ EXPERIMENT:
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
   NUM_PLOTS: 10
 
-INFERENCE:
+INFERENCE_ENGINE: INFERENCE_TF # this can be modified by cmd params in run_inference.py
+
+INFERENCE_TF:
+  INFERENCE_NAME: InferenceChaff
+  GENERATOR: GeneratorSegmentation
+  INFERENCE_CSV_FILE: s3://landing-client-zoomlion/data-for-models/chaff-hopper/qinghai-0824-1002/data-v0.4_chronological/train.csv
+  INFERENCE_DATA_DIR: s3://landing-client-zoomlion/data-for-models/chaff-hopper/qinghai-0824-1002/data-v0.4_chronological/
+  VIDEO_PATH: s3://zoomlion-sample/zoomlion-hopper-1/barn_video1.avi
+  NUM_FRAMES: 200
+  #VIDEO_PATH: s3://zoomlion-prod-data/zoomlion-s3-china-data/QingHai_Harvest_Data/2019-09-08/avi/elevator_cam/
+  SPLIT: split #Column name in the csv file
+  SPLIT_VAL: valid #Column content in the csv file
+  SEPARATOR: ','
+  IMAGE_PATH: image_path
+  SEGMENTATION_PATH: seg_label_path
+  LABEL_NAME: label_name
+  IMAGE_LEVEL_LABEL: image_level_label
+  NUM_PROCESS_IMAGE: 30000
+  PRED_IMAGE_DIR: pred_image
+  EVALUATE: False # Evaluate model on a dataset with ground truth; won't generate segmentation images.
+  VISUALIZE: False
+  MAXIMIZING_BUFFER_LENGTH: 1
+  OUTPUT_FPS: 5
+  MAKE_PLOTS: false
+  PB_FILE_PATH: s3://zoomlion-sample/tmp_unet_chaff_hopper_model/frozen_model.pb
+  TRT_ENGINE_PATH: ~/zoomlion-sample/tmp_unet_chaff_hopper_model/frozen_model.engine
+  CREATE_ENGINE: False
+  FP16_MODE: False
+  INPUT_NAME: data
+  OUTPUT_NAME: sigmoid/Sigmoid
+  CONTOUR_AREA_THRESHOLD: 1000
+
+INFERENCE_TRT:
   INFERENCE_NAME: InferenceChaffVideoTRT
   GENERATOR: GeneratorVideo
   INFERENCE_CSV_FILE: 

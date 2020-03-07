@@ -42,7 +42,7 @@ class DataGeneratorBase:
     def __inference_override(self, config):
         logging.info("=====Override config with inference configs=====")
         self.repeat = False
-        self.data_dir = config["INFERENCE"]["INFERENCE_DATA_DIR"]
+        self.data_dir = config[config["INFERENCE_ENGINE"]]["INFERENCE_DATA_DIR"]
 
     def create_dataset(self, df, transforms):
         raise NotImplementedError()

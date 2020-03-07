@@ -21,6 +21,7 @@ flags.DEFINE_boolean("debug", False, "run tf to compare results")
 flags.DEFINE_boolean("create_trt_engine", False, "run tf to compare results")
 flags.DEFINE_boolean("fp_16", False, "run tf in fp_16")
 flags.DEFINE_boolean("upload", False, "upload pb file to s3 bucket")
+flags.DEFINE_string("inference_engine","INFERENCE_TF", "set inference engine, either INFERENCE_TRT or INFERENCE_TF")
 
 FLAGS = flags.FLAGS
 
@@ -30,7 +31,7 @@ os.environ['S3_REQUEST_TIMEOUT_MSEC'] = '6000000'
 
 def run_inference(config, freeze_to_pb_path=None):
     inference_factory = InferenceFactory(config)
-    inference = inference_factory.create_inference(config["INFERENCE"]["INFERENCE_NAME"])
+    inference = inference_factory.create_inference(config[config["INFERENCE_ENGINE"]]["INFERENCE_NAME"])
 
     if freeze_to_pb_path != None:
         inference.freeze_to_pb(freeze_to_pb_path)
@@ -51,13 +52,13 @@ def run_load_test(load_test_config):
     configs = load_test_config["deploy_configs"]["models"]
     for config in configs:
         model_config_path = config["model_config"]
-        model_config = read_config(model_config_path)
+        model_config = read_config(model_config_path, INFERENCE_ENGINE=FLAGS.inference_engine)
         if FLAGS.create_trt_engine:
-            model_config["INFERENCE"]["CREATE_ENGINE"] = True
+            model_config[model_config["INFERENCE_ENGINE"]]["CREATE_ENGINE"] = True
             if FLAGS.fp_16:
-                model_config["INFERENCE"]["FP16_MODE"] = True
+                model_config[model_config["INFERENCE_ENGINE"]]["FP16_MODE"] = True
         inference_factory = InferenceFactory(model_config)
-        workers.append(inference_factory.create_inference(model_config["INFERENCE"]["INFERENCE_NAME"]))
+        workers.append(inference_factory.create_inference(model_config[model_config["INFERENCE_ENGINE"]]["INFERENCE_NAME"]))
         timers.append(0)
     num_run = load_test_config["load_test"]["num_run"]
     input_size = load_test_config["load_test"]["input_size"]
@@ -75,13 +76,15 @@ def main(_):
     if FLAGS.load_test_config:
         with open(FLAGS.load_test_config) as f:
             config = yaml.safe_load(f)
+            config["INFERENCE_ENGINE"] = FLAGS.inference_engine
             run_load_test(config)
     else:
-        module_config = read_config(FLAGS.config)
+        module_config = read_config(FLAGS.config, INFERENCE_ENGINE=FLAGS.inference_engine)
+        print(module_config)
         if FLAGS.create_trt_engine:
-            module_config["INFERENCE"]["CREATE_ENGINE"] = True
+            module_config[module_config["INFERENCE_ENGINE"]]["CREATE_ENGINE"] = True
             if FLAGS.fp_16:
-                module_config["INFERENCE"]["FP16_MODE"] = True
+                module_config[module_config["INFERENCE_ENGINE"]]["FP16_MODE"] = True
         run_inference(module_config, FLAGS.freeze_to_pb_path)
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 RUN_ENV: local #{aws, local}
-RUN_MODE: train #{train, inference}
+RUN_MODE: inference #{train, inference}
 
 BATCH_SIZE: 4
 LEARNING_RATE: 0.0001
@@ -54,7 +54,38 @@ EXPERIMENT:
   VALID_GENERATOR: # If empty, use TRAIN_GENERATOR
   NUM_PLOTS: 10
 
-INFERENCE:
+INFERENCE_ENGINE: INFERENCE_TF
+
+INFERENCE_TF: 
+  INFERENCE_NAME: InferenceLodging
+  GENERATOR: GeneratorSegmentation
+  INFERENCE_CSV_FILE: s3://landing-client-zoomlion/chaff_segmentation/chaff_elevator/train.csv
+  INFERENCE_DATA_DIR: s3://landing-client-zoomlion/chaff_segmentation/chaff_elevator/
+  VIDEO_PATH: s3://zoomlion-sample/zoomlion-data-aws-china/harvester/QingHai_Harvest_Data/2019-09-08/avi/elevator_cam/20190908_125526.h5.avi
+  SPLIT: split #Column name in the csv file
+  SPLIT_VAL: valid #Column content in the csv file
+  SEPARATOR: ','
+  IMAGE_PATH: image_path
+  SEGMENTATION_PATH: seg_label_path
+  LABEL_NAME: label_name
+  IMAGE_LEVEL_LABEL: image_level_label
+  NUM_PROCESS_IMAGE: 150
+  PRED_IMAGE_DIR: pred_image
+  EVALUATE: False # Evaluate model on a dataset with ground truth; won't generate segmentation images.
+  VISUALIZE: True
+  MAXIMIZING_BUFFER_LENGTH: 1
+  OUTPUT_FPS: 5
+  MAKE_PLOTS: false
+  PB_FILE_PATH: s3://zoomlion-sample/tmp_unet_chaff_elevator_model/frozen_model.pb
+  TRT_ENGINE_PATH: ~/zoomlion-sample/tmp_unet_chaff_elevator_model/frozen_model.engine
+  CREATE_ENGINE: False
+  FP16_MODE: False
+  INPUT_NAME: data
+  OUTPUT_NAME: sigmoid/Sigmoid
+  NUM_FRAMES: 200
+  CONTOUR_AREA_THRESHOLD: 1000
+
+INFERENCE_TRT:
   INFERENCE_NAME: InferenceChaffVideoTRT
   GENERATOR: GeneratorVideo
   INFERENCE_CSV_FILE: 
